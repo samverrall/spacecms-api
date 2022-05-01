@@ -1,0 +1,98 @@
+swagger: "2.0"
+info:
+  title: Invoice App API Service
+  description: REST API for the invoice app.
+  version: ""
+host: localhost:8000
+consumes:
+- application/json
+- application/xml
+- application/gob
+produces:
+- application/json
+- application/xml
+- application/gob
+paths:
+  /create-account:
+    post:
+      tags:
+      - invoice
+      summary: create-account invoice
+      operationId: invoice#create-account
+      parameters:
+      - name: Create-AccountRequestBody
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InvoiceCreateAccountRequestBody'
+          required:
+          - email
+          - name
+          - password
+      responses:
+        "201":
+          description: Created response.
+          schema:
+            $ref: '#/definitions/InvoiceCreateAccountResponseBody'
+            required:
+            - email
+            - name
+            - password
+      schemes:
+      - http
+  /openapi.json:
+    get:
+      tags:
+      - invoice
+      summary: Download ./gen/http/openapi.json
+      operationId: invoice#/openapi.json
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+      schemes:
+      - http
+definitions:
+  InvoiceCreateAccountRequestBody:
+    title: InvoiceCreateAccountRequestBody
+    type: object
+    properties:
+      email:
+        type: string
+        example: Qui sequi et dolore nihil.
+      name:
+        type: string
+        example: Facilis libero perferendis eligendi quis quia rerum.
+      password:
+        type: string
+        example: Est culpa est fuga.
+    example:
+      email: Et ab.
+      name: Deserunt earum voluptatem architecto.
+      password: Et qui corrupti.
+    required:
+    - email
+    - name
+    - password
+  InvoiceCreateAccountResponseBody:
+    title: InvoiceCreateAccountResponseBody
+    type: object
+    properties:
+      email:
+        type: string
+        example: Nemo repellendus quod deleniti eos.
+      name:
+        type: string
+        example: Voluptates sint.
+      password:
+        type: string
+        example: Aut molestiae vel autem aut.
+    example:
+      email: Deserunt voluptas libero.
+      name: Quas nulla et ut hic.
+      password: Quaerat quasi maxime nam est.
+    required:
+    - email
+    - name
+    - password
