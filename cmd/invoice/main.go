@@ -12,7 +12,7 @@ import (
 	"sync"
 	"syscall"
 
-	invoiceapi "github.com/samverrall/invoice-app"
+	invoiceapi "github.com/samverrall/invoice-app/controllers"
 	invoice "github.com/samverrall/invoice-app/gen/invoice"
 )
 
@@ -41,7 +41,7 @@ func main() {
 		invoiceSvc invoice.Service
 	)
 	{
-		invoiceSvc = invoiceapi.NewInvoice(logger)
+		invoiceSvc = invoiceapi.NewInvoice(logger, nil)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

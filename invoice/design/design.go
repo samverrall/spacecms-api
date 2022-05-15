@@ -18,6 +18,13 @@ var _ = API("invoice", func() {
 var _ = Service("invoice", func() {
 	Description("REST API for the invoice app.")
 
+	HTTP(func() {
+		Response("unauthorized", StatusUnauthorized)
+		Response("servererror", StatusInternalServerError)
+		Response("badrequest", StatusBadRequest)
+		Response("notfound", StatusNotFound)
+	})
+
 	Method("create-account", func() {
 		// The payload is the JSON request body with the fields of the type 'user'.
 		Payload(user)
@@ -30,6 +37,18 @@ var _ = Service("invoice", func() {
 			// When a account has been created we need to use a http.StatusCreated status code.
 			// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status for status codes.
 			Response(StatusCreated)
+		})
+	})
+
+	Method("get-account", func() {
+		Result(user)
+
+		HTTP(func() {
+			GET("/create-account/{userID}")
+
+			// When a account has been created we need to use a http.StatusCreated status code.
+			// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status for status codes.
+			Response(StatusOK)
 		})
 	})
 
