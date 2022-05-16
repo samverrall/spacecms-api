@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/samverrall/invoice-app/database"
-	"github.com/samverrall/invoice-app/gen/invoice"
 )
 
 type DataStore struct {
@@ -27,5 +26,6 @@ func New() *DataStore {
 }
 
 type DBInterface interface {
-	CreateUser(ctx context.Context, email, password, name string) (*invoice.User, error)
+	CreateUser(ctx context.Context, email, password, name string) error
+	GetUserByEmail(ctx context.Context, email string) error
 }
