@@ -18,6 +18,11 @@ var _ = API("invoice", func() {
 var _ = Service("invoice", func() {
 	Description("REST API for the invoice app.")
 
+	Error("unauthorized")
+	Error("servererror")
+	Error("badrequest")
+	Error("notfound")
+
 	HTTP(func() {
 		Response("unauthorized", StatusUnauthorized)
 		Response("servererror", StatusInternalServerError)
@@ -28,8 +33,6 @@ var _ = Service("invoice", func() {
 	Method("create-account", func() {
 		// The payload is the JSON request body with the fields of the type 'user'.
 		Payload(user)
-
-		Result(user)
 
 		HTTP(func() {
 			POST("/create-account")
@@ -43,8 +46,15 @@ var _ = Service("invoice", func() {
 	Method("get-account", func() {
 		Result(user)
 
+		Payload(func() {
+			Attribute("userID", String)
+		})
+
 		HTTP(func() {
 			GET("/create-account/{userID}")
+			Params(func() {
+				Param("userID")
+			})
 
 			// When a account has been created we need to use a http.StatusCreated status code.
 			// See https://developer.mozilla.org/en-US/docs/Web/HTTP/Status for status codes.
@@ -53,14 +63,4 @@ var _ = Service("invoice", func() {
 	})
 
 	Files("/openapi.json", "./gen/http/openapi.json")
-})
-
-// user defines the fields that can exist on a user.
-var user = Type("User", func() {
-	Attribute("email", String)
-	Attribute("name", String)
-	Attribute("password", String)
-
-	// These fields have to be on the user or the API will error.
-	Required("email", "name", "password")
 })

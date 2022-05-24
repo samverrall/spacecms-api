@@ -20,6 +20,7 @@ import (
 type Server struct {
 	Mounts             []*MountPoint
 	CreateAccount      http.Handler
+	GetAccount         http.Handler
 	GenHTTPOpenapiJSON http.Handler
 }
 
@@ -61,9 +62,11 @@ func New(
 	return &Server{
 		Mounts: []*MountPoint{
 			{"CreateAccount", "POST", "/create-account"},
+			{"GetAccount", "GET", "/create-account/{userID}"},
 			{"./gen/http/openapi.json", "GET", "/openapi.json"},
 		},
 		CreateAccount:      NewCreateAccountHandler(e.CreateAccount, mux, decoder, encoder, errhandler, formatter),
+		GetAccount:         NewGetAccountHandler(e.GetAccount, mux, decoder, encoder, errhandler, formatter),
 		GenHTTPOpenapiJSON: http.FileServer(fileSystemGenHTTPOpenapiJSON),
 	}
 }
@@ -74,11 +77,13 @@ func (s *Server) Service() string { return "invoice" }
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.CreateAccount = m(s.CreateAccount)
+	s.GetAccount = m(s.GetAccount)
 }
 
 // Mount configures the mux to serve the invoice endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreateAccountHandler(mux, h.CreateAccount)
+	MountGetAccountHandler(mux, h.GetAccount)
 	MountGenHTTPOpenapiJSON(mux, goahttp.Replace("", "/./gen/http/openapi.json", h.GenHTTPOpenapiJSON))
 }
 
@@ -112,11 +117,62 @@ func NewCreateAccountHandler(
 	var (
 		decodeRequest  = DecodeCreateAccountRequest(mux, decoder)
 		encodeResponse = EncodeCreateAccountResponse(encoder)
-		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+		encodeError    = EncodeCreateAccountError(encoder, formatter)
 	)
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "create-account")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "invoice")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountGetAccountHandler configures the mux to serve the "invoice" service
+// "get-account" endpoint.
+func MountGetAccountHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/create-account/{userID}", f)
+}
+
+// NewGetAccountHandler creates a HTTP handler which loads the HTTP request and
+// calls the "invoice" service "get-account" endpoint.
+func NewGetAccountHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeGetAccountRequest(mux, decoder)
+		encodeResponse = EncodeGetAccountResponse(encoder)
+		encodeError    = EncodeGetAccountError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "get-account")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "invoice")
 		payload, err := decodeRequest(r)
 		if err != nil {
