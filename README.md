@@ -1,6 +1,6 @@
-# invoice-app
+# Invoice API service
 
-This repository holds a Go Lang API service for a 'invoicing applcation' personal project that I'm building open source!
+This repository holds a Golang API service for a 'invoicing application' personal project that I'm building open source!
 
 ## Tools used within this repo:
   - Logrus (Used for logging)
