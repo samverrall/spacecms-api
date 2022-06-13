@@ -5,34 +5,52 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/google/uuid"
+	"github.com/samverrall/invoice-app/apierror"
 	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	"github.com/sirupsen/logrus"
 )
 
 // CreateAccount implements create-account.
 func (s *invoicesrvc) CreateAccount(ctx context.Context, p *invoice.User) error {
-	s.logger.Print("invoice.create-account")
+	s.logger.Info("invoice.create-account")
 
 	// Lookup the email to make sure it does not already exist in the system.
 	// If it does, return an error.
 	user, err := s.dbi.GetUserByEmail(ctx, p.Email)
 	switch {
 	case err != nil && !errors.Is(err, sql.ErrNoRows):
-		s.logger.Println("Failed to determind if user exists")
-		return newResponseError("servererror", "Failed to check if user exists")
+		s.logger.Error("Failed to determind if user exists")
+		return apierror.NewResponseError("servererror", "Failed to check if user exists")
 	case user != nil:
-		s.logger.Println("User already exists")
-		return newResponseError("badrequest", "This email address has already registered for an account.")
+		s.logger.Error("User already exists")
+		return apierror.NewResponseError("badrequest", "This email address has already registered for an account.")
+	}
+
+	s.logger.Info("User does not exist, ready to create account.")
+
+	newUserID := uuid.NewString()
+
+	hashedPassword, err := s.hasher.Hash(p.Password)
+	if err != nil {
+		s.logger.WithFields(logrus.Fields{
+			"email":    p.Email,
+			"password": p.Password,
+		}).Error("Failed to hash password")
+		return apierror.NewResponseError("servererror", "Failed to create account")
 	}
 
 	// Create the user in the database.
-	cErr := s.dbi.CreateUser(ctx, p.Email, p.Password, p.Name)
+	cErr := s.dbi.CreateUser(ctx, newUserID, p.Email, hashedPassword, p.Name)
 	switch {
 	case cErr != nil:
-		s.logger.Println("failed to create user, error: ", err)
-		return newResponseError("servererror", "Failed to create user")
+		s.logger.Error("failed to create user, error: ", cErr)
+		return apierror.NewResponseError("servererror", "Failed to create user")
 	}
 
-	s.logger.Println("Account successfully created")
+	s.logger.WithFields(logrus.Fields{
+		"email": p.Email,
+	}).Info("Account successfully created")
 
 	return nil
 }
