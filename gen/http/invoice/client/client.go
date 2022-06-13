@@ -3,7 +3,7 @@
 // invoice client HTTP transport
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-app/invoice/design
+// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
 
 package client
 

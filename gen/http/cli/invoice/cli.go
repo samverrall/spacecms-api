@@ -3,7 +3,7 @@
 // invoice HTTP client CLI support package
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-app/invoice/design
+// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
 
 package cli
 
@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"os"
 
-	invoicec "github.com/samverrall/invoice-app/gen/http/invoice/client"
+	invoicec "github.com/samverrall/invoice-api-service/gen/http/invoice/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )

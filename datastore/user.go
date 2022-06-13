@@ -3,7 +3,7 @@ package datastore
 import (
 	"context"
 
-	"github.com/samverrall/invoice-app/gen/invoice"
+	"github.com/samverrall/invoice-api-service/gen/invoice"
 )
 
 func (d *DataStore) CreateUser(ctx context.Context, id string, email, password, name string) error {

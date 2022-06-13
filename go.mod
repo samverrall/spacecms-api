@@ -1,4 +1,4 @@
-module github.com/samverrall/invoice-app
+module github.com/samverrall/invoice-api-service
 
 go 1.18
 

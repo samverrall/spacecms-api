@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/samverrall/invoice-app/database"
-	"github.com/samverrall/invoice-app/gen/invoice"
+	"github.com/samverrall/invoice-api-service/database"
+	"github.com/samverrall/invoice-api-service/gen/invoice"
 )
 
 type DataStore struct {

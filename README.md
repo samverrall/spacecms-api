@@ -9,7 +9,7 @@ This repository holds a Golang API service for a 'invoicing application' persona
   - Argon2id (Used for hashing of passwords)
 
 ## Controllers
-  - All controllers require unit tests, and moocks for the tests. 
+  - All controllers require unit tests, and may require mocks used within the tests.
 
 ## Database 
   - This service uses a SQLite3 database and the Go SQL driver. 
