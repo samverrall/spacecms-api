@@ -16,18 +16,21 @@ import (
 // Endpoints wraps the "invoice" service endpoints.
 type Endpoints struct {
 	CreateAccount goa.Endpoint
+	GetAccount    goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "invoice" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
 		CreateAccount: NewCreateAccountEndpoint(s),
+		GetAccount:    NewGetAccountEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "invoice" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.CreateAccount = m(e.CreateAccount)
+	e.GetAccount = m(e.GetAccount)
 }
 
 // NewCreateAccountEndpoint returns an endpoint function that calls the method
@@ -35,6 +38,15 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 func NewCreateAccountEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*User)
-		return s.CreateAccount(ctx, p)
+		return nil, s.CreateAccount(ctx, p)
+	}
+}
+
+// NewGetAccountEndpoint returns an endpoint function that calls the method
+// "get-account" of service "invoice".
+func NewGetAccountEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*GetAccountPayload)
+		return s.GetAccount(ctx, p)
 	}
 }

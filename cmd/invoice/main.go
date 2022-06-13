@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
 	"net"
 	"net/url"
 	"os"
@@ -12,8 +11,9 @@ import (
 	"sync"
 	"syscall"
 
-	invoiceapi "github.com/samverrall/invoice-app"
+	invoiceapi "github.com/samverrall/invoice-app/controllers"
 	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -30,10 +30,14 @@ func main() {
 
 	// Setup logger. Replace logger with your own log package of choice.
 	var (
-		logger *log.Logger
+		logger *logrus.Logger
 	)
 	{
-		logger = log.New(os.Stderr, "[invoiceapi] ", log.Ltime)
+		logger = &logrus.Logger{
+			Out:       os.Stderr,
+			Formatter: new(logrus.TextFormatter),
+			Level:     logrus.DebugLevel,
+		}
 	}
 
 	// Initialize the services.
@@ -41,7 +45,7 @@ func main() {
 		invoiceSvc invoice.Service
 	)
 	{
-		invoiceSvc = invoiceapi.NewInvoice(logger)
+		invoiceSvc = invoiceapi.NewInvoice(logger, nil)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services

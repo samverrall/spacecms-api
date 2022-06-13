@@ -11,6 +11,7 @@ import (
 
 	invoicesvr "github.com/samverrall/invoice-app/gen/http/invoice/server"
 	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	"github.com/sirupsen/logrus"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
 	"goa.design/goa/v3/middleware"
@@ -18,14 +19,14 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *invoice.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *invoice.Endpoints, wg *sync.WaitGroup, errc chan error, logger *logrus.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
 		adapter middleware.Logger
 	)
 	{
-		adapter = middleware.NewLogger(logger)
+		adapter = middleware.NewLogger(log.New(os.Stderr, "[invoiceapi] ", log.Ltime))
 	}
 
 	// Provide the transport specific request decoder and response encoder.
@@ -103,10 +104,10 @@ func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *invoice
 // errorHandler returns a function that writes and logs the given error.
 // The function also writes and logs the error unique ID so that it's possible
 // to correlate.
-func errorHandler(logger *log.Logger) func(context.Context, http.ResponseWriter, error) {
+func errorHandler(logger *logrus.Logger) func(context.Context, http.ResponseWriter, error) {
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
 		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
-		logger.Printf("[%s] ERROR: %s", id, err.Error())
+		logger.Error("[%s] ERROR: %s", id, err.Error())
 	}
 }

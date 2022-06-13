@@ -1,3 +1,3 @@
 #!/bin/bash
 
-go build github.com/samverrall/invoice-app/cmd/invoice
+go build -o invoice-api github.com/samverrall/invoice-app/cmd/invoice
