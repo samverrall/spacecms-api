@@ -6,10 +6,10 @@ import (
 	"github.com/samverrall/invoice-app/gen/invoice"
 )
 
-func (d *DataStore) CreateUser(ctx context.Context, email, password, name string) error {
-	const sqlstr = `INSERT INTO users (email, name, password_hash) VALUES (?,?,?)`
+func (d *DataStore) CreateUser(ctx context.Context, id string, email, password, name string) error {
+	const sqlstr = `INSERT INTO users (id, email, name, pass_hash) VALUES (?,?,?,?)`
 
-	if _, err := d.db.ExecContext(ctx, sqlstr, email, name, password); err != nil {
+	if _, err := d.db.Exec(sqlstr, id, email, name, password); err != nil {
 		return err
 	}
 
