@@ -14,13 +14,17 @@ import (
 
 func Test_invoicesrvc_CreateAccount(t *testing.T) {
 	const (
-		failedToInsertErr = "failed@test.com"
-		successInsert     = "success@test.com"
+		failedToInsertErr     = "failed@test.com"
+		checkExistingUserFail = "existing@fail.com"
+		successInsert         = "success@test.com"
 	)
 
 	var getGetUserByEmailMock = func(m *dm.DBInterface, t *testing.T, email string) {
 		// GetUserByEmail(ctx context.Context, email string) (*invoice.User, error)
 		switch email {
+		case checkExistingUserFail:
+			m.On("GetUserByEmail", mock.AnythingOfType("*context.emptyCtx"), email).
+				Return(nil, fmt.Errorf("Failed to check if user exists, unit test error."))
 		default:
 			m.On("GetUserByEmail", mock.AnythingOfType("*context.emptyCtx"), email).
 				Return(nil, nil)
@@ -51,6 +55,13 @@ func Test_invoicesrvc_CreateAccount(t *testing.T) {
 		payload *invoice.User
 		wantErr bool
 	}{
+		{
+			name: "Check if user exists fail",
+			payload: &invoice.User{
+				Email: checkExistingUserFail,
+			},
+			wantErr: true,
+		},
 		{
 			name: "Insert user fail",
 			payload: &invoice.User{
