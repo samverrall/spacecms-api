@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,29 +11,29 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const (
-	defaultDatabaseDir = "/Users/samverrall/projects/invoice-app/.data/database.db"
-	migrationsDir      = "/Users/samverrall/projects/invoice-app/database/migration"
-)
-
-func getMigrationsDir() string {
+func getMigrationsDir() (string, error) {
 	migrationsDir := os.Getenv("MIGRATIONS_DIR")
 	if strings.TrimSpace(migrationsDir) == "" {
-		return defaultDatabaseDir
+		return "", errors.New("no MIGRATIONS_DIR set")
 	}
-	return migrationsDir
+	return migrationsDir, nil
 }
 
-func getDatabaseDir() string {
+func getDatabaseDir() (string, error) {
 	dbDir := os.Getenv("DATABASE_DIR")
 	if strings.TrimSpace(dbDir) == "" {
-		return defaultDatabaseDir
+		return "", errors.New("no DATABASE_DIR set")
 	}
-	return dbDir
+	return dbDir, nil
 }
 
 func Get() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", getDatabaseDir())
+	dbDirectory, err := getDatabaseDir()
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := sql.Open("sqlite3", dbDirectory)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +44,12 @@ func Get() (*sql.DB, error) {
 }
 
 func getQueryFromFile(filename string) (string, error) {
-	file := filepath.Join(getMigrationsDir(), filename)
+	migrationsDir, err := getMigrationsDir()
+	if err != nil {
+		return "", err
+	}
+
+	file := filepath.Join(migrationsDir, filename)
 	bytes, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
@@ -56,7 +62,12 @@ func getQueryFromFile(filename string) (string, error) {
 
 // migrate will read the migrations directory, and attempt to exec any .SQL files.
 func migrate(db *sql.DB) error {
-	migrationFiles, rErr := os.ReadDir(getMigrationsDir())
+	migrationDir, err := getMigrationsDir()
+	if err != nil {
+		return err
+	}
+
+	migrationFiles, rErr := os.ReadDir(migrationDir)
 	if rErr != nil {
 		return rErr
 	}
