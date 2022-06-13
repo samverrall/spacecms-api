@@ -22,7 +22,7 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 	{
 		err = json.Unmarshal([]byte(invoiceCreateAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Ut odio neque nesciunt.\",\n      \"id\": \"Illo itaque eveniet non rerum et.\",\n      \"name\": \"Quisquam vel.\",\n      \"password\": \"Consectetur esse officiis voluptatum ea nihil fugit.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Illo itaque eveniet non rerum et.\",\n      \"id\": \"Atque voluptas placeat alias sed ut.\",\n      \"name\": \"Ut odio neque nesciunt.\",\n      \"password\": \"Quisquam vel.\"\n   }'")
 		}
 	}
 	v := &invoice.User{
@@ -31,19 +31,6 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 		Name:     body.Name,
 		Password: body.Password,
 	}
-
-	return v, nil
-}
-
-// BuildGetAccountPayload builds the payload for the invoice get-account
-// endpoint from CLI flags.
-func BuildGetAccountPayload(invoiceGetAccountUserID string) (*invoice.GetAccountPayload, error) {
-	var userID string
-	{
-		userID = invoiceGetAccountUserID
-	}
-	v := &invoice.GetAccountPayload{}
-	v.UserID = &userID
 
 	return v, nil
 }

@@ -7,16 +7,7 @@
 
 package server
 
-import (
-	"fmt"
-)
-
 // CreateAccountInvoicePath returns the URL path to the invoice service create-account HTTP endpoint.
 func CreateAccountInvoicePath() string {
 	return "/create-account"
-}
-
-// GetAccountInvoicePath returns the URL path to the invoice service get-account HTTP endpoint.
-func GetAccountInvoicePath(userID string) string {
-	return fmt.Sprintf("/create-account/%v", userID)
 }

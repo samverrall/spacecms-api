@@ -23,17 +23,17 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `invoice (create-account|get-account)
+	return `invoice create-account
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` invoice create-account --body '{
-      "email": "Ut odio neque nesciunt.",
-      "id": "Illo itaque eveniet non rerum et.",
-      "name": "Quisquam vel.",
-      "password": "Consectetur esse officiis voluptatum ea nihil fugit."
+      "email": "Illo itaque eveniet non rerum et.",
+      "id": "Atque voluptas placeat alias sed ut.",
+      "name": "Ut odio neque nesciunt.",
+      "password": "Quisquam vel."
    }'` + "\n" +
 		""
 }
@@ -52,13 +52,9 @@ func ParseEndpoint(
 
 		invoiceCreateAccountFlags    = flag.NewFlagSet("create-account", flag.ExitOnError)
 		invoiceCreateAccountBodyFlag = invoiceCreateAccountFlags.String("body", "REQUIRED", "")
-
-		invoiceGetAccountFlags      = flag.NewFlagSet("get-account", flag.ExitOnError)
-		invoiceGetAccountUserIDFlag = invoiceGetAccountFlags.String("user-id", "REQUIRED", "")
 	)
 	invoiceFlags.Usage = invoiceUsage
 	invoiceCreateAccountFlags.Usage = invoiceCreateAccountUsage
-	invoiceGetAccountFlags.Usage = invoiceGetAccountUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -97,9 +93,6 @@ func ParseEndpoint(
 			case "create-account":
 				epf = invoiceCreateAccountFlags
 
-			case "get-account":
-				epf = invoiceGetAccountFlags
-
 			}
 
 		}
@@ -128,9 +121,6 @@ func ParseEndpoint(
 			case "create-account":
 				endpoint = c.CreateAccount()
 				data, err = invoicec.BuildCreateAccountPayload(*invoiceCreateAccountBodyFlag)
-			case "get-account":
-				endpoint = c.GetAccount()
-				data, err = invoicec.BuildGetAccountPayload(*invoiceGetAccountUserIDFlag)
 			}
 		}
 	}
@@ -149,7 +139,6 @@ Usage:
 
 COMMAND:
     create-account: CreateAccount implements create-account.
-    get-account: GetAccount implements get-account.
 
 Additional help:
     %[1]s invoice COMMAND --help
@@ -163,21 +152,10 @@ CreateAccount implements create-account.
 
 Example:
     %[1]s invoice create-account --body '{
-      "email": "Ut odio neque nesciunt.",
-      "id": "Illo itaque eveniet non rerum et.",
-      "name": "Quisquam vel.",
-      "password": "Consectetur esse officiis voluptatum ea nihil fugit."
+      "email": "Illo itaque eveniet non rerum et.",
+      "id": "Atque voluptas placeat alias sed ut.",
+      "name": "Ut odio neque nesciunt.",
+      "password": "Quisquam vel."
    }'
-`, os.Args[0])
-}
-
-func invoiceGetAccountUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice get-account -user-id STRING
-
-GetAccount implements get-account.
-    -user-id STRING: 
-
-Example:
-    %[1]s invoice get-account --user-id "Voluptates sint."
 `, os.Args[0])
 }

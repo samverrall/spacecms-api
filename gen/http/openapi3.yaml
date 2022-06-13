@@ -19,63 +19,13 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccountRequestBody'
             example:
-              email: Ut odio neque nesciunt.
-              id: Illo itaque eveniet non rerum et.
-              name: Quisquam vel.
-              password: Consectetur esse officiis voluptatum ea nihil fugit.
+              email: Illo itaque eveniet non rerum et.
+              id: Atque voluptas placeat alias sed ut.
+              name: Ut odio neque nesciunt.
+              password: Quisquam vel.
       responses:
         "201":
           description: Created response.
-        "400":
-          description: 'badrequest: Bad Request response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "401":
-          description: 'unauthorized: Unauthorized response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "404":
-          description: 'notfound: Not Found response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-        "500":
-          description: 'servererror: Internal Server Error response.'
-          content:
-            application/vnd.goa.error:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /create-account/{userID}:
-    get:
-      tags:
-      - invoice
-      summary: get-account invoice
-      operationId: invoice#get-account
-      parameters:
-      - name: userID
-        in: path
-        required: true
-        schema:
-          type: string
-          example: Officia voluptates ex quod adipisci laudantium.
-        example: Placeat occaecati voluptas molestiae nobis facere.
-      responses:
-        "200":
-          description: OK response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CreateAccountRequestBody'
-              example:
-                email: Deserunt voluptas libero.
-                id: Aut molestiae vel autem aut.
-                name: Quas nulla et ut hic.
-                password: Quaerat quasi maxime nam est.
         "400":
           description: 'badrequest: Bad Request response.'
           content:
@@ -116,21 +66,25 @@ components:
       properties:
         email:
           type: string
-          example: Nisi rem.
+          description: Email address of the user
+          example: Perspiciatis voluptas.
         id:
           type: string
-          example: Aperiam nesciunt tempora praesentium aperiam.
+          description: ID of the user
+          example: Odio fuga.
         name:
           type: string
-          example: Laborum fugit.
+          description: Full name of the user
+          example: Veniam cumque est dignissimos magni quos omnis.
         password:
           type: string
-          example: Nihil ex.
+          description: Password of the user. This is never returned to the client.
+          example: Expedita sed soluta.
       example:
-        email: Dolore molestias.
-        id: Placeat iusto culpa labore aut corporis.
-        name: Officia expedita repellat velit neque illum voluptatem.
-        password: Officiis eius id quod quae possimus.
+        email: Necessitatibus quos facilis quibusdam et alias.
+        id: Quis autem quibusdam non nisi alias.
+        name: Debitis nemo assumenda aperiam natus.
+        password: Ex pariatur odio deserunt.
       required:
       - email
       - name
@@ -141,7 +95,7 @@ components:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: false
+          example: true
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of
@@ -163,7 +117,7 @@ components:
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       example:
         id: 3F1FKVRR
         message: Value of ID must be an integer

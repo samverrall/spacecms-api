@@ -39,19 +39,5 @@ var _ = Service("invoice", func() {
 		})
 	})
 
-	Method("get-account", func() {
-		Result(user)
-		Payload(func() {
-			Attribute("userID", String)
-		})
-		HTTP(func() {
-			GET("/create-account/{userID}")
-			Params(func() {
-				Param("userID")
-			})
-			Response(StatusOK)
-		})
-	})
-
 	Files("/openapi.json", "./gen/http/openapi.json")
 })

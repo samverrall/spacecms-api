@@ -16,14 +16,12 @@ import (
 // Client is the "invoice" service client.
 type Client struct {
 	CreateAccountEndpoint goa.Endpoint
-	GetAccountEndpoint    goa.Endpoint
 }
 
 // NewClient initializes a "invoice" service client given the endpoints.
-func NewClient(createAccount, getAccount goa.Endpoint) *Client {
+func NewClient(createAccount goa.Endpoint) *Client {
 	return &Client{
 		CreateAccountEndpoint: createAccount,
-		GetAccountEndpoint:    getAccount,
 	}
 }
 
@@ -31,14 +29,4 @@ func NewClient(createAccount, getAccount goa.Endpoint) *Client {
 func (c *Client) CreateAccount(ctx context.Context, p *User) (err error) {
 	_, err = c.CreateAccountEndpoint(ctx, p)
 	return
-}
-
-// GetAccount calls the "get-account" endpoint of the "invoice" service.
-func (c *Client) GetAccount(ctx context.Context, p *GetAccountPayload) (res *User, err error) {
-	var ires interface{}
-	ires, err = c.GetAccountEndpoint(ctx, p)
-	if err != nil {
-		return
-	}
-	return ires.(*User), nil
 }
