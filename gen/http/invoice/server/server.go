@@ -3,7 +3,7 @@
 // invoice HTTP server
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-app/invoice/design
+// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
 
 package server
 
@@ -11,7 +11,7 @@ import (
 	"context"
 	"net/http"
 
-	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )

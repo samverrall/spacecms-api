@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
 
 	mock "github.com/stretchr/testify/mock"
 )

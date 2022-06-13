@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	invoicesvr "github.com/samverrall/invoice-app/gen/http/invoice/server"
-	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	invoicesvr "github.com/samverrall/invoice-api-service/gen/http/invoice/server"
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
 	"github.com/sirupsen/logrus"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"

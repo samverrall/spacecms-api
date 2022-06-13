@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	dm "github.com/samverrall/invoice-app/datastore/mocks"
-	invoice "github.com/samverrall/invoice-app/gen/invoice"
-	"github.com/samverrall/invoice-app/hasher/argon2id"
+	dm "github.com/samverrall/invoice-api-service/datastore/mocks"
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/invoice-api-service/hasher/argon2id"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
 )

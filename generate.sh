@@ -1,3 +1,3 @@
 #!/bin/bash
 
-goa gen github.com/samverrall/invoice-app/invoice/design
+goa gen github.com/samverrall/invoice-api-service/invoice/design

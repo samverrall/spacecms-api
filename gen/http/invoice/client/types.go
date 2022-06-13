@@ -3,12 +3,12 @@
 // invoice HTTP client types
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-app/invoice/design
+// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
 
 package client
 
 import (
-	invoice "github.com/samverrall/invoice-app/gen/invoice"
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
 	goa "goa.design/goa/v3/pkg"
 )
 

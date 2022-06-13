@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"github.com/samverrall/invoice-app/datastore"
-	invoice "github.com/samverrall/invoice-app/gen/invoice"
-	"github.com/samverrall/invoice-app/hasher"
-	"github.com/samverrall/invoice-app/hasher/argon2id"
+	"github.com/samverrall/invoice-api-service/datastore"
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/invoice-api-service/hasher"
+	"github.com/samverrall/invoice-api-service/hasher/argon2id"
 	log "github.com/sirupsen/logrus"
 )
 

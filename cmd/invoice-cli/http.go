@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	cli "github.com/samverrall/invoice-app/gen/http/cli/invoice"
+	cli "github.com/samverrall/invoice-api-service/gen/http/cli/invoice"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
