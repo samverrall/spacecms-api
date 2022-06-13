@@ -108,6 +108,6 @@ func errorHandler(logger *logrus.Logger) func(context.Context, http.ResponseWrit
 	return func(ctx context.Context, w http.ResponseWriter, err error) {
 		id := ctx.Value(middleware.RequestIDKey).(string)
 		_, _ = w.Write([]byte("[" + id + "] encoding: " + err.Error()))
-		logger.Error("[%s] ERROR: %s", id, err.Error())
+		logger.Errorf("[%s] ERROR: %s", id, err.Error())
 	}
 }
