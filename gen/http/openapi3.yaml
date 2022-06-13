@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Invoice App API Service
-  description: REST API for the invoice app.
+  description: RESTFUL API Backend for Invoicify. An open source invoicing web app.
   version: "1.0"
 servers:
 - url: http://localhost:8000
@@ -177,4 +177,4 @@ components:
       - fault
 tags:
 - name: invoice
-  description: REST API for the invoice app.
+  description: RESTFUL API Backend for Invoicify. An open source invoicing web app.

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   title: Invoice App API Service
-  description: REST API for the invoice app.
+  description: RESTFUL API Backend for Invoicify. An open source invoicing web app.
   version: ""
 host: localhost:8000
 consumes:

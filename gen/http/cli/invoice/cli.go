@@ -143,7 +143,7 @@ func ParseEndpoint(
 
 // invoiceUsage displays the usage of the invoice command and its subcommands.
 func invoiceUsage() {
-	fmt.Fprintf(os.Stderr, `REST API for the invoice app.
+	fmt.Fprintf(os.Stderr, `RESTFUL API Backend for Invoicify. An open source invoicing web app.
 Usage:
     %[1]s [globalflags] invoice COMMAND [flags]
 

@@ -13,7 +13,7 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// REST API for the invoice app.
+// RESTFUL API Backend for Invoicify. An open source invoicing web app.
 type Service interface {
 	// CreateAccount implements create-account.
 	CreateAccount(context.Context, *User) (err error)
