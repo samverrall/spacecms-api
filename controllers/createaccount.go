@@ -34,8 +34,7 @@ func (s *invoicesrvc) CreateAccount(ctx context.Context, p *invoice.User) error 
 	hashedPassword, err := s.hasher.Hash(p.Password)
 	if err != nil {
 		s.logger.WithFields(logrus.Fields{
-			"email":    p.Email,
-			"password": p.Password,
+			"email": p.Email,
 		}).Error("Failed to hash password")
 		return apierror.NewResponseError("servererror", "Failed to create account")
 	}
