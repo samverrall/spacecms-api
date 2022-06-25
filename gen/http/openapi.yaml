@@ -13,7 +13,7 @@ produces:
 - application/xml
 - application/gob
 paths:
-  /create-account:
+  /api/v1/create-account:
     post:
       tags:
       - invoice
@@ -51,12 +51,12 @@ paths:
             $ref: '#/definitions/InvoiceCreateAccountServererrorResponseBody'
       schemes:
       - http
-  /openapi.json:
+  /api/v1/openapi.json:
     get:
       tags:
       - invoice
       summary: Download ./gen/http/openapi.json
-      operationId: invoice#/openapi.json
+      operationId: invoice#/api/v1/openapi.json
       responses:
         "200":
           description: File downloaded
@@ -64,7 +64,7 @@ paths:
             type: file
       schemes:
       - http
-  /tokens:
+  /api/v1/tokens:
     post:
       tags:
       - invoice

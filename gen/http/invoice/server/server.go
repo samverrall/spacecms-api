@@ -61,9 +61,9 @@ func New(
 	}
 	return &Server{
 		Mounts: []*MountPoint{
-			{"CreateAccount", "POST", "/create-account"},
-			{"AuthoriseLogin", "POST", "/tokens"},
-			{"./gen/http/openapi.json", "GET", "/openapi.json"},
+			{"CreateAccount", "POST", "/api/v1/create-account"},
+			{"AuthoriseLogin", "POST", "/api/v1/tokens"},
+			{"./gen/http/openapi.json", "GET", "/api/v1/openapi.json"},
 		},
 		CreateAccount:      NewCreateAccountHandler(e.CreateAccount, mux, decoder, encoder, errhandler, formatter),
 		AuthoriseLogin:     NewAuthoriseLoginHandler(e.AuthoriseLogin, mux, decoder, encoder, errhandler, formatter),
@@ -101,7 +101,7 @@ func MountCreateAccountHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/create-account", f)
+	mux.Handle("POST", "/api/v1/create-account", f)
 }
 
 // NewCreateAccountHandler creates a HTTP handler which loads the HTTP request
@@ -152,7 +152,7 @@ func MountAuthoriseLoginHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/tokens", f)
+	mux.Handle("POST", "/api/v1/tokens", f)
 }
 
 // NewAuthoriseLoginHandler creates a HTTP handler which loads the HTTP request
@@ -195,7 +195,7 @@ func NewAuthoriseLoginHandler(
 }
 
 // MountGenHTTPOpenapiJSON configures the mux to serve GET request made to
-// "/openapi.json".
+// "/api/v1/openapi.json".
 func MountGenHTTPOpenapiJSON(mux goahttp.Muxer, h http.Handler) {
-	mux.Handle("GET", "/openapi.json", h.ServeHTTP)
+	mux.Handle("GET", "/api/v1/openapi.json", h.ServeHTTP)
 }

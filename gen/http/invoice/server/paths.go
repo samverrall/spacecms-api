@@ -9,10 +9,10 @@ package server
 
 // CreateAccountInvoicePath returns the URL path to the invoice service CreateAccount HTTP endpoint.
 func CreateAccountInvoicePath() string {
-	return "/create-account"
+	return "/api/v1/create-account"
 }
 
 // AuthoriseLoginInvoicePath returns the URL path to the invoice service AuthoriseLogin HTTP endpoint.
 func AuthoriseLoginInvoicePath() string {
-	return "/tokens"
+	return "/api/v1/tokens"
 }
