@@ -6,11 +6,13 @@ import (
 	"log"
 
 	"github.com/samverrall/invoice-api-service/database"
+	"github.com/samverrall/invoice-api-service/datastore/sqlc"
 	"github.com/samverrall/invoice-api-service/gen/invoice"
 )
 
 type DataStore struct {
-	db *sql.DB
+	db      *sql.DB
+	querier sqlc.Querier
 }
 
 // https://earthly.dev/blog/golang-sqlite/
@@ -22,7 +24,8 @@ func New() *DataStore {
 	}
 
 	return &DataStore{
-		db: db,
+		db:      db,
+		querier: sqlc.New(db),
 	}
 }
 

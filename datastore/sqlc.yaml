@@ -1,0 +1,8 @@
+version: 1
+packages:
+  - path: "sqlc"
+    name: "sqlc"
+    engine: "mysql"
+    schema: "../database/migration"
+    queries: "./queries"
+    emit_interface: true

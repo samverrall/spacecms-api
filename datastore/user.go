@@ -2,28 +2,40 @@ package datastore
 
 import (
 	"context"
+	"database/sql"
 
+	"github.com/samverrall/invoice-api-service/datastore/sqlc"
 	"github.com/samverrall/invoice-api-service/gen/invoice"
 )
 
-func (d *DataStore) CreateUser(ctx context.Context, id string, email, password, name string) error {
-	const sqlstr = `INSERT INTO users (id, email, name, pass_hash) VALUES (?,?,?,?)`
-
-	if _, err := d.db.Exec(sqlstr, id, email, name, password); err != nil {
+func (d *DataStore) CreateUser(ctx context.Context, id string, email, passwordHash, name string) error {
+	if err := d.querier.InsertUser(ctx, sqlc.InsertUserParams{
+		ID: id,
+		Email: sql.NullString{
+			String: email,
+			Valid:  true,
+		},
+		Name:     name,
+		PassHash: passwordHash,
+	}); err != nil {
 		return err
 	}
-
 	return nil
 }
 
 func (d *DataStore) GetUserByEmail(ctx context.Context, email string) (*invoice.User, error) {
-	const sqlstr = `SELECT id, name, email, pass_hash FROM users WHERE email = ?`
-
-	var user invoice.User
-	err := d.db.QueryRowContext(ctx, sqlstr, email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+	user, err := d.querier.GetUserByEmail(ctx, sql.NullString{
+		String: email,
+		Valid:  true,
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &user, nil
+	return &invoice.User{
+		ID:       &user.ID,
+		Email:    email,
+		Name:     user.Name,
+		Password: user.PassHash,
+	}, nil
 }
