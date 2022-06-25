@@ -20,7 +20,9 @@ func (s *invoicesrvc) CreateAccount(ctx context.Context, p *invoice.User) error 
 	user, err := s.dbi.GetUserByEmail(ctx, p.Email)
 	switch {
 	case err != nil && !errors.Is(err, sql.ErrNoRows):
-		s.logger.Error("Failed to determind if user exists")
+		s.logger.WithFields(logrus.Fields{
+			"error": err.Error(),
+		}).Error("Failed to determind if user exists")
 		return apierror.NewResponseError("servererror", "Failed to check if user exists")
 	case user != nil:
 		s.logger.Error("User already exists")
@@ -41,8 +43,7 @@ func (s *invoicesrvc) CreateAccount(ctx context.Context, p *invoice.User) error 
 
 	// Create the user in the database.
 	cErr := s.dbi.CreateUser(ctx, newUserID, p.Email, hashedPassword, p.Name)
-	switch {
-	case cErr != nil:
+	if cErr != nil {
 		s.logger.Error("failed to create user, error: ", cErr)
 		return apierror.NewResponseError("servererror", "Failed to create user")
 	}

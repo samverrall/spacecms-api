@@ -18,8 +18,12 @@ import (
 // Client lists the invoice service endpoint HTTP clients.
 type Client struct {
 	// CreateAccount Doer is the HTTP client used to make requests to the
-	// create-account endpoint.
+	// CreateAccount endpoint.
 	CreateAccountDoer goahttp.Doer
+
+	// AuthoriseLogin Doer is the HTTP client used to make requests to the
+	// AuthoriseLogin endpoint.
+	AuthoriseLoginDoer goahttp.Doer
 
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
@@ -42,6 +46,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		CreateAccountDoer:   doer,
+		AuthoriseLoginDoer:  doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -51,7 +56,7 @@ func NewClient(
 }
 
 // CreateAccount returns an endpoint that makes HTTP requests to the invoice
-// service create-account server.
+// service CreateAccount server.
 func (c *Client) CreateAccount() goa.Endpoint {
 	var (
 		encodeRequest  = EncodeCreateAccountRequest(c.encoder)
@@ -68,7 +73,31 @@ func (c *Client) CreateAccount() goa.Endpoint {
 		}
 		resp, err := c.CreateAccountDoer.Do(req)
 		if err != nil {
-			return nil, goahttp.ErrRequestError("invoice", "create-account", err)
+			return nil, goahttp.ErrRequestError("invoice", "CreateAccount", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// AuthoriseLogin returns an endpoint that makes HTTP requests to the invoice
+// service AuthoriseLogin server.
+func (c *Client) AuthoriseLogin() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeAuthoriseLoginRequest(c.encoder)
+		decodeResponse = DecodeAuthoriseLoginResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildAuthoriseLoginRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.AuthoriseLoginDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("invoice", "AuthoriseLogin", err)
 		}
 		return decodeResponse(resp)
 	}

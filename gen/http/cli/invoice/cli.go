@@ -23,17 +23,17 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `invoice create-account
+	return `invoice (create-account|authorise-login)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` invoice create-account --body '{
-      "email": "Illo itaque eveniet non rerum et.",
-      "id": "Atque voluptas placeat alias sed ut.",
-      "name": "Ut odio neque nesciunt.",
-      "password": "Quisquam vel."
+      "email": "Fugiat aut molestiae vel.",
+      "id": "Repellendus quod deleniti eos dolores voluptates.",
+      "name": "Aut quod deserunt voluptas libero et quas.",
+      "password": "Et ut."
    }'` + "\n" +
 		""
 }
@@ -52,9 +52,14 @@ func ParseEndpoint(
 
 		invoiceCreateAccountFlags    = flag.NewFlagSet("create-account", flag.ExitOnError)
 		invoiceCreateAccountBodyFlag = invoiceCreateAccountFlags.String("body", "REQUIRED", "")
+
+		invoiceAuthoriseLoginFlags         = flag.NewFlagSet("authorise-login", flag.ExitOnError)
+		invoiceAuthoriseLoginBodyFlag      = invoiceAuthoriseLoginFlags.String("body", "REQUIRED", "")
+		invoiceAuthoriseLoginGrantTypeFlag = invoiceAuthoriseLoginFlags.String("grant-type", "access_token", "")
 	)
 	invoiceFlags.Usage = invoiceUsage
 	invoiceCreateAccountFlags.Usage = invoiceCreateAccountUsage
+	invoiceAuthoriseLoginFlags.Usage = invoiceAuthoriseLoginUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -93,6 +98,9 @@ func ParseEndpoint(
 			case "create-account":
 				epf = invoiceCreateAccountFlags
 
+			case "authorise-login":
+				epf = invoiceAuthoriseLoginFlags
+
 			}
 
 		}
@@ -121,6 +129,9 @@ func ParseEndpoint(
 			case "create-account":
 				endpoint = c.CreateAccount()
 				data, err = invoicec.BuildCreateAccountPayload(*invoiceCreateAccountBodyFlag)
+			case "authorise-login":
+				endpoint = c.AuthoriseLogin()
+				data, err = invoicec.BuildAuthoriseLoginPayload(*invoiceAuthoriseLoginBodyFlag, *invoiceAuthoriseLoginGrantTypeFlag)
 			}
 		}
 	}
@@ -138,7 +149,8 @@ Usage:
     %[1]s [globalflags] invoice COMMAND [flags]
 
 COMMAND:
-    create-account: CreateAccount implements create-account.
+    create-account: Create an account by email address and password.
+    authorise-login: Create an account by email address and password.
 
 Additional help:
     %[1]s invoice COMMAND --help
@@ -147,15 +159,30 @@ Additional help:
 func invoiceCreateAccountUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice create-account -body JSON
 
-CreateAccount implements create-account.
+Create an account by email address and password.
     -body JSON: 
 
 Example:
     %[1]s invoice create-account --body '{
-      "email": "Illo itaque eveniet non rerum et.",
-      "id": "Atque voluptas placeat alias sed ut.",
-      "name": "Ut odio neque nesciunt.",
-      "password": "Quisquam vel."
+      "email": "Fugiat aut molestiae vel.",
+      "id": "Repellendus quod deleniti eos dolores voluptates.",
+      "name": "Aut quod deserunt voluptas libero et quas.",
+      "password": "Et ut."
    }'
+`, os.Args[0])
+}
+
+func invoiceAuthoriseLoginUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice authorise-login -body JSON -grant-type STRING
+
+Create an account by email address and password.
+    -body JSON: 
+    -grant-type STRING: 
+
+Example:
+    %[1]s invoice authorise-login --body '{
+      "email": "Et quaerat quasi maxime nam est fugiat.",
+      "password": "Sequi et dolore."
+   }' --grant-type "access_token"
 `, os.Args[0])
 }

@@ -13,7 +13,7 @@ import (
 )
 
 // CreateAccountRequestBody is the type of the "invoice" service
-// "create-account" endpoint HTTP request body.
+// "CreateAccount" endpoint HTTP request body.
 type CreateAccountRequestBody struct {
 	// ID of the user
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
@@ -25,8 +25,28 @@ type CreateAccountRequestBody struct {
 	Password *string `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 }
 
+// AuthoriseLoginRequestBody is the type of the "invoice" service
+// "AuthoriseLogin" endpoint HTTP request body.
+type AuthoriseLoginRequestBody struct {
+	// User email
+	Email *string `form:"email,omitempty" json:"email,omitempty" xml:"email,omitempty"`
+	// User password
+	Password *string `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
+}
+
+// AuthoriseLoginResponseBody is the type of the "invoice" service
+// "AuthoriseLogin" endpoint HTTP response body.
+type AuthoriseLoginResponseBody struct {
+	AccessToken            string `form:"accessToken" json:"accessToken" xml:"accessToken"`
+	RefreshToken           string `form:"refreshToken" json:"refreshToken" xml:"refreshToken"`
+	AccessExpiryTime       int64  `form:"accessExpiryTime" json:"accessExpiryTime" xml:"accessExpiryTime"`
+	RefreshExpiryTime      int64  `form:"refreshExpiryTime" json:"refreshExpiryTime" xml:"refreshExpiryTime"`
+	AccessExpiryTimeStamp  string `form:"accessExpiryTimeStamp" json:"accessExpiryTimeStamp" xml:"accessExpiryTimeStamp"`
+	RefreshExpiryTimeStamp string `form:"refreshExpiryTimeStamp" json:"refreshExpiryTimeStamp" xml:"refreshExpiryTimeStamp"`
+}
+
 // CreateAccountUnauthorizedResponseBody is the type of the "invoice" service
-// "create-account" endpoint HTTP response body for the "unauthorized" error.
+// "CreateAccount" endpoint HTTP response body for the "unauthorized" error.
 type CreateAccountUnauthorizedResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
@@ -44,7 +64,7 @@ type CreateAccountUnauthorizedResponseBody struct {
 }
 
 // CreateAccountServererrorResponseBody is the type of the "invoice" service
-// "create-account" endpoint HTTP response body for the "servererror" error.
+// "CreateAccount" endpoint HTTP response body for the "servererror" error.
 type CreateAccountServererrorResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
@@ -62,7 +82,7 @@ type CreateAccountServererrorResponseBody struct {
 }
 
 // CreateAccountBadrequestResponseBody is the type of the "invoice" service
-// "create-account" endpoint HTTP response body for the "badrequest" error.
+// "CreateAccount" endpoint HTTP response body for the "badrequest" error.
 type CreateAccountBadrequestResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
@@ -80,7 +100,7 @@ type CreateAccountBadrequestResponseBody struct {
 }
 
 // CreateAccountNotfoundResponseBody is the type of the "invoice" service
-// "create-account" endpoint HTTP response body for the "notfound" error.
+// "CreateAccount" endpoint HTTP response body for the "notfound" error.
 type CreateAccountNotfoundResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
@@ -97,8 +117,94 @@ type CreateAccountNotfoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
+// AuthoriseLoginUnauthorizedResponseBody is the type of the "invoice" service
+// "AuthoriseLogin" endpoint HTTP response body for the "unauthorized" error.
+type AuthoriseLoginUnauthorizedResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// AuthoriseLoginServererrorResponseBody is the type of the "invoice" service
+// "AuthoriseLogin" endpoint HTTP response body for the "servererror" error.
+type AuthoriseLoginServererrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// AuthoriseLoginBadrequestResponseBody is the type of the "invoice" service
+// "AuthoriseLogin" endpoint HTTP response body for the "badrequest" error.
+type AuthoriseLoginBadrequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// AuthoriseLoginNotfoundResponseBody is the type of the "invoice" service
+// "AuthoriseLogin" endpoint HTTP response body for the "notfound" error.
+type AuthoriseLoginNotfoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// NewAuthoriseLoginResponseBody builds the HTTP response body from the result
+// of the "AuthoriseLogin" endpoint of the "invoice" service.
+func NewAuthoriseLoginResponseBody(res *invoice.Token) *AuthoriseLoginResponseBody {
+	body := &AuthoriseLoginResponseBody{
+		AccessToken:            res.AccessToken,
+		RefreshToken:           res.RefreshToken,
+		AccessExpiryTime:       res.AccessExpiryTime,
+		RefreshExpiryTime:      res.RefreshExpiryTime,
+		AccessExpiryTimeStamp:  res.AccessExpiryTimeStamp,
+		RefreshExpiryTimeStamp: res.RefreshExpiryTimeStamp,
+	}
+	return body
+}
+
 // NewCreateAccountUnauthorizedResponseBody builds the HTTP response body from
-// the result of the "create-account" endpoint of the "invoice" service.
+// the result of the "CreateAccount" endpoint of the "invoice" service.
 func NewCreateAccountUnauthorizedResponseBody(res *goa.ServiceError) *CreateAccountUnauthorizedResponseBody {
 	body := &CreateAccountUnauthorizedResponseBody{
 		Name:      res.Name,
@@ -112,7 +218,7 @@ func NewCreateAccountUnauthorizedResponseBody(res *goa.ServiceError) *CreateAcco
 }
 
 // NewCreateAccountServererrorResponseBody builds the HTTP response body from
-// the result of the "create-account" endpoint of the "invoice" service.
+// the result of the "CreateAccount" endpoint of the "invoice" service.
 func NewCreateAccountServererrorResponseBody(res *goa.ServiceError) *CreateAccountServererrorResponseBody {
 	body := &CreateAccountServererrorResponseBody{
 		Name:      res.Name,
@@ -126,7 +232,7 @@ func NewCreateAccountServererrorResponseBody(res *goa.ServiceError) *CreateAccou
 }
 
 // NewCreateAccountBadrequestResponseBody builds the HTTP response body from
-// the result of the "create-account" endpoint of the "invoice" service.
+// the result of the "CreateAccount" endpoint of the "invoice" service.
 func NewCreateAccountBadrequestResponseBody(res *goa.ServiceError) *CreateAccountBadrequestResponseBody {
 	body := &CreateAccountBadrequestResponseBody{
 		Name:      res.Name,
@@ -140,7 +246,7 @@ func NewCreateAccountBadrequestResponseBody(res *goa.ServiceError) *CreateAccoun
 }
 
 // NewCreateAccountNotfoundResponseBody builds the HTTP response body from the
-// result of the "create-account" endpoint of the "invoice" service.
+// result of the "CreateAccount" endpoint of the "invoice" service.
 func NewCreateAccountNotfoundResponseBody(res *goa.ServiceError) *CreateAccountNotfoundResponseBody {
 	body := &CreateAccountNotfoundResponseBody{
 		Name:      res.Name,
@@ -153,8 +259,63 @@ func NewCreateAccountNotfoundResponseBody(res *goa.ServiceError) *CreateAccountN
 	return body
 }
 
-// NewCreateAccountUser builds a invoice service create-account endpoint
-// payload.
+// NewAuthoriseLoginUnauthorizedResponseBody builds the HTTP response body from
+// the result of the "AuthoriseLogin" endpoint of the "invoice" service.
+func NewAuthoriseLoginUnauthorizedResponseBody(res *goa.ServiceError) *AuthoriseLoginUnauthorizedResponseBody {
+	body := &AuthoriseLoginUnauthorizedResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewAuthoriseLoginServererrorResponseBody builds the HTTP response body from
+// the result of the "AuthoriseLogin" endpoint of the "invoice" service.
+func NewAuthoriseLoginServererrorResponseBody(res *goa.ServiceError) *AuthoriseLoginServererrorResponseBody {
+	body := &AuthoriseLoginServererrorResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewAuthoriseLoginBadrequestResponseBody builds the HTTP response body from
+// the result of the "AuthoriseLogin" endpoint of the "invoice" service.
+func NewAuthoriseLoginBadrequestResponseBody(res *goa.ServiceError) *AuthoriseLoginBadrequestResponseBody {
+	body := &AuthoriseLoginBadrequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewAuthoriseLoginNotfoundResponseBody builds the HTTP response body from the
+// result of the "AuthoriseLogin" endpoint of the "invoice" service.
+func NewAuthoriseLoginNotfoundResponseBody(res *goa.ServiceError) *AuthoriseLoginNotfoundResponseBody {
+	body := &AuthoriseLoginNotfoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateAccountUser builds a invoice service CreateAccount endpoint payload.
 func NewCreateAccountUser(body *CreateAccountRequestBody) *invoice.User {
 	v := &invoice.User{
 		ID:       body.ID,
@@ -166,14 +327,38 @@ func NewCreateAccountUser(body *CreateAccountRequestBody) *invoice.User {
 	return v
 }
 
+// NewAuthoriseLoginPayload builds a invoice service AuthoriseLogin endpoint
+// payload.
+func NewAuthoriseLoginPayload(body *AuthoriseLoginRequestBody, grantType string) *invoice.AuthoriseLoginPayload {
+	v := &invoice.AuthoriseLoginPayload{
+		Email:    *body.Email,
+		Password: *body.Password,
+	}
+	v.GrantType = grantType
+
+	return v
+}
+
 // ValidateCreateAccountRequestBody runs the validations defined on
-// Create-AccountRequestBody
+// CreateAccountRequestBody
 func ValidateCreateAccountRequestBody(body *CreateAccountRequestBody) (err error) {
 	if body.Email == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("email", "body"))
 	}
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.Password == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("password", "body"))
+	}
+	return
+}
+
+// ValidateAuthoriseLoginRequestBody runs the validations defined on
+// AuthoriseLoginRequestBody
+func ValidateAuthoriseLoginRequestBody(body *AuthoriseLoginRequestBody) (err error) {
+	if body.Email == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("email", "body"))
 	}
 	if body.Password == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("password", "body"))

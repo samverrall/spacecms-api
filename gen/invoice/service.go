@@ -15,8 +15,10 @@ import (
 
 // RESTFUL API Backend for Invoicify. An open source invoicing web app.
 type Service interface {
-	// CreateAccount implements create-account.
+	// Create an account by email address and password.
 	CreateAccount(context.Context, *User) (err error)
+	// Create an account by email address and password.
+	AuthoriseLogin(context.Context, *AuthoriseLoginPayload) (res *Token, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -27,9 +29,29 @@ const ServiceName = "invoice"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"create-account"}
+var MethodNames = [2]string{"CreateAccount", "AuthoriseLogin"}
 
-// User is the payload type of the invoice service create-account method.
+// AuthoriseLoginPayload is the payload type of the invoice service
+// AuthoriseLogin method.
+type AuthoriseLoginPayload struct {
+	GrantType string
+	// User email
+	Email string
+	// User password
+	Password string
+}
+
+// Token is the result type of the invoice service AuthoriseLogin method.
+type Token struct {
+	AccessToken            string
+	RefreshToken           string
+	AccessExpiryTime       int64
+	RefreshExpiryTime      int64
+	AccessExpiryTimeStamp  string
+	RefreshExpiryTimeStamp string
+}
+
+// User is the payload type of the invoice service CreateAccount method.
 type User struct {
 	// ID of the user
 	ID *string

@@ -17,10 +17,10 @@ func (d *DataStore) CreateUser(ctx context.Context, id string, email, password, 
 }
 
 func (d *DataStore) GetUserByEmail(ctx context.Context, email string) (*invoice.User, error) {
-	const sqlstr = `SELECT id, name, email, is_active FROM users WHERE email = ?`
+	const sqlstr = `SELECT id, name, email, pass_hash FROM users WHERE email = ?`
 
 	var user invoice.User
-	err := d.db.QueryRowContext(ctx, sqlstr, email).Scan(&user.ID, &user.Name, &user.Email)
+	err := d.db.QueryRowContext(ctx, sqlstr, email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
 		return nil, err
 	}

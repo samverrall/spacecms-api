@@ -9,7 +9,7 @@ var _ = API("invoice", func() {
 	Description("RESTFUL API Backend for Invoicify. An open source invoicing web app.")
 	Server("invoice", func() {
 		Host("localhost", func() {
-			URI("http://localhost:8000")
+			URI("http://localhost:8000/api/v1")
 			URI("grpc://localhost:8080")
 		})
 	})
@@ -30,12 +30,38 @@ var _ = Service("invoice", func() {
 		Response("notfound", StatusNotFound)
 	})
 
-	Method("create-account", func() {
+	Method("CreateAccount", func() {
+		Description("Create an account by email address and password.")
+
 		Payload(user)
 
 		HTTP(func() {
 			POST("/create-account")
 			Response(StatusCreated)
+		})
+	})
+
+	Method("AuthoriseLogin", func() {
+		Description("Create an account by email address and password.")
+
+		Payload(func() {
+			Attribute("grant_type", String, func() {
+				Default("access_token")
+				Enum("access_token", "refresh_token")
+			})
+			Attribute("email", String, "User email")
+			Attribute("password", String, "User password")
+			Required("email", "password")
+		})
+
+		Result(tokenResponse)
+
+		HTTP(func() {
+			POST("/tokens")
+			Params(func() {
+				Param("grant_type")
+			})
+			Response(StatusOK)
 		})
 	})
 

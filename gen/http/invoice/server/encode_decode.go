@@ -13,12 +13,13 @@ import (
 	"io"
 	"net/http"
 
+	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
 
 // EncodeCreateAccountResponse returns an encoder for responses returned by the
-// invoice create-account endpoint.
+// invoice CreateAccount endpoint.
 func EncodeCreateAccountResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		w.WriteHeader(http.StatusCreated)
@@ -27,7 +28,7 @@ func EncodeCreateAccountResponse(encoder func(context.Context, http.ResponseWrit
 }
 
 // DecodeCreateAccountRequest returns a decoder for requests sent to the
-// invoice create-account endpoint.
+// invoice CreateAccount endpoint.
 func DecodeCreateAccountRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
@@ -52,7 +53,7 @@ func DecodeCreateAccountRequest(mux goahttp.Muxer, decoder func(*http.Request) g
 }
 
 // EncodeCreateAccountError returns an encoder for errors returned by the
-// create-account invoice endpoint.
+// CreateAccount invoice endpoint.
 func EncodeCreateAccountError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
 	encodeError := goahttp.ErrorEncoder(encoder, formatter)
 	return func(ctx context.Context, w http.ResponseWriter, v error) error {
@@ -109,6 +110,127 @@ func EncodeCreateAccountError(encoder func(context.Context, http.ResponseWriter)
 				body = formatter(res)
 			} else {
 				body = NewCreateAccountNotfoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
+// EncodeAuthoriseLoginResponse returns an encoder for responses returned by
+// the invoice AuthoriseLogin endpoint.
+func EncodeAuthoriseLoginResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*invoice.Token)
+		enc := encoder(ctx, w)
+		body := NewAuthoriseLoginResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeAuthoriseLoginRequest returns a decoder for requests sent to the
+// invoice AuthoriseLogin endpoint.
+func DecodeAuthoriseLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body AuthoriseLoginRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateAuthoriseLoginRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+
+		var (
+			grantType string
+		)
+		grantTypeRaw := r.URL.Query().Get("grant_type")
+		if grantTypeRaw != "" {
+			grantType = grantTypeRaw
+		} else {
+			grantType = "access_token"
+		}
+		if !(grantType == "access_token" || grantType == "refresh_token") {
+			err = goa.MergeErrors(err, goa.InvalidEnumValueError("grantType", grantType, []interface{}{"access_token", "refresh_token"}))
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewAuthoriseLoginPayload(&body, grantType)
+
+		return payload, nil
+	}
+}
+
+// EncodeAuthoriseLoginError returns an encoder for errors returned by the
+// AuthoriseLogin invoice endpoint.
+func EncodeAuthoriseLoginError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en ErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "unauthorized":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewAuthoriseLoginUnauthorizedResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusUnauthorized)
+			return enc.Encode(body)
+		case "servererror":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewAuthoriseLoginServererrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		case "badrequest":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewAuthoriseLoginBadrequestResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		case "notfound":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewAuthoriseLoginNotfoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
 			w.WriteHeader(http.StatusNotFound)

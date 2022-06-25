@@ -4,14 +4,15 @@ info:
   description: RESTFUL API Backend for Invoicify. An open source invoicing web app.
   version: "1.0"
 servers:
-- url: http://localhost:8000
+- url: http://localhost:8000/api/v1
 paths:
   /create-account:
     post:
       tags:
       - invoice
-      summary: create-account invoice
-      operationId: invoice#create-account
+      summary: CreateAccount invoice
+      description: Create an account by email address and password.
+      operationId: invoice#CreateAccount
       requestBody:
         required: true
         content:
@@ -19,10 +20,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccountRequestBody'
             example:
-              email: Illo itaque eveniet non rerum et.
-              id: Atque voluptas placeat alias sed ut.
-              name: Ut odio neque nesciunt.
-              password: Quisquam vel.
+              email: Fugiat aut molestiae vel.
+              id: Repellendus quod deleniti eos dolores voluptates.
+              name: Aut quod deserunt voluptas libero et quas.
+              password: Et ut.
       responses:
         "201":
           description: Created response.
@@ -59,32 +60,115 @@ paths:
       responses:
         "200":
           description: File downloaded
+  /tokens:
+    post:
+      tags:
+      - invoice
+      summary: AuthoriseLogin invoice
+      description: Create an account by email address and password.
+      operationId: invoice#AuthoriseLogin
+      parameters:
+      - name: grant_type
+        in: query
+        allowEmptyValue: true
+        schema:
+          type: string
+          default: access_token
+          example: access_token
+          enum:
+          - access_token
+          - refresh_token
+        example: access_token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthoriseLoginRequestBody'
+            example:
+              email: Et quaerat quasi maxime nam est fugiat.
+              password: Sequi et dolore.
+      responses:
+        "200":
+          description: OK response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+              example:
+                accessExpiryTime: 67623043014199361
+                accessExpiryTimeStamp: Est fuga voluptas et ab.
+                accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
+                refreshExpiryTime: 5031187896088648523
+                refreshExpiryTimeStamp: Deserunt earum voluptatem architecto.
+                refreshToken: Facilis libero perferendis eligendi quis quia rerum.
+        "400":
+          description: 'badrequest: Bad Request response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: 'notfound: Not Found response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: 'servererror: Internal Server Error response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
+    AuthoriseLoginRequestBody:
+      type: object
+      properties:
+        email:
+          type: string
+          description: User email
+          example: Veniam facere doloribus veritatis minima eum.
+        password:
+          type: string
+          description: User password
+          example: Est vel consequatur.
+      example:
+        email: Aliquid voluptates magni vero.
+        password: Culpa at voluptatum ipsa dolor ea.
+      required:
+      - email
+      - password
     CreateAccountRequestBody:
       type: object
       properties:
         email:
           type: string
           description: Email address of the user
-          example: Perspiciatis voluptas.
+          example: Voluptates ex quod adipisci laudantium libero placeat.
         id:
           type: string
           description: ID of the user
-          example: Odio fuga.
+          example: Soluta qui nesciunt illo.
         name:
           type: string
           description: Full name of the user
-          example: Veniam cumque est dignissimos magni quos omnis.
+          example: Voluptas molestiae.
         password:
           type: string
           description: Password of the user. This is never returned to the client.
-          example: Expedita sed soluta.
+          example: Facere maxime quia assumenda.
       example:
-        email: Necessitatibus quos facilis quibusdam et alias.
-        id: Quis autem quibusdam non nisi alias.
-        name: Debitis nemo assumenda aperiam natus.
-        password: Ex pariatur odio deserunt.
+        email: Architecto animi aut quibusdam tenetur occaecati ipsa.
+        id: Sint sapiente ipsum qui non repellat doloremque.
+        name: Illum ipsam ut ipsa non enim.
+        password: Nobis quia.
       required:
       - email
       - name
@@ -95,7 +179,7 @@ components:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: true
+          example: false
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of
@@ -129,6 +213,43 @@ components:
       - temporary
       - timeout
       - fault
+    Token:
+      type: object
+      properties:
+        accessExpiryTime:
+          type: integer
+          example: 3060025047012573426
+          format: int64
+        accessExpiryTimeStamp:
+          type: string
+          example: Est temporibus.
+        accessToken:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
+        refreshExpiryTime:
+          type: integer
+          example: 5946692650975640505
+          format: int64
+        refreshExpiryTimeStamp:
+          type: string
+          example: Et ipsum facilis.
+        refreshToken:
+          type: string
+          example: Sit ut aut et nihil.
+      example:
+        accessExpiryTime: 9101595108846684392
+        accessExpiryTimeStamp: Sit eaque.
+        accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
+        refreshExpiryTime: 4514162953042510188
+        refreshExpiryTimeStamp: Veritatis facilis architecto doloribus quo at dignissimos.
+        refreshToken: Similique aut id est.
+      required:
+      - accessToken
+      - refreshToken
+      - accessExpiryTime
+      - refreshExpiryTime
+      - accessExpiryTimeStamp
+      - refreshExpiryTimeStamp
 tags:
 - name: invoice
   description: RESTFUL API Backend for Invoicify. An open source invoicing web app.

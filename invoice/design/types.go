@@ -14,3 +14,15 @@ var user = Type("User", func() {
 	// These fields have to be on the user or the API will error.
 	Required("email", "name", "password")
 })
+
+var tokenResponse = Type("Token", func() {
+	Attribute("accessToken", String, func() {
+		Example("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0")
+	})
+	Attribute("refreshToken", String)
+	Attribute("accessExpiryTime", Int64)
+	Attribute("refreshExpiryTime", Int64)
+	Attribute("accessExpiryTimeStamp", String)
+	Attribute("refreshExpiryTimeStamp", String)
+	Required("accessToken", "refreshToken", "accessExpiryTime", "refreshExpiryTime", "accessExpiryTimeStamp", "refreshExpiryTimeStamp")
+})

@@ -19,12 +19,12 @@ import (
 )
 
 // BuildCreateAccountRequest instantiates a HTTP request object with method and
-// path set to call the "invoice" service "create-account" endpoint
+// path set to call the "invoice" service "CreateAccount" endpoint
 func (c *Client) BuildCreateAccountRequest(ctx context.Context, v interface{}) (*http.Request, error) {
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateAccountInvoicePath()}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
-		return nil, goahttp.ErrInvalidURL("invoice", "create-account", u.String(), err)
+		return nil, goahttp.ErrInvalidURL("invoice", "CreateAccount", u.String(), err)
 	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -34,23 +34,23 @@ func (c *Client) BuildCreateAccountRequest(ctx context.Context, v interface{}) (
 }
 
 // EncodeCreateAccountRequest returns an encoder for requests sent to the
-// invoice create-account server.
+// invoice CreateAccount server.
 func EncodeCreateAccountRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
 		p, ok := v.(*invoice.User)
 		if !ok {
-			return goahttp.ErrInvalidType("invoice", "create-account", "*invoice.User", v)
+			return goahttp.ErrInvalidType("invoice", "CreateAccount", "*invoice.User", v)
 		}
 		body := NewCreateAccountRequestBody(p)
 		if err := encoder(req).Encode(&body); err != nil {
-			return goahttp.ErrEncodingError("invoice", "create-account", err)
+			return goahttp.ErrEncodingError("invoice", "CreateAccount", err)
 		}
 		return nil
 	}
 }
 
 // DecodeCreateAccountResponse returns a decoder for responses returned by the
-// invoice create-account endpoint. restoreBody controls whether the response
+// invoice CreateAccount endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
 // DecodeCreateAccountResponse may return the following errors:
 //	- "unauthorized" (type *goa.ServiceError): http.StatusUnauthorized
@@ -82,11 +82,11 @@ func DecodeCreateAccountResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "create-account", err)
+				return nil, goahttp.ErrDecodingError("invoice", "CreateAccount", err)
 			}
 			err = ValidateCreateAccountUnauthorizedResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "create-account", err)
+				return nil, goahttp.ErrValidationError("invoice", "CreateAccount", err)
 			}
 			return nil, NewCreateAccountUnauthorized(&body)
 		case http.StatusInternalServerError:
@@ -96,11 +96,11 @@ func DecodeCreateAccountResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "create-account", err)
+				return nil, goahttp.ErrDecodingError("invoice", "CreateAccount", err)
 			}
 			err = ValidateCreateAccountServererrorResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "create-account", err)
+				return nil, goahttp.ErrValidationError("invoice", "CreateAccount", err)
 			}
 			return nil, NewCreateAccountServererror(&body)
 		case http.StatusBadRequest:
@@ -110,11 +110,11 @@ func DecodeCreateAccountResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "create-account", err)
+				return nil, goahttp.ErrDecodingError("invoice", "CreateAccount", err)
 			}
 			err = ValidateCreateAccountBadrequestResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "create-account", err)
+				return nil, goahttp.ErrValidationError("invoice", "CreateAccount", err)
 			}
 			return nil, NewCreateAccountBadrequest(&body)
 		case http.StatusNotFound:
@@ -124,16 +124,152 @@ func DecodeCreateAccountResponse(decoder func(*http.Response) goahttp.Decoder, r
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "create-account", err)
+				return nil, goahttp.ErrDecodingError("invoice", "CreateAccount", err)
 			}
 			err = ValidateCreateAccountNotfoundResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "create-account", err)
+				return nil, goahttp.ErrValidationError("invoice", "CreateAccount", err)
 			}
 			return nil, NewCreateAccountNotfound(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
-			return nil, goahttp.ErrInvalidResponse("invoice", "create-account", resp.StatusCode, string(body))
+			return nil, goahttp.ErrInvalidResponse("invoice", "CreateAccount", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildAuthoriseLoginRequest instantiates a HTTP request object with method
+// and path set to call the "invoice" service "AuthoriseLogin" endpoint
+func (c *Client) BuildAuthoriseLoginRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: AuthoriseLoginInvoicePath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("invoice", "AuthoriseLogin", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeAuthoriseLoginRequest returns an encoder for requests sent to the
+// invoice AuthoriseLogin server.
+func EncodeAuthoriseLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*invoice.AuthoriseLoginPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("invoice", "AuthoriseLogin", "*invoice.AuthoriseLoginPayload", v)
+		}
+		values := req.URL.Query()
+		values.Add("grant_type", p.GrantType)
+		req.URL.RawQuery = values.Encode()
+		body := NewAuthoriseLoginRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("invoice", "AuthoriseLogin", err)
+		}
+		return nil
+	}
+}
+
+// DecodeAuthoriseLoginResponse returns a decoder for responses returned by the
+// invoice AuthoriseLogin endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+// DecodeAuthoriseLoginResponse may return the following errors:
+//	- "unauthorized" (type *goa.ServiceError): http.StatusUnauthorized
+//	- "servererror" (type *goa.ServiceError): http.StatusInternalServerError
+//	- "badrequest" (type *goa.ServiceError): http.StatusBadRequest
+//	- "notfound" (type *goa.ServiceError): http.StatusNotFound
+//	- error: internal error
+func DecodeAuthoriseLoginResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body AuthoriseLoginResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+			}
+			err = ValidateAuthoriseLoginResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+			}
+			res := NewAuthoriseLoginTokenOK(&body)
+			return res, nil
+		case http.StatusUnauthorized:
+			var (
+				body AuthoriseLoginUnauthorizedResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+			}
+			err = ValidateAuthoriseLoginUnauthorizedResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+			}
+			return nil, NewAuthoriseLoginUnauthorized(&body)
+		case http.StatusInternalServerError:
+			var (
+				body AuthoriseLoginServererrorResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+			}
+			err = ValidateAuthoriseLoginServererrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+			}
+			return nil, NewAuthoriseLoginServererror(&body)
+		case http.StatusBadRequest:
+			var (
+				body AuthoriseLoginBadrequestResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+			}
+			err = ValidateAuthoriseLoginBadrequestResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+			}
+			return nil, NewAuthoriseLoginBadrequest(&body)
+		case http.StatusNotFound:
+			var (
+				body AuthoriseLoginNotfoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+			}
+			err = ValidateAuthoriseLoginNotfoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+			}
+			return nil, NewAuthoriseLoginNotfound(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("invoice", "AuthoriseLogin", resp.StatusCode, string(body))
 		}
 	}
 }

@@ -12,9 +12,10 @@ import (
 	"fmt"
 
 	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	goa "goa.design/goa/v3/pkg"
 )
 
-// BuildCreateAccountPayload builds the payload for the invoice create-account
+// BuildCreateAccountPayload builds the payload for the invoice CreateAccount
 // endpoint from CLI flags.
 func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, error) {
 	var err error
@@ -22,7 +23,7 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 	{
 		err = json.Unmarshal([]byte(invoiceCreateAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Illo itaque eveniet non rerum et.\",\n      \"id\": \"Atque voluptas placeat alias sed ut.\",\n      \"name\": \"Ut odio neque nesciunt.\",\n      \"password\": \"Quisquam vel.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Fugiat aut molestiae vel.\",\n      \"id\": \"Repellendus quod deleniti eos dolores voluptates.\",\n      \"name\": \"Aut quod deserunt voluptas libero et quas.\",\n      \"password\": \"Et ut.\"\n   }'")
 		}
 	}
 	v := &invoice.User{
@@ -31,6 +32,38 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 		Name:     body.Name,
 		Password: body.Password,
 	}
+
+	return v, nil
+}
+
+// BuildAuthoriseLoginPayload builds the payload for the invoice AuthoriseLogin
+// endpoint from CLI flags.
+func BuildAuthoriseLoginPayload(invoiceAuthoriseLoginBody string, invoiceAuthoriseLoginGrantType string) (*invoice.AuthoriseLoginPayload, error) {
+	var err error
+	var body AuthoriseLoginRequestBody
+	{
+		err = json.Unmarshal([]byte(invoiceAuthoriseLoginBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Et quaerat quasi maxime nam est fugiat.\",\n      \"password\": \"Sequi et dolore.\"\n   }'")
+		}
+	}
+	var grantType string
+	{
+		if invoiceAuthoriseLoginGrantType != "" {
+			grantType = invoiceAuthoriseLoginGrantType
+			if !(grantType == "access_token" || grantType == "refresh_token") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("grantType", grantType, []interface{}{"access_token", "refresh_token"}))
+			}
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	v := &invoice.AuthoriseLoginPayload{
+		Email:    body.Email,
+		Password: body.Password,
+	}
+	v.GrantType = grantType
 
 	return v, nil
 }
