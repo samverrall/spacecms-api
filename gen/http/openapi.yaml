@@ -155,8 +155,8 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
-      timeout: true
+      temporary: true
+      timeout: false
     required:
     - name
     - id
@@ -171,7 +171,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -189,19 +189,19 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: false
+        example: true
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: AuthoriseLogin_notfound_Response_Body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: true
+      temporary: false
+      timeout: false
     required:
     - name
     - id
@@ -216,14 +216,14 @@ definitions:
       email:
         type: string
         description: User email
-        example: Aut corporis earum dolore.
+        example: Illo officia voluptates ex quod.
       password:
         type: string
         description: User password
-        example: Quam officia.
+        example: Laudantium libero.
     example:
-      email: Repellat velit neque.
-      password: Voluptatem ut officiis eius id quod quae.
+      email: Occaecati voluptas molestiae nobis facere.
+      password: Quia assumenda qui sint sapiente ipsum qui.
     required:
     - email
     - password
@@ -233,31 +233,31 @@ definitions:
     properties:
       accessExpiryTime:
         type: integer
-        example: 9024632453247275197
+        example: 7843115956462264338
         format: int64
       accessExpiryTimeStamp:
         type: string
-        example: Exercitationem in.
+        example: Esse repellendus.
       accessToken:
         type: string
         example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
       refreshExpiryTime:
         type: integer
-        example: 8370629711617933064
+        example: 1334392219278916415
         format: int64
       refreshExpiryTimeStamp:
         type: string
-        example: Accusamus quasi.
+        example: Reiciendis magni et et qui.
       refreshToken:
         type: string
-        example: Vel ut quia est deleniti quae aut.
+        example: Sunt totam temporibus quibusdam quasi autem possimus.
     example:
-      accessExpiryTime: 7843115956462264338
-      accessExpiryTimeStamp: Esse repellendus.
+      accessExpiryTime: 2118452547822873798
+      accessExpiryTimeStamp: Atque nisi rem aut.
       accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-      refreshExpiryTime: 1334392219278916415
-      refreshExpiryTimeStamp: Reiciendis magni et et qui.
-      refreshToken: Sunt totam temporibus quibusdam quasi autem possimus.
+      refreshExpiryTime: 6941582188916535944
+      refreshExpiryTimeStamp: Fugit iste nihil ex ea placeat iusto.
+      refreshToken: Ut veniam voluptatum repellendus et aperiam nesciunt.
     required:
     - accessToken
     - refreshToken
@@ -297,12 +297,12 @@ definitions:
         example: false
     description: AuthoriseLogin_servererror_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: true
+      temporary: false
+      timeout: false
     required:
     - name
     - id
@@ -342,11 +342,11 @@ definitions:
         example: false
     description: AuthoriseLogin_unauthorized_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -362,7 +362,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -380,11 +380,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: CreateAccount_badrequest_Response_Body result type (default view)
     example:
       fault: false
@@ -429,15 +429,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: CreateAccount_notfound_Response_Body result type (default view)
     example:
-      fault: true
+      fault: false
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -452,24 +452,24 @@ definitions:
       email:
         type: string
         description: Email address of the user
-        example: Autem quibusdam non nisi alias voluptatem necessitatibus.
+        example: Nemo assumenda aperiam natus ullam ex pariatur.
       id:
         type: string
         description: ID of the user
-        example: Sed soluta voluptates.
+        example: Alias cumque.
       name:
         type: string
         description: Full name of the user
-        example: Facilis quibusdam et alias.
+        example: Deserunt et at ipsum eveniet autem.
       password:
         type: string
         description: Password of the user. This is never returned to the client.
-        example: Debitis nemo assumenda aperiam natus.
+        example: Eaque quam quidem dolorem libero velit.
     example:
-      email: At ipsum eveniet autem cupiditate eaque.
-      id: Ex pariatur odio deserunt.
-      name: Quidem dolorem libero velit.
-      password: Vero molestiae eius.
+      email: Vel ut quia est deleniti quae aut.
+      id: Vero molestiae eius.
+      name: Tempore eius exercitationem in.
+      password: Accusamus quasi.
     required:
     - email
     - name
@@ -481,7 +481,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -499,18 +499,18 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
         example: true
     description: CreateAccount_servererror_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: true
     required:
     - name
@@ -526,7 +526,7 @@ definitions:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -544,11 +544,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: CreateAccount_unauthorized_Response_Body result type (default view)
     example:
       fault: true
@@ -556,7 +556,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: true
+      timeout: false
     required:
     - name
     - id

@@ -30,6 +30,7 @@ var _ = Service("invoice", func() {
 		Path("/api/v1")
 	})
 
+	// Auth
 	Method("CreateAccount", func() {
 		Description("Create an account by email address and password.")
 
@@ -45,6 +46,7 @@ var _ = Service("invoice", func() {
 		Description("Create an account by email address and password.")
 
 		Payload(func() {
+			Attribute("token", String)
 			Attribute("grant_type", String, func() {
 				Default("access_token")
 				Enum("access_token", "refresh_token")
@@ -57,13 +59,22 @@ var _ = Service("invoice", func() {
 		Result(tokenResponse)
 
 		HTTP(func() {
+			Cookie("token:__Host-token", String)
 			POST("/tokens")
 			Params(func() {
 				Param("grant_type")
 			})
-			Response(StatusOK)
+			Response(StatusOK, func() {
+				Cookie("token:__Host-token", String)
+				CookieMaxAge(90000)
+				CookieDomain("SameSite")
+				CookiePath("/")
+				CookieSecure()
+				CookieHTTPOnly()
+			})
 		})
 	})
+	// Auth end
 
 	Files("/openapi.json", "./gen/http/openapi.json")
 })

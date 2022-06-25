@@ -45,5 +45,8 @@ func (s *invoicesrvc) AuthoriseLogin(ctx context.Context, p *invoice.AuthoriseLo
 		return nil, apierror.NewResponseError("servererror", "Failed to create token pair for user.")
 	}
 
+	// Set __Host-token HTTP Cookie
+	token.Token = &token.AccessToken
+
 	return token, nil
 }

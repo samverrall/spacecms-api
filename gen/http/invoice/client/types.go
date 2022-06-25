@@ -273,7 +273,7 @@ func NewCreateAccountNotfound(body *CreateAccountNotfoundResponseBody) *goa.Serv
 
 // NewAuthoriseLoginTokenOK builds a "invoice" service "AuthoriseLogin"
 // endpoint result from a HTTP "OK" response.
-func NewAuthoriseLoginTokenOK(body *AuthoriseLoginResponseBody) *invoice.Token {
+func NewAuthoriseLoginTokenOK(body *AuthoriseLoginResponseBody, token *string) *invoice.Token {
 	v := &invoice.Token{
 		AccessToken:            *body.AccessToken,
 		RefreshToken:           *body.RefreshToken,
@@ -282,6 +282,7 @@ func NewAuthoriseLoginTokenOK(body *AuthoriseLoginResponseBody) *invoice.Token {
 		AccessExpiryTimeStamp:  *body.AccessExpiryTimeStamp,
 		RefreshExpiryTimeStamp: *body.RefreshExpiryTimeStamp,
 	}
+	v.Token = token
 
 	return v
 }

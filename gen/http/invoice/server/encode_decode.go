@@ -127,6 +127,18 @@ func EncodeAuthoriseLoginResponse(encoder func(context.Context, http.ResponseWri
 		res, _ := v.(*invoice.Token)
 		enc := encoder(ctx, w)
 		body := NewAuthoriseLoginResponseBody(res)
+		if res.Token != nil {
+			token := *res.Token
+			http.SetCookie(w, &http.Cookie{
+				Name:     "__Host-token",
+				Value:    token,
+				MaxAge:   90000,
+				Path:     "/",
+				Domain:   "SameSite",
+				Secure:   true,
+				HttpOnly: true,
+			})
+		}
 		w.WriteHeader(http.StatusOK)
 		return enc.Encode(body)
 	}
@@ -154,6 +166,8 @@ func DecodeAuthoriseLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) 
 
 		var (
 			grantType string
+			token     *string
+			c         *http.Cookie
 		)
 		grantTypeRaw := r.URL.Query().Get("grant_type")
 		if grantTypeRaw != "" {
@@ -164,10 +178,18 @@ func DecodeAuthoriseLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) 
 		if !(grantType == "access_token" || grantType == "refresh_token") {
 			err = goa.MergeErrors(err, goa.InvalidEnumValueError("grantType", grantType, []interface{}{"access_token", "refresh_token"}))
 		}
+		c, _ = r.Cookie("__Host-token")
+		var tokenRaw string
+		if c != nil {
+			tokenRaw = c.Value
+		}
+		if tokenRaw != "" {
+			token = &tokenRaw
+		}
 		if err != nil {
 			return nil, err
 		}
-		payload := NewAuthoriseLoginPayload(&body, grantType)
+		payload := NewAuthoriseLoginPayload(&body, grantType, token)
 
 		return payload, nil
 	}

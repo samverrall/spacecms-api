@@ -34,6 +34,7 @@ var MethodNames = [2]string{"CreateAccount", "AuthoriseLogin"}
 // AuthoriseLoginPayload is the payload type of the invoice service
 // AuthoriseLogin method.
 type AuthoriseLoginPayload struct {
+	Token     *string
 	GrantType string
 	// User email
 	Email string
@@ -43,6 +44,7 @@ type AuthoriseLoginPayload struct {
 
 // Token is the result type of the invoice service AuthoriseLogin method.
 type Token struct {
+	Token                  *string
 	AccessToken            string
 	RefreshToken           string
 	AccessExpiryTime       int64

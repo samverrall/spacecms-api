@@ -30,10 +30,10 @@ func UsageCommands() string {
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` invoice create-account --body '{
-      "email": "Fugiat aut molestiae vel.",
-      "id": "Repellendus quod deleniti eos dolores voluptates.",
-      "name": "Aut quod deserunt voluptas libero et quas.",
-      "password": "Et ut."
+      "email": "Et ut.",
+      "id": "Aut quod deserunt voluptas libero et quas.",
+      "name": "Et quaerat quasi maxime nam est fugiat.",
+      "password": "Sequi et dolore."
    }'` + "\n" +
 		""
 }
@@ -56,6 +56,7 @@ func ParseEndpoint(
 		invoiceAuthoriseLoginFlags         = flag.NewFlagSet("authorise-login", flag.ExitOnError)
 		invoiceAuthoriseLoginBodyFlag      = invoiceAuthoriseLoginFlags.String("body", "REQUIRED", "")
 		invoiceAuthoriseLoginGrantTypeFlag = invoiceAuthoriseLoginFlags.String("grant-type", "access_token", "")
+		invoiceAuthoriseLoginTokenFlag     = invoiceAuthoriseLoginFlags.String("token", "", "")
 	)
 	invoiceFlags.Usage = invoiceUsage
 	invoiceCreateAccountFlags.Usage = invoiceCreateAccountUsage
@@ -131,7 +132,7 @@ func ParseEndpoint(
 				data, err = invoicec.BuildCreateAccountPayload(*invoiceCreateAccountBodyFlag)
 			case "authorise-login":
 				endpoint = c.AuthoriseLogin()
-				data, err = invoicec.BuildAuthoriseLoginPayload(*invoiceAuthoriseLoginBodyFlag, *invoiceAuthoriseLoginGrantTypeFlag)
+				data, err = invoicec.BuildAuthoriseLoginPayload(*invoiceAuthoriseLoginBodyFlag, *invoiceAuthoriseLoginGrantTypeFlag, *invoiceAuthoriseLoginTokenFlag)
 			}
 		}
 	}
@@ -164,25 +165,26 @@ Create an account by email address and password.
 
 Example:
     %[1]s invoice create-account --body '{
-      "email": "Fugiat aut molestiae vel.",
-      "id": "Repellendus quod deleniti eos dolores voluptates.",
-      "name": "Aut quod deserunt voluptas libero et quas.",
-      "password": "Et ut."
+      "email": "Et ut.",
+      "id": "Aut quod deserunt voluptas libero et quas.",
+      "name": "Et quaerat quasi maxime nam est fugiat.",
+      "password": "Sequi et dolore."
    }'
 `, os.Args[0])
 }
 
 func invoiceAuthoriseLoginUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice authorise-login -body JSON -grant-type STRING
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice authorise-login -body JSON -grant-type STRING -token STRING
 
 Create an account by email address and password.
     -body JSON: 
     -grant-type STRING: 
+    -token STRING: 
 
 Example:
     %[1]s invoice authorise-login --body '{
-      "email": "Et quaerat quasi maxime nam est fugiat.",
-      "password": "Sequi et dolore."
-   }' --grant-type "access_token"
+      "email": "Laborum facilis libero.",
+      "password": "Eligendi quis."
+   }' --grant-type "access_token" --token "Autem est culpa est fuga voluptas."
 `, os.Args[0])
 }

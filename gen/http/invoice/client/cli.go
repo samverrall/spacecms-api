@@ -23,7 +23,7 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 	{
 		err = json.Unmarshal([]byte(invoiceCreateAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Fugiat aut molestiae vel.\",\n      \"id\": \"Repellendus quod deleniti eos dolores voluptates.\",\n      \"name\": \"Aut quod deserunt voluptas libero et quas.\",\n      \"password\": \"Et ut.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Et ut.\",\n      \"id\": \"Aut quod deserunt voluptas libero et quas.\",\n      \"name\": \"Et quaerat quasi maxime nam est fugiat.\",\n      \"password\": \"Sequi et dolore.\"\n   }'")
 		}
 	}
 	v := &invoice.User{
@@ -38,13 +38,13 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 
 // BuildAuthoriseLoginPayload builds the payload for the invoice AuthoriseLogin
 // endpoint from CLI flags.
-func BuildAuthoriseLoginPayload(invoiceAuthoriseLoginBody string, invoiceAuthoriseLoginGrantType string) (*invoice.AuthoriseLoginPayload, error) {
+func BuildAuthoriseLoginPayload(invoiceAuthoriseLoginBody string, invoiceAuthoriseLoginGrantType string, invoiceAuthoriseLoginToken string) (*invoice.AuthoriseLoginPayload, error) {
 	var err error
 	var body AuthoriseLoginRequestBody
 	{
 		err = json.Unmarshal([]byte(invoiceAuthoriseLoginBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Et quaerat quasi maxime nam est fugiat.\",\n      \"password\": \"Sequi et dolore.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Laborum facilis libero.\",\n      \"password\": \"Eligendi quis.\"\n   }'")
 		}
 	}
 	var grantType string
@@ -59,11 +59,18 @@ func BuildAuthoriseLoginPayload(invoiceAuthoriseLoginBody string, invoiceAuthori
 			}
 		}
 	}
+	var token *string
+	{
+		if invoiceAuthoriseLoginToken != "" {
+			token = &invoiceAuthoriseLoginToken
+		}
+	}
 	v := &invoice.AuthoriseLoginPayload{
 		Email:    body.Email,
 		Password: body.Password,
 	}
 	v.GrantType = grantType
+	v.Token = token
 
 	return v, nil
 }

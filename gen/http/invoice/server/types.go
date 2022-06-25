@@ -329,12 +329,13 @@ func NewCreateAccountUser(body *CreateAccountRequestBody) *invoice.User {
 
 // NewAuthoriseLoginPayload builds a invoice service AuthoriseLogin endpoint
 // payload.
-func NewAuthoriseLoginPayload(body *AuthoriseLoginRequestBody, grantType string) *invoice.AuthoriseLoginPayload {
+func NewAuthoriseLoginPayload(body *AuthoriseLoginRequestBody, grantType string, token *string) *invoice.AuthoriseLoginPayload {
 	v := &invoice.AuthoriseLoginPayload{
 		Email:    *body.Email,
 		Password: *body.Password,
 	}
 	v.GrantType = grantType
+	v.Token = token
 
 	return v
 }

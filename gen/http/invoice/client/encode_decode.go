@@ -161,6 +161,13 @@ func EncodeAuthoriseLoginRequest(encoder func(*http.Request) goahttp.Encoder) fu
 		if !ok {
 			return goahttp.ErrInvalidType("invoice", "AuthoriseLogin", "*invoice.AuthoriseLoginPayload", v)
 		}
+		if p.Token != nil {
+			v := *p.Token
+			req.AddCookie(&http.Cookie{
+				Name:  "__Host-token",
+				Value: v,
+			})
+		}
 		values := req.URL.Query()
 		values.Add("grant_type", p.GrantType)
 		req.URL.RawQuery = values.Encode()
@@ -209,7 +216,22 @@ func DecodeAuthoriseLoginResponse(decoder func(*http.Response) goahttp.Decoder, 
 			if err != nil {
 				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
 			}
-			res := NewAuthoriseLoginTokenOK(&body)
+			var (
+				token    *string
+				tokenRaw string
+
+				cookies = resp.Cookies()
+			)
+			for _, c := range cookies {
+				switch c.Name {
+				case "__Host-token":
+					tokenRaw = c.Value
+				}
+			}
+			if tokenRaw != "" {
+				token = &tokenRaw
+			}
+			res := NewAuthoriseLoginTokenOK(&body, token)
 			return res, nil
 		case http.StatusUnauthorized:
 			var (
