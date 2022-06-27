@@ -120,13 +120,13 @@ func EncodeCreateAccountError(encoder func(context.Context, http.ResponseWriter)
 	}
 }
 
-// EncodeAuthoriseLoginResponse returns an encoder for responses returned by
-// the invoice AuthoriseLogin endpoint.
-func EncodeAuthoriseLoginResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+// EncodeGrantTokenResponse returns an encoder for responses returned by the
+// invoice GrantToken endpoint.
+func EncodeGrantTokenResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
 		res, _ := v.(*invoice.Token)
 		enc := encoder(ctx, w)
-		body := NewAuthoriseLoginResponseBody(res)
+		body := NewGrantTokenResponseBody(res)
 		if res.Token != nil {
 			token := *res.Token
 			http.SetCookie(w, &http.Cookie{
@@ -144,12 +144,12 @@ func EncodeAuthoriseLoginResponse(encoder func(context.Context, http.ResponseWri
 	}
 }
 
-// DecodeAuthoriseLoginRequest returns a decoder for requests sent to the
-// invoice AuthoriseLogin endpoint.
-func DecodeAuthoriseLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+// DecodeGrantTokenRequest returns a decoder for requests sent to the invoice
+// GrantToken endpoint.
+func DecodeGrantTokenRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			body AuthoriseLoginRequestBody
+			body GrantTokenRequestBody
 			err  error
 		)
 		err = decoder(r).Decode(&body)
@@ -159,7 +159,7 @@ func DecodeAuthoriseLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) 
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
-		err = ValidateAuthoriseLoginRequestBody(&body)
+		err = ValidateGrantTokenRequestBody(&body)
 		if err != nil {
 			return nil, err
 		}
@@ -189,15 +189,15 @@ func DecodeAuthoriseLoginRequest(mux goahttp.Muxer, decoder func(*http.Request) 
 		if err != nil {
 			return nil, err
 		}
-		payload := NewAuthoriseLoginPayload(&body, grantType, token)
+		payload := NewGrantTokenPayload(&body, grantType, token)
 
 		return payload, nil
 	}
 }
 
-// EncodeAuthoriseLoginError returns an encoder for errors returned by the
-// AuthoriseLogin invoice endpoint.
-func EncodeAuthoriseLoginError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+// EncodeGrantTokenError returns an encoder for errors returned by the
+// GrantToken invoice endpoint.
+func EncodeGrantTokenError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
 	encodeError := goahttp.ErrorEncoder(encoder, formatter)
 	return func(ctx context.Context, w http.ResponseWriter, v error) error {
 		var en ErrorNamer
@@ -213,7 +213,7 @@ func EncodeAuthoriseLoginError(encoder func(context.Context, http.ResponseWriter
 			if formatter != nil {
 				body = formatter(res)
 			} else {
-				body = NewAuthoriseLoginUnauthorizedResponseBody(res)
+				body = NewGrantTokenUnauthorizedResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
 			w.WriteHeader(http.StatusUnauthorized)
@@ -226,7 +226,7 @@ func EncodeAuthoriseLoginError(encoder func(context.Context, http.ResponseWriter
 			if formatter != nil {
 				body = formatter(res)
 			} else {
-				body = NewAuthoriseLoginServererrorResponseBody(res)
+				body = NewGrantTokenServererrorResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
 			w.WriteHeader(http.StatusInternalServerError)
@@ -239,7 +239,7 @@ func EncodeAuthoriseLoginError(encoder func(context.Context, http.ResponseWriter
 			if formatter != nil {
 				body = formatter(res)
 			} else {
-				body = NewAuthoriseLoginBadrequestResponseBody(res)
+				body = NewGrantTokenBadrequestResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
 			w.WriteHeader(http.StatusBadRequest)
@@ -252,7 +252,7 @@ func EncodeAuthoriseLoginError(encoder func(context.Context, http.ResponseWriter
 			if formatter != nil {
 				body = formatter(res)
 			} else {
-				body = NewAuthoriseLoginNotfoundResponseBody(res)
+				body = NewGrantTokenNotfoundResponseBody(res)
 			}
 			w.Header().Set("goa-error", res.ErrorName())
 			w.WriteHeader(http.StatusNotFound)

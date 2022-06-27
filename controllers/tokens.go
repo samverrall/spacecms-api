@@ -10,8 +10,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func (s *invoicesrvc) AuthoriseLogin(ctx context.Context, p *invoice.AuthoriseLoginPayload) (*invoice.Token, error) {
-	s.logger.Info("invoice.AuthoriseLogin")
+const (
+	GrantTypeRefresh = "refresh_token"
+	GrantTypeAccess  = "access_token"
+)
+
+func (s *invoicesrvc) GrantToken(ctx context.Context, p *invoice.GrantTokenPayload) (*invoice.Token, error) {
+	s.logger.Info("invoice.GrantToken")
 
 	user, err := s.dbi.GetUserByEmail(ctx, p.Email)
 	switch {
@@ -37,10 +42,10 @@ func (s *invoicesrvc) AuthoriseLogin(ctx context.Context, p *invoice.AuthoriseLo
 		return nil, apierror.NewResponseError("badrequest", "Incorrect password supplied")
 	}
 
-	token, err := s.tokener.CreateTokenPair(ctx, user.ID)
-	if err != nil {
+	token, tokenErr := s.tokener.CreateTokenPair(ctx, user.ID)
+	if tokenErr != nil {
 		s.logger.WithFields(logrus.Fields{
-			"error": err.Error(),
+			"error": tokenErr.Error(),
 		}).Error("Failed to create token pair")
 		return nil, apierror.NewResponseError("servererror", "Failed to create token pair for user.")
 	}

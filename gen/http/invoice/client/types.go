@@ -25,18 +25,18 @@ type CreateAccountRequestBody struct {
 	Password string `form:"password" json:"password" xml:"password"`
 }
 
-// AuthoriseLoginRequestBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP request body.
-type AuthoriseLoginRequestBody struct {
+// GrantTokenRequestBody is the type of the "invoice" service "GrantToken"
+// endpoint HTTP request body.
+type GrantTokenRequestBody struct {
 	// User email
 	Email string `form:"email" json:"email" xml:"email"`
 	// User password
 	Password string `form:"password" json:"password" xml:"password"`
 }
 
-// AuthoriseLoginResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body.
-type AuthoriseLoginResponseBody struct {
+// GrantTokenResponseBody is the type of the "invoice" service "GrantToken"
+// endpoint HTTP response body.
+type GrantTokenResponseBody struct {
 	AccessToken            *string `form:"accessToken,omitempty" json:"accessToken,omitempty" xml:"accessToken,omitempty"`
 	RefreshToken           *string `form:"refreshToken,omitempty" json:"refreshToken,omitempty" xml:"refreshToken,omitempty"`
 	AccessExpiryTime       *int64  `form:"accessExpiryTime,omitempty" json:"accessExpiryTime,omitempty" xml:"accessExpiryTime,omitempty"`
@@ -117,9 +117,9 @@ type CreateAccountNotfoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// AuthoriseLoginUnauthorizedResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "unauthorized" error.
-type AuthoriseLoginUnauthorizedResponseBody struct {
+// GrantTokenUnauthorizedResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "unauthorized" error.
+type GrantTokenUnauthorizedResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -135,9 +135,9 @@ type AuthoriseLoginUnauthorizedResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// AuthoriseLoginServererrorResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "servererror" error.
-type AuthoriseLoginServererrorResponseBody struct {
+// GrantTokenServererrorResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "servererror" error.
+type GrantTokenServererrorResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -153,9 +153,9 @@ type AuthoriseLoginServererrorResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// AuthoriseLoginBadrequestResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "badrequest" error.
-type AuthoriseLoginBadrequestResponseBody struct {
+// GrantTokenBadrequestResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "badrequest" error.
+type GrantTokenBadrequestResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -171,9 +171,9 @@ type AuthoriseLoginBadrequestResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// AuthoriseLoginNotfoundResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "notfound" error.
-type AuthoriseLoginNotfoundResponseBody struct {
+// GrantTokenNotfoundResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "notfound" error.
+type GrantTokenNotfoundResponseBody struct {
 	// Name is the name of this class of errors.
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -201,10 +201,10 @@ func NewCreateAccountRequestBody(p *invoice.User) *CreateAccountRequestBody {
 	return body
 }
 
-// NewAuthoriseLoginRequestBody builds the HTTP request body from the payload
-// of the "AuthoriseLogin" endpoint of the "invoice" service.
-func NewAuthoriseLoginRequestBody(p *invoice.AuthoriseLoginPayload) *AuthoriseLoginRequestBody {
-	body := &AuthoriseLoginRequestBody{
+// NewGrantTokenRequestBody builds the HTTP request body from the payload of
+// the "GrantToken" endpoint of the "invoice" service.
+func NewGrantTokenRequestBody(p *invoice.GrantTokenPayload) *GrantTokenRequestBody {
+	body := &GrantTokenRequestBody{
 		Email:    p.Email,
 		Password: p.Password,
 	}
@@ -271,9 +271,9 @@ func NewCreateAccountNotfound(body *CreateAccountNotfoundResponseBody) *goa.Serv
 	return v
 }
 
-// NewAuthoriseLoginTokenOK builds a "invoice" service "AuthoriseLogin"
-// endpoint result from a HTTP "OK" response.
-func NewAuthoriseLoginTokenOK(body *AuthoriseLoginResponseBody, token *string) *invoice.Token {
+// NewGrantTokenTokenOK builds a "invoice" service "GrantToken" endpoint result
+// from a HTTP "OK" response.
+func NewGrantTokenTokenOK(body *GrantTokenResponseBody, token *string) *invoice.Token {
 	v := &invoice.Token{
 		AccessToken:            *body.AccessToken,
 		RefreshToken:           *body.RefreshToken,
@@ -287,9 +287,9 @@ func NewAuthoriseLoginTokenOK(body *AuthoriseLoginResponseBody, token *string) *
 	return v
 }
 
-// NewAuthoriseLoginUnauthorized builds a invoice service AuthoriseLogin
-// endpoint unauthorized error.
-func NewAuthoriseLoginUnauthorized(body *AuthoriseLoginUnauthorizedResponseBody) *goa.ServiceError {
+// NewGrantTokenUnauthorized builds a invoice service GrantToken endpoint
+// unauthorized error.
+func NewGrantTokenUnauthorized(body *GrantTokenUnauthorizedResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -302,9 +302,9 @@ func NewAuthoriseLoginUnauthorized(body *AuthoriseLoginUnauthorizedResponseBody)
 	return v
 }
 
-// NewAuthoriseLoginServererror builds a invoice service AuthoriseLogin
-// endpoint servererror error.
-func NewAuthoriseLoginServererror(body *AuthoriseLoginServererrorResponseBody) *goa.ServiceError {
+// NewGrantTokenServererror builds a invoice service GrantToken endpoint
+// servererror error.
+func NewGrantTokenServererror(body *GrantTokenServererrorResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -317,9 +317,9 @@ func NewAuthoriseLoginServererror(body *AuthoriseLoginServererrorResponseBody) *
 	return v
 }
 
-// NewAuthoriseLoginBadrequest builds a invoice service AuthoriseLogin endpoint
+// NewGrantTokenBadrequest builds a invoice service GrantToken endpoint
 // badrequest error.
-func NewAuthoriseLoginBadrequest(body *AuthoriseLoginBadrequestResponseBody) *goa.ServiceError {
+func NewGrantTokenBadrequest(body *GrantTokenBadrequestResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -332,9 +332,9 @@ func NewAuthoriseLoginBadrequest(body *AuthoriseLoginBadrequestResponseBody) *go
 	return v
 }
 
-// NewAuthoriseLoginNotfound builds a invoice service AuthoriseLogin endpoint
-// notfound error.
-func NewAuthoriseLoginNotfound(body *AuthoriseLoginNotfoundResponseBody) *goa.ServiceError {
+// NewGrantTokenNotfound builds a invoice service GrantToken endpoint notfound
+// error.
+func NewGrantTokenNotfound(body *GrantTokenNotfoundResponseBody) *goa.ServiceError {
 	v := &goa.ServiceError{
 		Name:      *body.Name,
 		ID:        *body.ID,
@@ -347,9 +347,9 @@ func NewAuthoriseLoginNotfound(body *AuthoriseLoginNotfoundResponseBody) *goa.Se
 	return v
 }
 
-// ValidateAuthoriseLoginResponseBody runs the validations defined on
-// AuthoriseLoginResponseBody
-func ValidateAuthoriseLoginResponseBody(body *AuthoriseLoginResponseBody) (err error) {
+// ValidateGrantTokenResponseBody runs the validations defined on
+// GrantTokenResponseBody
+func ValidateGrantTokenResponseBody(body *GrantTokenResponseBody) (err error) {
 	if body.AccessToken == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("accessToken", "body"))
 	}
@@ -467,9 +467,9 @@ func ValidateCreateAccountNotfoundResponseBody(body *CreateAccountNotfoundRespon
 	return
 }
 
-// ValidateAuthoriseLoginUnauthorizedResponseBody runs the validations defined
-// on AuthoriseLogin_unauthorized_Response_Body
-func ValidateAuthoriseLoginUnauthorizedResponseBody(body *AuthoriseLoginUnauthorizedResponseBody) (err error) {
+// ValidateGrantTokenUnauthorizedResponseBody runs the validations defined on
+// GrantToken_unauthorized_Response_Body
+func ValidateGrantTokenUnauthorizedResponseBody(body *GrantTokenUnauthorizedResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
@@ -491,9 +491,9 @@ func ValidateAuthoriseLoginUnauthorizedResponseBody(body *AuthoriseLoginUnauthor
 	return
 }
 
-// ValidateAuthoriseLoginServererrorResponseBody runs the validations defined
-// on AuthoriseLogin_servererror_Response_Body
-func ValidateAuthoriseLoginServererrorResponseBody(body *AuthoriseLoginServererrorResponseBody) (err error) {
+// ValidateGrantTokenServererrorResponseBody runs the validations defined on
+// GrantToken_servererror_Response_Body
+func ValidateGrantTokenServererrorResponseBody(body *GrantTokenServererrorResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
@@ -515,9 +515,9 @@ func ValidateAuthoriseLoginServererrorResponseBody(body *AuthoriseLoginServererr
 	return
 }
 
-// ValidateAuthoriseLoginBadrequestResponseBody runs the validations defined on
-// AuthoriseLogin_badrequest_Response_Body
-func ValidateAuthoriseLoginBadrequestResponseBody(body *AuthoriseLoginBadrequestResponseBody) (err error) {
+// ValidateGrantTokenBadrequestResponseBody runs the validations defined on
+// GrantToken_badrequest_Response_Body
+func ValidateGrantTokenBadrequestResponseBody(body *GrantTokenBadrequestResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
@@ -539,9 +539,9 @@ func ValidateAuthoriseLoginBadrequestResponseBody(body *AuthoriseLoginBadrequest
 	return
 }
 
-// ValidateAuthoriseLoginNotfoundResponseBody runs the validations defined on
-// AuthoriseLogin_notfound_Response_Body
-func ValidateAuthoriseLoginNotfoundResponseBody(body *AuthoriseLoginNotfoundResponseBody) (err error) {
+// ValidateGrantTokenNotfoundResponseBody runs the validations defined on
+// GrantToken_notfound_Response_Body
+func ValidateGrantTokenNotfoundResponseBody(body *GrantTokenNotfoundResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

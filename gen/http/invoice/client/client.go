@@ -21,9 +21,9 @@ type Client struct {
 	// CreateAccount endpoint.
 	CreateAccountDoer goahttp.Doer
 
-	// AuthoriseLogin Doer is the HTTP client used to make requests to the
-	// AuthoriseLogin endpoint.
-	AuthoriseLoginDoer goahttp.Doer
+	// GrantToken Doer is the HTTP client used to make requests to the GrantToken
+	// endpoint.
+	GrantTokenDoer goahttp.Doer
 
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
@@ -46,7 +46,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		CreateAccountDoer:   doer,
-		AuthoriseLoginDoer:  doer,
+		GrantTokenDoer:      doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -79,15 +79,15 @@ func (c *Client) CreateAccount() goa.Endpoint {
 	}
 }
 
-// AuthoriseLogin returns an endpoint that makes HTTP requests to the invoice
-// service AuthoriseLogin server.
-func (c *Client) AuthoriseLogin() goa.Endpoint {
+// GrantToken returns an endpoint that makes HTTP requests to the invoice
+// service GrantToken server.
+func (c *Client) GrantToken() goa.Endpoint {
 	var (
-		encodeRequest  = EncodeAuthoriseLoginRequest(c.encoder)
-		decodeResponse = DecodeAuthoriseLoginResponse(c.decoder, c.RestoreResponseBody)
+		encodeRequest  = EncodeGrantTokenRequest(c.encoder)
+		decodeResponse = DecodeGrantTokenResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
-		req, err := c.BuildAuthoriseLoginRequest(ctx, v)
+		req, err := c.BuildGrantTokenRequest(ctx, v)
 		if err != nil {
 			return nil, err
 		}
@@ -95,9 +95,9 @@ func (c *Client) AuthoriseLogin() goa.Endpoint {
 		if err != nil {
 			return nil, err
 		}
-		resp, err := c.AuthoriseLoginDoer.Do(req)
+		resp, err := c.GrantTokenDoer.Do(req)
 		if err != nil {
-			return nil, goahttp.ErrRequestError("invoice", "AuthoriseLogin", err)
+			return nil, goahttp.ErrRequestError("invoice", "GrantToken", err)
 		}
 		return decodeResponse(resp)
 	}

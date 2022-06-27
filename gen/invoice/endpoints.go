@@ -15,22 +15,22 @@ import (
 
 // Endpoints wraps the "invoice" service endpoints.
 type Endpoints struct {
-	CreateAccount  goa.Endpoint
-	AuthoriseLogin goa.Endpoint
+	CreateAccount goa.Endpoint
+	GrantToken    goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "invoice" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		CreateAccount:  NewCreateAccountEndpoint(s),
-		AuthoriseLogin: NewAuthoriseLoginEndpoint(s),
+		CreateAccount: NewCreateAccountEndpoint(s),
+		GrantToken:    NewGrantTokenEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "invoice" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.CreateAccount = m(e.CreateAccount)
-	e.AuthoriseLogin = m(e.AuthoriseLogin)
+	e.GrantToken = m(e.GrantToken)
 }
 
 // NewCreateAccountEndpoint returns an endpoint function that calls the method
@@ -42,11 +42,11 @@ func NewCreateAccountEndpoint(s Service) goa.Endpoint {
 	}
 }
 
-// NewAuthoriseLoginEndpoint returns an endpoint function that calls the method
-// "AuthoriseLogin" of service "invoice".
-func NewAuthoriseLoginEndpoint(s Service) goa.Endpoint {
+// NewGrantTokenEndpoint returns an endpoint function that calls the method
+// "GrantToken" of service "invoice".
+func NewGrantTokenEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		p := req.(*AuthoriseLoginPayload)
-		return s.AuthoriseLogin(ctx, p)
+		p := req.(*GrantTokenPayload)
+		return s.GrantToken(ctx, p)
 	}
 }

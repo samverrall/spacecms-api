@@ -36,21 +36,21 @@ func BuildCreateAccountPayload(invoiceCreateAccountBody string) (*invoice.User, 
 	return v, nil
 }
 
-// BuildAuthoriseLoginPayload builds the payload for the invoice AuthoriseLogin
+// BuildGrantTokenPayload builds the payload for the invoice GrantToken
 // endpoint from CLI flags.
-func BuildAuthoriseLoginPayload(invoiceAuthoriseLoginBody string, invoiceAuthoriseLoginGrantType string, invoiceAuthoriseLoginToken string) (*invoice.AuthoriseLoginPayload, error) {
+func BuildGrantTokenPayload(invoiceGrantTokenBody string, invoiceGrantTokenGrantType string, invoiceGrantTokenToken string) (*invoice.GrantTokenPayload, error) {
 	var err error
-	var body AuthoriseLoginRequestBody
+	var body GrantTokenRequestBody
 	{
-		err = json.Unmarshal([]byte(invoiceAuthoriseLoginBody), &body)
+		err = json.Unmarshal([]byte(invoiceGrantTokenBody), &body)
 		if err != nil {
 			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Laborum facilis libero.\",\n      \"password\": \"Eligendi quis.\"\n   }'")
 		}
 	}
 	var grantType string
 	{
-		if invoiceAuthoriseLoginGrantType != "" {
-			grantType = invoiceAuthoriseLoginGrantType
+		if invoiceGrantTokenGrantType != "" {
+			grantType = invoiceGrantTokenGrantType
 			if !(grantType == "access_token" || grantType == "refresh_token") {
 				err = goa.MergeErrors(err, goa.InvalidEnumValueError("grantType", grantType, []interface{}{"access_token", "refresh_token"}))
 			}
@@ -61,11 +61,11 @@ func BuildAuthoriseLoginPayload(invoiceAuthoriseLoginBody string, invoiceAuthori
 	}
 	var token *string
 	{
-		if invoiceAuthoriseLoginToken != "" {
-			token = &invoiceAuthoriseLoginToken
+		if invoiceGrantTokenToken != "" {
+			token = &invoiceGrantTokenToken
 		}
 	}
-	v := &invoice.AuthoriseLoginPayload{
+	v := &invoice.GrantTokenPayload{
 		Email:    body.Email,
 		Password: body.Password,
 	}

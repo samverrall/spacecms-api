@@ -42,15 +42,10 @@ var _ = Service("invoice", func() {
 		})
 	})
 
-	Method("AuthoriseLogin", func() {
+	Method("GrantToken", func() {
 		Description("Create an account by email address and password.")
-
 		Payload(func() {
 			Attribute("token", String)
-			Attribute("grant_type", String, func() {
-				Default("access_token")
-				Enum("access_token", "refresh_token")
-			})
 			Attribute("email", String, "User email")
 			Attribute("password", String, "User password")
 			Required("email", "password")

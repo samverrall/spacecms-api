@@ -12,7 +12,7 @@ func CreateAccountInvoicePath() string {
 	return "/api/v1/create-account"
 }
 
-// AuthoriseLoginInvoicePath returns the URL path to the invoice service AuthoriseLogin HTTP endpoint.
-func AuthoriseLoginInvoicePath() string {
+// GrantTokenInvoicePath returns the URL path to the invoice service GrantToken HTTP endpoint.
+func GrantTokenInvoicePath() string {
 	return "/api/v1/tokens"
 }

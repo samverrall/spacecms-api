@@ -10,18 +10,18 @@ import (
 )
 
 type JWTToken struct {
-	AccessTokenExpiryMinutes int
+	accessTokenExpiryMinutes int
 }
 
 func New(accessTokenExpiryMinutes int) *JWTToken {
 	return &JWTToken{
-		AccessTokenExpiryMinutes: accessTokenExpiryMinutes,
+		accessTokenExpiryMinutes: accessTokenExpiryMinutes,
 	}
 }
 
 // https://developer.vonage.com/blog/20/03/13/using-jwt-for-authentication-in-a-golang-application-dr#:~:text=Refresh%20Token%3A%20A%20refresh%20token,hit%20(from%20our%20application).
 func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*invoice.Token, error) {
-	atExpiryTime := time.Now().Add(time.Minute * time.Duration(jt.AccessTokenExpiryMinutes))
+	atExpiryTime := time.Now().Add(time.Minute * time.Duration(jt.accessTokenExpiryMinutes))
 	rtExpiryTime := time.Now().Add(time.Hour * 24 * 7)
 
 	at, err := jt.NewAccessToken(ctx, jwt.MapClaims{
@@ -69,3 +69,9 @@ func (jt *JWTToken) NewRefreshToken(ctx context.Context, claims jwt.MapClaims) (
 	}
 	return refreshToken, nil
 }
+
+// func (jt *JWTToken) Verify(token string) error {
+// 	jwt.Parse(token, func() {
+
+// 	})
+// }

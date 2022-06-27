@@ -23,7 +23,7 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `invoice (create-account|authorise-login)
+	return `invoice (create-account|grant-token)
 `
 }
 
@@ -53,14 +53,14 @@ func ParseEndpoint(
 		invoiceCreateAccountFlags    = flag.NewFlagSet("create-account", flag.ExitOnError)
 		invoiceCreateAccountBodyFlag = invoiceCreateAccountFlags.String("body", "REQUIRED", "")
 
-		invoiceAuthoriseLoginFlags         = flag.NewFlagSet("authorise-login", flag.ExitOnError)
-		invoiceAuthoriseLoginBodyFlag      = invoiceAuthoriseLoginFlags.String("body", "REQUIRED", "")
-		invoiceAuthoriseLoginGrantTypeFlag = invoiceAuthoriseLoginFlags.String("grant-type", "access_token", "")
-		invoiceAuthoriseLoginTokenFlag     = invoiceAuthoriseLoginFlags.String("token", "", "")
+		invoiceGrantTokenFlags         = flag.NewFlagSet("grant-token", flag.ExitOnError)
+		invoiceGrantTokenBodyFlag      = invoiceGrantTokenFlags.String("body", "REQUIRED", "")
+		invoiceGrantTokenGrantTypeFlag = invoiceGrantTokenFlags.String("grant-type", "access_token", "")
+		invoiceGrantTokenTokenFlag     = invoiceGrantTokenFlags.String("token", "", "")
 	)
 	invoiceFlags.Usage = invoiceUsage
 	invoiceCreateAccountFlags.Usage = invoiceCreateAccountUsage
-	invoiceAuthoriseLoginFlags.Usage = invoiceAuthoriseLoginUsage
+	invoiceGrantTokenFlags.Usage = invoiceGrantTokenUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -99,8 +99,8 @@ func ParseEndpoint(
 			case "create-account":
 				epf = invoiceCreateAccountFlags
 
-			case "authorise-login":
-				epf = invoiceAuthoriseLoginFlags
+			case "grant-token":
+				epf = invoiceGrantTokenFlags
 
 			}
 
@@ -130,9 +130,9 @@ func ParseEndpoint(
 			case "create-account":
 				endpoint = c.CreateAccount()
 				data, err = invoicec.BuildCreateAccountPayload(*invoiceCreateAccountBodyFlag)
-			case "authorise-login":
-				endpoint = c.AuthoriseLogin()
-				data, err = invoicec.BuildAuthoriseLoginPayload(*invoiceAuthoriseLoginBodyFlag, *invoiceAuthoriseLoginGrantTypeFlag, *invoiceAuthoriseLoginTokenFlag)
+			case "grant-token":
+				endpoint = c.GrantToken()
+				data, err = invoicec.BuildGrantTokenPayload(*invoiceGrantTokenBodyFlag, *invoiceGrantTokenGrantTypeFlag, *invoiceGrantTokenTokenFlag)
 			}
 		}
 	}
@@ -151,7 +151,7 @@ Usage:
 
 COMMAND:
     create-account: Create an account by email address and password.
-    authorise-login: Create an account by email address and password.
+    grant-token: Create an account by email address and password.
 
 Additional help:
     %[1]s invoice COMMAND --help
@@ -173,8 +173,8 @@ Example:
 `, os.Args[0])
 }
 
-func invoiceAuthoriseLoginUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice authorise-login -body JSON -grant-type STRING -token STRING
+func invoiceGrantTokenUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice grant-token -body JSON -grant-type STRING -token STRING
 
 Create an account by email address and password.
     -body JSON: 
@@ -182,7 +182,7 @@ Create an account by email address and password.
     -token STRING: 
 
 Example:
-    %[1]s invoice authorise-login --body '{
+    %[1]s invoice grant-token --body '{
       "email": "Laborum facilis libero.",
       "password": "Eligendi quis."
    }' --grant-type "access_token" --token "Autem est culpa est fuga voluptas."

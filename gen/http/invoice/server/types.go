@@ -25,18 +25,18 @@ type CreateAccountRequestBody struct {
 	Password *string `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 }
 
-// AuthoriseLoginRequestBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP request body.
-type AuthoriseLoginRequestBody struct {
+// GrantTokenRequestBody is the type of the "invoice" service "GrantToken"
+// endpoint HTTP request body.
+type GrantTokenRequestBody struct {
 	// User email
 	Email *string `form:"email,omitempty" json:"email,omitempty" xml:"email,omitempty"`
 	// User password
 	Password *string `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 }
 
-// AuthoriseLoginResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body.
-type AuthoriseLoginResponseBody struct {
+// GrantTokenResponseBody is the type of the "invoice" service "GrantToken"
+// endpoint HTTP response body.
+type GrantTokenResponseBody struct {
 	AccessToken            string `form:"accessToken" json:"accessToken" xml:"accessToken"`
 	RefreshToken           string `form:"refreshToken" json:"refreshToken" xml:"refreshToken"`
 	AccessExpiryTime       int64  `form:"accessExpiryTime" json:"accessExpiryTime" xml:"accessExpiryTime"`
@@ -117,9 +117,9 @@ type CreateAccountNotfoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// AuthoriseLoginUnauthorizedResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "unauthorized" error.
-type AuthoriseLoginUnauthorizedResponseBody struct {
+// GrantTokenUnauthorizedResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "unauthorized" error.
+type GrantTokenUnauthorizedResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -135,9 +135,9 @@ type AuthoriseLoginUnauthorizedResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// AuthoriseLoginServererrorResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "servererror" error.
-type AuthoriseLoginServererrorResponseBody struct {
+// GrantTokenServererrorResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "servererror" error.
+type GrantTokenServererrorResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -153,9 +153,9 @@ type AuthoriseLoginServererrorResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// AuthoriseLoginBadrequestResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "badrequest" error.
-type AuthoriseLoginBadrequestResponseBody struct {
+// GrantTokenBadrequestResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "badrequest" error.
+type GrantTokenBadrequestResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -171,9 +171,9 @@ type AuthoriseLoginBadrequestResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// AuthoriseLoginNotfoundResponseBody is the type of the "invoice" service
-// "AuthoriseLogin" endpoint HTTP response body for the "notfound" error.
-type AuthoriseLoginNotfoundResponseBody struct {
+// GrantTokenNotfoundResponseBody is the type of the "invoice" service
+// "GrantToken" endpoint HTTP response body for the "notfound" error.
+type GrantTokenNotfoundResponseBody struct {
 	// Name is the name of this class of errors.
 	Name string `form:"name" json:"name" xml:"name"`
 	// ID is a unique identifier for this particular occurrence of the problem.
@@ -189,10 +189,10 @@ type AuthoriseLoginNotfoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// NewAuthoriseLoginResponseBody builds the HTTP response body from the result
-// of the "AuthoriseLogin" endpoint of the "invoice" service.
-func NewAuthoriseLoginResponseBody(res *invoice.Token) *AuthoriseLoginResponseBody {
-	body := &AuthoriseLoginResponseBody{
+// NewGrantTokenResponseBody builds the HTTP response body from the result of
+// the "GrantToken" endpoint of the "invoice" service.
+func NewGrantTokenResponseBody(res *invoice.Token) *GrantTokenResponseBody {
+	body := &GrantTokenResponseBody{
 		AccessToken:            res.AccessToken,
 		RefreshToken:           res.RefreshToken,
 		AccessExpiryTime:       res.AccessExpiryTime,
@@ -259,10 +259,10 @@ func NewCreateAccountNotfoundResponseBody(res *goa.ServiceError) *CreateAccountN
 	return body
 }
 
-// NewAuthoriseLoginUnauthorizedResponseBody builds the HTTP response body from
-// the result of the "AuthoriseLogin" endpoint of the "invoice" service.
-func NewAuthoriseLoginUnauthorizedResponseBody(res *goa.ServiceError) *AuthoriseLoginUnauthorizedResponseBody {
-	body := &AuthoriseLoginUnauthorizedResponseBody{
+// NewGrantTokenUnauthorizedResponseBody builds the HTTP response body from the
+// result of the "GrantToken" endpoint of the "invoice" service.
+func NewGrantTokenUnauthorizedResponseBody(res *goa.ServiceError) *GrantTokenUnauthorizedResponseBody {
+	body := &GrantTokenUnauthorizedResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -273,10 +273,10 @@ func NewAuthoriseLoginUnauthorizedResponseBody(res *goa.ServiceError) *Authorise
 	return body
 }
 
-// NewAuthoriseLoginServererrorResponseBody builds the HTTP response body from
-// the result of the "AuthoriseLogin" endpoint of the "invoice" service.
-func NewAuthoriseLoginServererrorResponseBody(res *goa.ServiceError) *AuthoriseLoginServererrorResponseBody {
-	body := &AuthoriseLoginServererrorResponseBody{
+// NewGrantTokenServererrorResponseBody builds the HTTP response body from the
+// result of the "GrantToken" endpoint of the "invoice" service.
+func NewGrantTokenServererrorResponseBody(res *goa.ServiceError) *GrantTokenServererrorResponseBody {
+	body := &GrantTokenServererrorResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -287,10 +287,10 @@ func NewAuthoriseLoginServererrorResponseBody(res *goa.ServiceError) *AuthoriseL
 	return body
 }
 
-// NewAuthoriseLoginBadrequestResponseBody builds the HTTP response body from
-// the result of the "AuthoriseLogin" endpoint of the "invoice" service.
-func NewAuthoriseLoginBadrequestResponseBody(res *goa.ServiceError) *AuthoriseLoginBadrequestResponseBody {
-	body := &AuthoriseLoginBadrequestResponseBody{
+// NewGrantTokenBadrequestResponseBody builds the HTTP response body from the
+// result of the "GrantToken" endpoint of the "invoice" service.
+func NewGrantTokenBadrequestResponseBody(res *goa.ServiceError) *GrantTokenBadrequestResponseBody {
+	body := &GrantTokenBadrequestResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -301,10 +301,10 @@ func NewAuthoriseLoginBadrequestResponseBody(res *goa.ServiceError) *AuthoriseLo
 	return body
 }
 
-// NewAuthoriseLoginNotfoundResponseBody builds the HTTP response body from the
-// result of the "AuthoriseLogin" endpoint of the "invoice" service.
-func NewAuthoriseLoginNotfoundResponseBody(res *goa.ServiceError) *AuthoriseLoginNotfoundResponseBody {
-	body := &AuthoriseLoginNotfoundResponseBody{
+// NewGrantTokenNotfoundResponseBody builds the HTTP response body from the
+// result of the "GrantToken" endpoint of the "invoice" service.
+func NewGrantTokenNotfoundResponseBody(res *goa.ServiceError) *GrantTokenNotfoundResponseBody {
+	body := &GrantTokenNotfoundResponseBody{
 		Name:      res.Name,
 		ID:        res.ID,
 		Message:   res.Message,
@@ -327,10 +327,9 @@ func NewCreateAccountUser(body *CreateAccountRequestBody) *invoice.User {
 	return v
 }
 
-// NewAuthoriseLoginPayload builds a invoice service AuthoriseLogin endpoint
-// payload.
-func NewAuthoriseLoginPayload(body *AuthoriseLoginRequestBody, grantType string, token *string) *invoice.AuthoriseLoginPayload {
-	v := &invoice.AuthoriseLoginPayload{
+// NewGrantTokenPayload builds a invoice service GrantToken endpoint payload.
+func NewGrantTokenPayload(body *GrantTokenRequestBody, grantType string, token *string) *invoice.GrantTokenPayload {
+	v := &invoice.GrantTokenPayload{
 		Email:    *body.Email,
 		Password: *body.Password,
 	}
@@ -355,9 +354,9 @@ func ValidateCreateAccountRequestBody(body *CreateAccountRequestBody) (err error
 	return
 }
 
-// ValidateAuthoriseLoginRequestBody runs the validations defined on
-// AuthoriseLoginRequestBody
-func ValidateAuthoriseLoginRequestBody(body *AuthoriseLoginRequestBody) (err error) {
+// ValidateGrantTokenRequestBody runs the validations defined on
+// GrantTokenRequestBody
+func ValidateGrantTokenRequestBody(body *GrantTokenRequestBody) (err error) {
 	if body.Email == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("email", "body"))
 	}

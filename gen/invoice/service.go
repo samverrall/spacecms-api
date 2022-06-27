@@ -18,7 +18,7 @@ type Service interface {
 	// Create an account by email address and password.
 	CreateAccount(context.Context, *User) (err error)
 	// Create an account by email address and password.
-	AuthoriseLogin(context.Context, *AuthoriseLoginPayload) (res *Token, err error)
+	GrantToken(context.Context, *GrantTokenPayload) (res *Token, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -29,11 +29,11 @@ const ServiceName = "invoice"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [2]string{"CreateAccount", "AuthoriseLogin"}
+var MethodNames = [2]string{"CreateAccount", "GrantToken"}
 
-// AuthoriseLoginPayload is the payload type of the invoice service
-// AuthoriseLogin method.
-type AuthoriseLoginPayload struct {
+// GrantTokenPayload is the payload type of the invoice service GrantToken
+// method.
+type GrantTokenPayload struct {
 	Token     *string
 	GrantType string
 	// User email
@@ -42,7 +42,7 @@ type AuthoriseLoginPayload struct {
 	Password string
 }
 
-// Token is the result type of the invoice service AuthoriseLogin method.
+// Token is the result type of the invoice service GrantToken method.
 type Token struct {
 	Token                  *string
 	AccessToken            string

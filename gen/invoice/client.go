@@ -15,15 +15,15 @@ import (
 
 // Client is the "invoice" service client.
 type Client struct {
-	CreateAccountEndpoint  goa.Endpoint
-	AuthoriseLoginEndpoint goa.Endpoint
+	CreateAccountEndpoint goa.Endpoint
+	GrantTokenEndpoint    goa.Endpoint
 }
 
 // NewClient initializes a "invoice" service client given the endpoints.
-func NewClient(createAccount, authoriseLogin goa.Endpoint) *Client {
+func NewClient(createAccount, grantToken goa.Endpoint) *Client {
 	return &Client{
-		CreateAccountEndpoint:  createAccount,
-		AuthoriseLoginEndpoint: authoriseLogin,
+		CreateAccountEndpoint: createAccount,
+		GrantTokenEndpoint:    grantToken,
 	}
 }
 
@@ -33,10 +33,10 @@ func (c *Client) CreateAccount(ctx context.Context, p *User) (err error) {
 	return
 }
 
-// AuthoriseLogin calls the "AuthoriseLogin" endpoint of the "invoice" service.
-func (c *Client) AuthoriseLogin(ctx context.Context, p *AuthoriseLoginPayload) (res *Token, err error) {
+// GrantToken calls the "GrantToken" endpoint of the "invoice" service.
+func (c *Client) GrantToken(ctx context.Context, p *GrantTokenPayload) (res *Token, err error) {
 	var ires interface{}
-	ires, err = c.AuthoriseLoginEndpoint(ctx, p)
+	ires, err = c.GrantTokenEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

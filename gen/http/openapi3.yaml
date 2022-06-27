@@ -64,9 +64,9 @@ paths:
     post:
       tags:
       - invoice
-      summary: AuthoriseLogin invoice
+      summary: GrantToken invoice
       description: Create an account by email address and password.
-      operationId: invoice#AuthoriseLogin
+      operationId: invoice#GrantToken
       parameters:
       - name: grant_type
         in: query
@@ -91,7 +91,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthoriseLoginRequestBody'
+              $ref: '#/components/schemas/GrantTokenRequestBody'
             example:
               email: Laborum facilis libero.
               password: Eligendi quis.
@@ -135,23 +135,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    AuthoriseLoginRequestBody:
-      type: object
-      properties:
-        email:
-          type: string
-          description: User email
-          example: Et nihil libero ut laboriosam.
-        password:
-          type: string
-          description: User password
-          example: Temporibus eveniet.
-      example:
-        email: Ipsum facilis est similique aut id.
-        password: Et delectus.
-      required:
-      - email
-      - password
     CreateAccountRequestBody:
       type: object
       properties:
@@ -220,6 +203,23 @@ components:
       - temporary
       - timeout
       - fault
+    GrantTokenRequestBody:
+      type: object
+      properties:
+        email:
+          type: string
+          description: User email
+          example: Et nihil libero ut laboriosam.
+        password:
+          type: string
+          description: User password
+          example: Temporibus eveniet.
+      example:
+        email: Ipsum facilis est similique aut id.
+        password: Et delectus.
+      required:
+      - email
+      - password
     Token:
       type: object
       properties:

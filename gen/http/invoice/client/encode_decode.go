@@ -138,13 +138,13 @@ func DecodeCreateAccountResponse(decoder func(*http.Response) goahttp.Decoder, r
 	}
 }
 
-// BuildAuthoriseLoginRequest instantiates a HTTP request object with method
-// and path set to call the "invoice" service "AuthoriseLogin" endpoint
-func (c *Client) BuildAuthoriseLoginRequest(ctx context.Context, v interface{}) (*http.Request, error) {
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: AuthoriseLoginInvoicePath()}
+// BuildGrantTokenRequest instantiates a HTTP request object with method and
+// path set to call the "invoice" service "GrantToken" endpoint
+func (c *Client) BuildGrantTokenRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GrantTokenInvoicePath()}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
-		return nil, goahttp.ErrInvalidURL("invoice", "AuthoriseLogin", u.String(), err)
+		return nil, goahttp.ErrInvalidURL("invoice", "GrantToken", u.String(), err)
 	}
 	if ctx != nil {
 		req = req.WithContext(ctx)
@@ -153,13 +153,13 @@ func (c *Client) BuildAuthoriseLoginRequest(ctx context.Context, v interface{}) 
 	return req, nil
 }
 
-// EncodeAuthoriseLoginRequest returns an encoder for requests sent to the
-// invoice AuthoriseLogin server.
-func EncodeAuthoriseLoginRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+// EncodeGrantTokenRequest returns an encoder for requests sent to the invoice
+// GrantToken server.
+func EncodeGrantTokenRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
 	return func(req *http.Request, v interface{}) error {
-		p, ok := v.(*invoice.AuthoriseLoginPayload)
+		p, ok := v.(*invoice.GrantTokenPayload)
 		if !ok {
-			return goahttp.ErrInvalidType("invoice", "AuthoriseLogin", "*invoice.AuthoriseLoginPayload", v)
+			return goahttp.ErrInvalidType("invoice", "GrantToken", "*invoice.GrantTokenPayload", v)
 		}
 		if p.Token != nil {
 			v := *p.Token
@@ -171,24 +171,24 @@ func EncodeAuthoriseLoginRequest(encoder func(*http.Request) goahttp.Encoder) fu
 		values := req.URL.Query()
 		values.Add("grant_type", p.GrantType)
 		req.URL.RawQuery = values.Encode()
-		body := NewAuthoriseLoginRequestBody(p)
+		body := NewGrantTokenRequestBody(p)
 		if err := encoder(req).Encode(&body); err != nil {
-			return goahttp.ErrEncodingError("invoice", "AuthoriseLogin", err)
+			return goahttp.ErrEncodingError("invoice", "GrantToken", err)
 		}
 		return nil
 	}
 }
 
-// DecodeAuthoriseLoginResponse returns a decoder for responses returned by the
-// invoice AuthoriseLogin endpoint. restoreBody controls whether the response
-// body should be restored after having been read.
-// DecodeAuthoriseLoginResponse may return the following errors:
+// DecodeGrantTokenResponse returns a decoder for responses returned by the
+// invoice GrantToken endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+// DecodeGrantTokenResponse may return the following errors:
 //	- "unauthorized" (type *goa.ServiceError): http.StatusUnauthorized
 //	- "servererror" (type *goa.ServiceError): http.StatusInternalServerError
 //	- "badrequest" (type *goa.ServiceError): http.StatusBadRequest
 //	- "notfound" (type *goa.ServiceError): http.StatusNotFound
 //	- error: internal error
-func DecodeAuthoriseLoginResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+func DecodeGrantTokenResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
 	return func(resp *http.Response) (interface{}, error) {
 		if restoreBody {
 			b, err := ioutil.ReadAll(resp.Body)
@@ -205,16 +205,16 @@ func DecodeAuthoriseLoginResponse(decoder func(*http.Response) goahttp.Decoder, 
 		switch resp.StatusCode {
 		case http.StatusOK:
 			var (
-				body AuthoriseLoginResponseBody
+				body GrantTokenResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrDecodingError("invoice", "GrantToken", err)
 			}
-			err = ValidateAuthoriseLoginResponseBody(&body)
+			err = ValidateGrantTokenResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrValidationError("invoice", "GrantToken", err)
 			}
 			var (
 				token    *string
@@ -231,67 +231,67 @@ func DecodeAuthoriseLoginResponse(decoder func(*http.Response) goahttp.Decoder, 
 			if tokenRaw != "" {
 				token = &tokenRaw
 			}
-			res := NewAuthoriseLoginTokenOK(&body, token)
+			res := NewGrantTokenTokenOK(&body, token)
 			return res, nil
 		case http.StatusUnauthorized:
 			var (
-				body AuthoriseLoginUnauthorizedResponseBody
+				body GrantTokenUnauthorizedResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrDecodingError("invoice", "GrantToken", err)
 			}
-			err = ValidateAuthoriseLoginUnauthorizedResponseBody(&body)
+			err = ValidateGrantTokenUnauthorizedResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrValidationError("invoice", "GrantToken", err)
 			}
-			return nil, NewAuthoriseLoginUnauthorized(&body)
+			return nil, NewGrantTokenUnauthorized(&body)
 		case http.StatusInternalServerError:
 			var (
-				body AuthoriseLoginServererrorResponseBody
+				body GrantTokenServererrorResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrDecodingError("invoice", "GrantToken", err)
 			}
-			err = ValidateAuthoriseLoginServererrorResponseBody(&body)
+			err = ValidateGrantTokenServererrorResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrValidationError("invoice", "GrantToken", err)
 			}
-			return nil, NewAuthoriseLoginServererror(&body)
+			return nil, NewGrantTokenServererror(&body)
 		case http.StatusBadRequest:
 			var (
-				body AuthoriseLoginBadrequestResponseBody
+				body GrantTokenBadrequestResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrDecodingError("invoice", "GrantToken", err)
 			}
-			err = ValidateAuthoriseLoginBadrequestResponseBody(&body)
+			err = ValidateGrantTokenBadrequestResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrValidationError("invoice", "GrantToken", err)
 			}
-			return nil, NewAuthoriseLoginBadrequest(&body)
+			return nil, NewGrantTokenBadrequest(&body)
 		case http.StatusNotFound:
 			var (
-				body AuthoriseLoginNotfoundResponseBody
+				body GrantTokenNotfoundResponseBody
 				err  error
 			)
 			err = decoder(resp).Decode(&body)
 			if err != nil {
-				return nil, goahttp.ErrDecodingError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrDecodingError("invoice", "GrantToken", err)
 			}
-			err = ValidateAuthoriseLoginNotfoundResponseBody(&body)
+			err = ValidateGrantTokenNotfoundResponseBody(&body)
 			if err != nil {
-				return nil, goahttp.ErrValidationError("invoice", "AuthoriseLogin", err)
+				return nil, goahttp.ErrValidationError("invoice", "GrantToken", err)
 			}
-			return nil, NewAuthoriseLoginNotfound(&body)
+			return nil, NewGrantTokenNotfound(&body)
 		default:
 			body, _ := ioutil.ReadAll(resp.Body)
-			return nil, goahttp.ErrInvalidResponse("invoice", "AuthoriseLogin", resp.StatusCode, string(body))
+			return nil, goahttp.ErrInvalidResponse("invoice", "GrantToken", resp.StatusCode, string(body))
 		}
 	}
 }
