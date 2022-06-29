@@ -3,7 +3,7 @@
 // invoice HTTP client CLI support package
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/invoice/design
 
 package client
 
@@ -11,7 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	invoice "github.com/samverrall/spacecms-api/gen/invoice"
 	goa "goa.design/goa/v3/pkg"
 )
 

@@ -1,6 +1,6 @@
-# Invoice API service
+# SpaceCMS API
 
-This repository holds a Golang API service for a 'invoicing application' personal project that I'm building open source!
+This repository holds a Golang API service for a CMS (Content Management System) personal project that I'm building open source!
 
 ## Tools used within this repo:
   - Logrus (Used for logging)

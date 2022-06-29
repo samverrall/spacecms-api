@@ -6,11 +6,11 @@ import (
 	"reflect"
 	"testing"
 
-	dm "github.com/samverrall/invoice-api-service/datastore/mocks"
-	"github.com/samverrall/invoice-api-service/gen/invoice"
-	"github.com/samverrall/invoice-api-service/hasher"
-	hm "github.com/samverrall/invoice-api-service/hasher/mocks"
-	"github.com/samverrall/invoice-api-service/tokens/jwttoken"
+	dm "github.com/samverrall/spacecms-api/datastore/mocks"
+	"github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/hasher"
+	hm "github.com/samverrall/spacecms-api/hasher/mocks"
+	"github.com/samverrall/spacecms-api/tokens/jwttoken"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
 )

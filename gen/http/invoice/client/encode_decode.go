@@ -3,7 +3,7 @@
 // invoice HTTP client encoders and decoders
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/invoice/design
 
 package client
 
@@ -14,7 +14,7 @@ import (
 	"net/http"
 	"net/url"
 
-	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	invoice "github.com/samverrall/spacecms-api/gen/invoice"
 	goahttp "goa.design/goa/v3/http"
 )
 

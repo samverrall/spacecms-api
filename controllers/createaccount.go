@@ -6,8 +6,8 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/samverrall/invoice-api-service/apierror"
-	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/spacecms-api/apierror"
+	invoice "github.com/samverrall/spacecms-api/gen/invoice"
 	"github.com/sirupsen/logrus"
 )
 

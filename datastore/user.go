@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/samverrall/invoice-api-service/datastore/sqlc"
-	"github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/spacecms-api/datastore/sqlc"
+	"github.com/samverrall/spacecms-api/gen/invoice"
 )
 
 func (d *DataStore) CreateUser(ctx context.Context, id string, email, passwordHash, name string) error {

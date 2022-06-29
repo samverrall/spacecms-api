@@ -11,8 +11,8 @@ import (
 	"sync"
 	"syscall"
 
-	invoiceapi "github.com/samverrall/invoice-api-service/controllers"
-	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
+	invoiceapi "github.com/samverrall/spacecms-api/controllers"
+	invoice "github.com/samverrall/spacecms-api/gen/invoice"
 	"github.com/sirupsen/logrus"
 )
 

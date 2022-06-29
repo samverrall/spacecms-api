@@ -3,7 +3,7 @@
 // HTTP request path constructors for the invoice service.
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/invoice/design
 
 package client
 

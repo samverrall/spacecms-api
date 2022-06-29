@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/samverrall/invoice-api-service/apierror"
-	"github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/spacecms-api/apierror"
+	"github.com/samverrall/spacecms-api/gen/invoice"
 	"github.com/sirupsen/logrus"
 )
 

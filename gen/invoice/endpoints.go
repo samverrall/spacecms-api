@@ -3,7 +3,7 @@
 // invoice endpoints
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/invoice/design
 
 package invoice
 

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/invoice"
 )
 
 type JWTToken struct {

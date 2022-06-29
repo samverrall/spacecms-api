@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/invoice"
 )
 
 type Tokener interface {

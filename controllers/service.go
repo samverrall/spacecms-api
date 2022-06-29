@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"github.com/samverrall/invoice-api-service/datastore"
-	invoice "github.com/samverrall/invoice-api-service/gen/invoice"
-	"github.com/samverrall/invoice-api-service/hasher"
-	"github.com/samverrall/invoice-api-service/hasher/argon2id"
-	"github.com/samverrall/invoice-api-service/tokens"
-	"github.com/samverrall/invoice-api-service/tokens/jwttoken"
+	"github.com/samverrall/spacecms-api/datastore"
+	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/hasher"
+	"github.com/samverrall/spacecms-api/hasher/argon2id"
+	"github.com/samverrall/spacecms-api/tokens"
+	"github.com/samverrall/spacecms-api/tokens/jwttoken"
 	log "github.com/sirupsen/logrus"
 )
 

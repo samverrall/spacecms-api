@@ -1,4 +1,4 @@
-module github.com/samverrall/invoice-api-service
+module github.com/samverrall/spacecms-api
 
 go 1.18
 

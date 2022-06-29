@@ -3,7 +3,7 @@
 // invoice HTTP client CLI support package
 //
 // Command:
-// $ goa gen github.com/samverrall/invoice-api-service/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/invoice/design
 
 package cli
 
@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"os"
 
-	invoicec "github.com/samverrall/invoice-api-service/gen/http/invoice/client"
+	invoicec "github.com/samverrall/spacecms-api/gen/http/invoice/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -161,7 +161,7 @@ func invoiceCreateAccountUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice create-account -body JSON
 
 Create an account by email address and password.
-    -body JSON: 
+    -body JSON:
 
 Example:
     %[1]s invoice create-account --body '{
@@ -177,9 +177,9 @@ func invoiceGrantTokenUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice grant-token -body JSON -grant-type STRING -token STRING
 
 Create an account by email address and password.
-    -body JSON: 
-    -grant-type STRING: 
-    -token STRING: 
+    -body JSON:
+    -grant-type STRING:
+    -token STRING:
 
 Example:
     %[1]s invoice grant-token --body '{

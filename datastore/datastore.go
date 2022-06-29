@@ -5,9 +5,9 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/samverrall/invoice-api-service/database"
-	"github.com/samverrall/invoice-api-service/datastore/sqlc"
-	"github.com/samverrall/invoice-api-service/gen/invoice"
+	"github.com/samverrall/spacecms-api/database"
+	"github.com/samverrall/spacecms-api/datastore/sqlc"
+	"github.com/samverrall/spacecms-api/gen/invoice"
 )
 
 type DataStore struct {
