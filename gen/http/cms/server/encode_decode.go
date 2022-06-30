@@ -54,7 +54,7 @@ func DecodeCreatePageRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 		var (
 			token *string
 		)
-		tokenRaw := r.Header.Get("X-Authorization")
+		tokenRaw := r.Header.Get("Authorization")
 		if tokenRaw != "" {
 			token = &tokenRaw
 		}

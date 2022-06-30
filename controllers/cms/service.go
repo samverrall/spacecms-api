@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"os"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/samverrall/spacecms-api/datastore"
 	"github.com/samverrall/spacecms-api/gen/cms"
+	"github.com/samverrall/spacecms-api/tokens/jwttoken"
 )
 
 // auth service example implementation.
@@ -34,30 +36,25 @@ func NewCMSService(logger *log.Logger, dbi *datastore.DataStore) cms.Service {
 // JWTAuth implements the authorization logic for service "secured_service" for
 // the "jwt" security scheme.
 func (s *cmsservice) JWTAuth(ctx context.Context, token string, scheme *security.JWTScheme) (context.Context, error) {
-	claims := make(jwt.MapClaims)
+	s.logger.Info("JWTAuth")
 
-	_, err := jwt.ParseWithClaims(token, claims, func(_ *jwt.Token) (interface{}, error) { return os.Getenv("INVOICE_SECRET"), nil })
+	t, err := jwt.ParseWithClaims(token, &jwttoken.Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("INVOICE_SECRET")), nil
+	})
 	if err != nil {
 		return ctx, err
 	}
 
-	if claims["scopes"] == nil {
-		return ctx, err
-	}
-	scopes, ok := claims["scopes"].([]interface{})
-	if !ok {
-		return ctx, err
-	}
-	scopesInToken := make([]string, len(scopes))
-	for _, scp := range scopes {
-		scopesInToken = append(scopesInToken, scp.(string))
-	}
-	if err := scheme.Validate(scopesInToken); err != nil {
-		return ctx, err
+	claims, ok := t.Claims.(*jwttoken.Claims)
+	if !ok || !t.Valid {
+		return ctx, errors.New("got invalid token")
 	}
 
+	s.logger.Info("UserID from token: ", claims.UserID)
+
 	ctx = contextWithAuthInfo(ctx, authInfo{
-		claims: claims,
+		user: claims.UserID,
 	})
+
 	return ctx, nil
 }

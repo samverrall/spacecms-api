@@ -34,7 +34,7 @@ var _ = Service("cms", func() {
 		Result(page)
 
 		HTTP(func() {
-			Header("token:X-Authorization") // JWT token passed in "X-Authorization" header
+			Header("token:Authorization") // JWT token passed in "X-Authorization" header
 			POST("/pages")
 			Response(StatusCreated)
 		})

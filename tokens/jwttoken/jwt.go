@@ -2,6 +2,7 @@ package jwttoken
 
 import (
 	"context"
+	"errors"
 	"os"
 	"time"
 
@@ -19,24 +20,38 @@ func New(accessTokenExpiryMinutes int) *JWTToken {
 	}
 }
 
+type Claims struct {
+	UserID string `json:"userId"`
+	jwt.StandardClaims
+}
+
 // https://developer.vonage.com/blog/20/03/13/using-jwt-for-authentication-in-a-golang-application-dr#:~:text=Refresh%20Token%3A%20A%20refresh%20token,hit%20(from%20our%20application).
 func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*auth.Token, error) {
-	atExpiryTime := time.Now().Add(time.Minute * time.Duration(jt.accessTokenExpiryMinutes))
+	ttl := time.Duration(jt.accessTokenExpiryMinutes) * time.Minute
+	atExpiryTime := time.Now().Add(ttl)
 	rtExpiryTime := time.Now().Add(time.Hour * 24 * 7)
 
-	at, err := jt.NewAccessToken(ctx, jwt.MapClaims{
-		"expiresAt": atExpiryTime.Unix(),
-		"issuedAt":  time.Now().Unix(),
-		"userID":    userID,
+	if userID == nil {
+		return nil, errors.New("no user id supplied")
+	}
+
+	at, err := jt.NewAccessToken(ctx, &Claims{
+		*userID,
+		jwt.StandardClaims{
+			ExpiresAt: atExpiryTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	rt, err := jt.NewRefreshToken(ctx, jwt.MapClaims{
-		"expiresAt": rtExpiryTime.Unix(),
-		"issuedAt":  time.Now().Unix(),
-		"userID":    userID,
+	rt, err := jt.NewRefreshToken(ctx, &Claims{
+		*userID,
+		jwt.StandardClaims{
+			ExpiresAt: rtExpiryTime.Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -52,7 +67,7 @@ func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*auth.
 	}, nil
 }
 
-func (jt *JWTToken) NewAccessToken(ctx context.Context, claims jwt.MapClaims) (string, error) {
+func (jt *JWTToken) NewAccessToken(ctx context.Context, claims *Claims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	accessToken, err := token.SignedString([]byte(os.Getenv("INVOICE_SECRET")))
 	if err != nil {
@@ -61,7 +76,7 @@ func (jt *JWTToken) NewAccessToken(ctx context.Context, claims jwt.MapClaims) (s
 	return accessToken, nil
 }
 
-func (jt *JWTToken) NewRefreshToken(ctx context.Context, claims jwt.MapClaims) (string, error) {
+func (jt *JWTToken) NewRefreshToken(ctx context.Context, claims *Claims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	refreshToken, err := token.SignedString([]byte(os.Getenv("INVOICE_SECRET_REFRESH")))
 	if err != nil {
@@ -69,9 +84,3 @@ func (jt *JWTToken) NewRefreshToken(ctx context.Context, claims jwt.MapClaims) (
 	}
 	return refreshToken, nil
 }
-
-// func (jt *JWTToken) Verify(token string) error {
-// 	jwt.Parse(token, func() {
-
-// 	})
-// }

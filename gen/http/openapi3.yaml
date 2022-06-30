@@ -22,16 +22,6 @@ paths:
       summary: CreatePage cms
       description: Create an account by email address and password.
       operationId: cms#CreatePage
-      parameters:
-      - name: X-Authorization
-        in: header
-        description: JWT used for authentication
-        allowEmptyValue: true
-        schema:
-          type: string
-          description: JWT used for authentication
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
       requestBody:
         required: true
         content:
@@ -88,7 +78,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
       security:
-      - jwt_header_X-Authorization:
+      - jwt_header_Authorization:
         - api:read
         - api:write
   /api/v1/user/signup:
@@ -379,7 +369,7 @@ components:
       - accessExpiryTimeStamp
       - refreshExpiryTimeStamp
   securitySchemes:
-    jwt_header_X-Authorization:
+    jwt_header_Authorization:
       type: http
       description: Secures endpoint by requiring a valid JWT token retrieved via the
         signin endpoint. Supports scopes "api:read" and "api:write".

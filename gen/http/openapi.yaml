@@ -34,7 +34,7 @@ paths:
       description: Create an account by email address and password.
       operationId: cms#CreatePage
       parameters:
-      - name: X-Authorization
+      - name: Authorization
         in: header
         description: JWT used for authentication
         required: false
@@ -82,7 +82,7 @@ paths:
       schemes:
       - http
       security:
-      - jwt_header_X-Authorization: []
+      - jwt_header_Authorization: []
   /api/v1/user/signup:
     post:
       tags:
@@ -910,7 +910,7 @@ definitions:
       description: Sit ad facilis neque eum.
       title: Consequatur minus voluptatum incidunt.
 securityDefinitions:
-  jwt_header_X-Authorization:
+  jwt_header_Authorization:
     type: apiKey
     description: |-
       Secures endpoint by requiring a valid JWT token retrieved via the signin endpoint. Supports scopes "api:read" and "api:write".
@@ -918,5 +918,5 @@ securityDefinitions:
       **Security Scopes**:
         * `api:read`: Read-only access
         * `api:write`: Read and write access
-    name: X-Authorization
+    name: Authorization
     in: header

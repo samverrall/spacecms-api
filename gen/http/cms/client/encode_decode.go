@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 
 	cms "github.com/samverrall/spacecms-api/gen/cms"
 	goahttp "goa.design/goa/v3/http"
@@ -43,7 +44,11 @@ func EncodeCreatePageRequest(encoder func(*http.Request) goahttp.Encoder) func(*
 		}
 		if p.Token != nil {
 			head := *p.Token
-			req.Header.Set("X-Authorization", head)
+			if !strings.Contains(head, " ") {
+				req.Header.Set("Authorization", "Bearer "+head)
+			} else {
+				req.Header.Set("Authorization", head)
+			}
 		}
 		body := NewCreatePageRequestBody(p)
 		if err := encoder(req).Encode(&body); err != nil {
