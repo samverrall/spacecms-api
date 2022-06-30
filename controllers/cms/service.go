@@ -33,7 +33,7 @@ func NewCMSService(logger *log.Logger, dbi *datastore.DataStore) cms.Service {
 	}
 }
 
-// JWTAuth implements the authorization logic for service "secured_service" for
+// JWTAuth implements the authorization logic for the cms service for
 // the "jwt" security scheme.
 func (s *cmsservice) JWTAuth(ctx context.Context, token string, scheme *security.JWTScheme) (context.Context, error) {
 	s.logger.Info("JWTAuth")
