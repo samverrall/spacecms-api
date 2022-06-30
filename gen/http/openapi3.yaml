@@ -6,7 +6,16 @@ info:
 servers:
 - url: http://localhost:8000
 paths:
-  /api/v1/create-account:
+  /api/v1/openapi.json:
+    get:
+      tags:
+      - auth
+      summary: Download ./gen/http/openapi.json
+      operationId: auth#/api/v1/openapi.json
+      responses:
+        "200":
+          description: File downloaded
+  /api/v1/user/signup:
     post:
       tags:
       - auth
@@ -51,16 +60,7 @@ paths:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
-  /api/v1/openapi.json:
-    get:
-      tags:
-      - auth
-      summary: Download ./gen/http/openapi.json
-      operationId: auth#/api/v1/openapi.json
-      responses:
-        "200":
-          description: File downloaded
-  /api/v1/tokens:
+  /api/v1/user/tokens:
     post:
       tags:
       - auth

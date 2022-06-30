@@ -37,7 +37,7 @@ var _ = Service("auth", func() {
 		Payload(user)
 
 		HTTP(func() {
-			POST("/create-account")
+			POST("/user/signup")
 			Response(StatusCreated)
 		})
 	})
@@ -55,7 +55,7 @@ var _ = Service("auth", func() {
 
 		HTTP(func() {
 			Cookie("token:__Host-token", String)
-			POST("/tokens")
+			POST("/user/tokens")
 			Response(StatusOK, func() {
 				Cookie("token:__Host-token", String)
 				CookieMaxAge(90000)

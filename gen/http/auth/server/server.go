@@ -61,8 +61,8 @@ func New(
 	}
 	return &Server{
 		Mounts: []*MountPoint{
-			{"CreateAccount", "POST", "/api/v1/create-account"},
-			{"GrantToken", "POST", "/api/v1/tokens"},
+			{"CreateAccount", "POST", "/api/v1/user/signup"},
+			{"GrantToken", "POST", "/api/v1/user/tokens"},
 			{"./gen/http/openapi.json", "GET", "/api/v1/openapi.json"},
 		},
 		CreateAccount:      NewCreateAccountHandler(e.CreateAccount, mux, decoder, encoder, errhandler, formatter),
@@ -101,7 +101,7 @@ func MountCreateAccountHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/api/v1/create-account", f)
+	mux.Handle("POST", "/api/v1/user/signup", f)
 }
 
 // NewCreateAccountHandler creates a HTTP handler which loads the HTTP request
@@ -152,7 +152,7 @@ func MountGrantTokenHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("POST", "/api/v1/tokens", f)
+	mux.Handle("POST", "/api/v1/user/tokens", f)
 }
 
 // NewGrantTokenHandler creates a HTTP handler which loads the HTTP request and

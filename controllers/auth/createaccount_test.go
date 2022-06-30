@@ -70,7 +70,7 @@ func Test_invoicesrvc_CreateAccount(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "Successfuly inserted user",
+			name: "Successfully inserted user",
 			payload: &auth.User{
 				Email: successInsert,
 			},

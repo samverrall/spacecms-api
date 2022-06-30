@@ -9,10 +9,10 @@ package client
 
 // CreateAccountAuthPath returns the URL path to the auth service CreateAccount HTTP endpoint.
 func CreateAccountAuthPath() string {
-	return "/api/v1/create-account"
+	return "/api/v1/user/signup"
 }
 
 // GrantTokenAuthPath returns the URL path to the auth service GrantToken HTTP endpoint.
 func GrantTokenAuthPath() string {
-	return "/api/v1/tokens"
+	return "/api/v1/user/tokens"
 }
