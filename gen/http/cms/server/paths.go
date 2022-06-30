@@ -3,6 +3,11 @@
 // HTTP request path constructors for the cms service.
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package server
+
+// CreatePageCmsPath returns the URL path to the cms service CreatePage HTTP endpoint.
+func CreatePageCmsPath() string {
+	return "/api/v1/pages"
+}

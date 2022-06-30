@@ -3,7 +3,7 @@
 // auth HTTP client CLI support package
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package client
 
@@ -22,7 +22,7 @@ func BuildCreateAccountPayload(authCreateAccountBody string) (*auth.User, error)
 	{
 		err = json.Unmarshal([]byte(authCreateAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Maiores at cupiditate doloribus recusandae non.\",\n      \"id\": \"Occaecati aspernatur et doloremque aut recusandae voluptatem.\",\n      \"name\": \"Perspiciatis error.\",\n      \"password\": \"Autem tenetur et voluptate possimus asperiores ea.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Itaque excepturi repellendus rerum tempore velit.\",\n      \"id\": \"Autem tenetur et voluptate possimus asperiores ea.\",\n      \"name\": \"Consectetur et saepe voluptas ex sit.\",\n      \"password\": \"Dolores eveniet molestias laudantium sequi hic perspiciatis.\"\n   }'")
 		}
 	}
 	v := &auth.User{
@@ -43,7 +43,7 @@ func BuildGrantTokenPayload(authGrantTokenBody string, authGrantTokenToken strin
 	{
 		err = json.Unmarshal([]byte(authGrantTokenBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Itaque excepturi repellendus rerum tempore velit.\",\n      \"password\": \"Consectetur et saepe voluptas ex sit.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Perspiciatis quibusdam dolor numquam.\",\n      \"password\": \"Odit vel esse voluptas.\"\n   }'")
 		}
 	}
 	var token *string

@@ -20,5 +20,23 @@ var _ = Service("cms", func() {
 		Path("/api/v1")
 	})
 
+	Method("CreatePage", func() {
+		Description("Create an account by email address and password.")
+		Payload(func() {
+			Attribute("token", String)
+			Attribute("email", String, "User email")
+			Attribute("password", String, "User password")
+			Required("email", "password")
+		})
+
+		Result(tokenResponse)
+
+		HTTP(func() {
+			Cookie("token:__Host-token", String)
+			POST("/pages")
+			Response(StatusCreated)
+		})
+	})
+
 	Files("/openapi.json", "./gen/http/openapi.json")
 })

@@ -3,19 +3,34 @@
 // cms client
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package cms
 
 import (
+	"context"
+
 	goa "goa.design/goa/v3/pkg"
 )
 
 // Client is the "cms" service client.
 type Client struct {
+	CreatePageEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "cms" service client given the endpoints.
-func NewClient(goa.Endpoint) *Client {
-	return &Client{}
+func NewClient(createPage goa.Endpoint) *Client {
+	return &Client{
+		CreatePageEndpoint: createPage,
+	}
+}
+
+// CreatePage calls the "CreatePage" endpoint of the "cms" service.
+func (c *Client) CreatePage(ctx context.Context, p *CreatePagePayload) (res *Token, err error) {
+	var ires interface{}
+	ires, err = c.CreatePageEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*Token), nil
 }

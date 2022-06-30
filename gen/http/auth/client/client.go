@@ -3,7 +3,7 @@
 // auth client HTTP transport
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package client
 

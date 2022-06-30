@@ -9,12 +9,75 @@ paths:
   /api/v1/openapi.json:
     get:
       tags:
-      - auth
+      - cms
       summary: Download ./gen/http/openapi.json
-      operationId: auth#/api/v1/openapi.json
+      operationId: cms#/api/v1/openapi.json
       responses:
         "200":
           description: File downloaded
+  /api/v1/pages:
+    post:
+      tags:
+      - cms
+      summary: CreatePage cms
+      description: Create an account by email address and password.
+      operationId: cms#CreatePage
+      parameters:
+      - name: __Host-token
+        in: cookie
+        allowEmptyValue: true
+        schema:
+          type: string
+          example: Deleniti voluptatibus quam repellat tenetur explicabo velit.
+        example: Aut modi commodi rerum.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrantTokenRequestBody'
+            example:
+              email: Commodi architecto velit dolorem distinctio.
+              password: Laborum quam.
+      responses:
+        "201":
+          description: Created response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token2'
+              example:
+                accessExpiryTime: 1087056026976835113
+                accessExpiryTimeStamp: Illum ut repellendus velit qui.
+                accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
+                refreshExpiryTime: 1220539258699969072
+                refreshExpiryTimeStamp: Vero qui voluptatibus illum natus dignissimos.
+                refreshToken: Commodi fugit et voluptas.
+                token: Autem rerum.
+        "400":
+          description: 'badrequest: Bad Request response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: 'notfound: Not Found response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: 'servererror: Internal Server Error response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/v1/user/signup:
     post:
       tags:
@@ -29,10 +92,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccountRequestBody'
             example:
-              email: Maiores at cupiditate doloribus recusandae non.
-              id: Occaecati aspernatur et doloremque aut recusandae voluptatem.
-              name: Perspiciatis error.
-              password: Autem tenetur et voluptate possimus asperiores ea.
+              email: Itaque excepturi repellendus rerum tempore velit.
+              id: Autem tenetur et voluptate possimus asperiores ea.
+              name: Consectetur et saepe voluptas ex sit.
+              password: Dolores eveniet molestias laudantium sequi hic perspiciatis.
       responses:
         "201":
           description: Created response.
@@ -73,8 +136,8 @@ paths:
         allowEmptyValue: true
         schema:
           type: string
-          example: Molestiae aut sit dolorum et error.
-        example: Quos iusto provident.
+          example: Illo nihil repellat voluptatem eos quidem.
+        example: Et dolorem quos iure qui laudantium.
       requestBody:
         required: true
         content:
@@ -82,8 +145,8 @@ paths:
             schema:
               $ref: '#/components/schemas/GrantTokenRequestBody'
             example:
-              email: Itaque excepturi repellendus rerum tempore velit.
-              password: Consectetur et saepe voluptas ex sit.
+              email: Perspiciatis quibusdam dolor numquam.
+              password: Odit vel esse voluptas.
       responses:
         "200":
           description: OK response.
@@ -92,12 +155,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
               example:
-                accessExpiryTime: 2485788906379267123
-                accessExpiryTimeStamp: Magnam placeat error sed qui.
+                accessExpiryTime: 3564172555033265585
+                accessExpiryTimeStamp: Est optio consequatur sit sit doloremque.
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-                refreshExpiryTime: 1347379500592278005
-                refreshExpiryTimeStamp: Ad inventore at omnis.
-                refreshToken: Odit vel esse voluptas.
+                refreshExpiryTime: 73466722768413525
+                refreshExpiryTimeStamp: Ad qui est quibusdam eaque et.
+                refreshToken: Inventore ad inventore at omnis non commodi.
         "400":
           description: 'badrequest: Bad Request response.'
           content:
@@ -130,24 +193,24 @@ components:
         email:
           type: string
           description: Email address of the user
-          example: Quas autem eius suscipit laboriosam laborum voluptas.
+          example: Voluptatum vitae provident quia.
         id:
           type: string
           description: ID of the user
-          example: Illo voluptatem eligendi.
+          example: Quia dicta placeat et non.
         name:
           type: string
           description: Full name of the user
-          example: Ut iusto cum voluptate.
+          example: Voluptatem aut et ipsum.
         password:
           type: string
           description: Password of the user. This is never returned to the client.
-          example: Qui sit reprehenderit a ut et ea.
+          example: Quia amet.
       example:
-        email: Modi est adipisci autem rem fuga.
-        id: Repudiandae fugiat molestiae aliquid voluptas.
-        name: Architecto aspernatur vel.
-        password: Officia nihil sed quas sequi nemo occaecati.
+        email: Aliquam numquam voluptatem ad veritatis qui.
+        id: Necessitatibus quia accusantium excepturi sit.
+        name: Eum modi qui soluta omnis totam.
+        password: Atque sint ea laborum.
       required:
       - email
       - name
@@ -198,14 +261,14 @@ components:
         email:
           type: string
           description: User email
-          example: Ab et qui.
+          example: Fugit vitae totam aut dignissimos.
         password:
           type: string
           description: User password
-          example: Dolor consequatur et quo similique culpa sint.
+          example: Eum est corrupti non.
       example:
-        email: Qui sint id labore.
-        password: Adipisci rerum.
+        email: Modi dolorem quaerat voluptas.
+        password: Voluptatibus quia tenetur enim ad.
       required:
       - email
       - password
@@ -214,31 +277,72 @@ components:
       properties:
         accessExpiryTime:
           type: integer
-          example: 2228558795693003840
+          example: 3599252296412658996
           format: int64
         accessExpiryTimeStamp:
           type: string
-          example: Ratione reprehenderit quae voluptas.
+          example: Quod natus voluptatem.
         accessToken:
           type: string
           example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
         refreshExpiryTime:
           type: integer
-          example: 5418770516802379696
+          example: 6128336371357092582
           format: int64
         refreshExpiryTimeStamp:
           type: string
-          example: Nisi odio velit ducimus facilis molestiae.
+          example: Aut quo odio vel quisquam aut explicabo.
         refreshToken:
           type: string
-          example: Veniam atque consectetur.
+          example: Aliquam aut omnis sint eveniet.
       example:
-        accessExpiryTime: 1444052815716541567
-        accessExpiryTimeStamp: Fugit qui qui reiciendis veniam laudantium quisquam.
+        accessExpiryTime: 7992353371575155920
+        accessExpiryTimeStamp: Dolores sit sapiente quam minima porro corporis.
         accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-        refreshExpiryTime: 8971481570524836720
-        refreshExpiryTimeStamp: Perspiciatis soluta aut rerum illum tempora.
-        refreshToken: Quibusdam dolores optio consequatur excepturi non occaecati.
+        refreshExpiryTime: 85603938504448694
+        refreshExpiryTimeStamp: Reprehenderit et quod minima id accusantium perferendis.
+        refreshToken: Consectetur sed et pariatur modi.
+      required:
+      - accessToken
+      - refreshToken
+      - accessExpiryTime
+      - refreshExpiryTime
+      - accessExpiryTimeStamp
+      - refreshExpiryTimeStamp
+    Token2:
+      type: object
+      properties:
+        accessExpiryTime:
+          type: integer
+          example: 3266702264075865762
+          format: int64
+        accessExpiryTimeStamp:
+          type: string
+          example: Ipsum ex dolores unde nemo itaque.
+        accessToken:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
+        refreshExpiryTime:
+          type: integer
+          example: 7183912702272291221
+          format: int64
+        refreshExpiryTimeStamp:
+          type: string
+          example: Dolores accusantium eum recusandae maiores qui dolore.
+        refreshToken:
+          type: string
+          example: Odio est velit vel.
+        token:
+          type: string
+          example: Est porro.
+      example:
+        accessExpiryTime: 5196807279474169960
+        accessExpiryTimeStamp: Optio omnis doloribus minima officiis aut aut.
+        accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
+        refreshExpiryTime: 8764384405603082437
+        refreshExpiryTimeStamp: A consequatur eos nisi.
+        refreshToken: At vero.
+        token: Odio itaque aut.
       required:
       - accessToken
       - refreshToken
@@ -247,7 +351,7 @@ components:
       - accessExpiryTimeStamp
       - refreshExpiryTimeStamp
 tags:
-- name: cms
-  description: CMS service for SpaceCMS. An open source content management system.
 - name: auth
   description: RESTFUL API Backend for Invoicify. An open source invoicing web app.
+- name: cms
+  description: CMS service for SpaceCMS. An open source content management system.

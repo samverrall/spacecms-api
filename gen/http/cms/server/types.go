@@ -3,6 +3,198 @@
 // cms HTTP server types
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package server
+
+import (
+	cms "github.com/samverrall/spacecms-api/gen/cms"
+	goa "goa.design/goa/v3/pkg"
+)
+
+// CreatePageRequestBody is the type of the "cms" service "CreatePage" endpoint
+// HTTP request body.
+type CreatePageRequestBody struct {
+	// User email
+	Email *string `form:"email,omitempty" json:"email,omitempty" xml:"email,omitempty"`
+	// User password
+	Password *string `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
+}
+
+// CreatePageResponseBody is the type of the "cms" service "CreatePage"
+// endpoint HTTP response body.
+type CreatePageResponseBody struct {
+	Token                  *string `form:"token,omitempty" json:"token,omitempty" xml:"token,omitempty"`
+	AccessToken            string  `form:"accessToken" json:"accessToken" xml:"accessToken"`
+	RefreshToken           string  `form:"refreshToken" json:"refreshToken" xml:"refreshToken"`
+	AccessExpiryTime       int64   `form:"accessExpiryTime" json:"accessExpiryTime" xml:"accessExpiryTime"`
+	RefreshExpiryTime      int64   `form:"refreshExpiryTime" json:"refreshExpiryTime" xml:"refreshExpiryTime"`
+	AccessExpiryTimeStamp  string  `form:"accessExpiryTimeStamp" json:"accessExpiryTimeStamp" xml:"accessExpiryTimeStamp"`
+	RefreshExpiryTimeStamp string  `form:"refreshExpiryTimeStamp" json:"refreshExpiryTimeStamp" xml:"refreshExpiryTimeStamp"`
+}
+
+// CreatePageUnauthorizedResponseBody is the type of the "cms" service
+// "CreatePage" endpoint HTTP response body for the "unauthorized" error.
+type CreatePageUnauthorizedResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreatePageServererrorResponseBody is the type of the "cms" service
+// "CreatePage" endpoint HTTP response body for the "servererror" error.
+type CreatePageServererrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreatePageBadrequestResponseBody is the type of the "cms" service
+// "CreatePage" endpoint HTTP response body for the "badrequest" error.
+type CreatePageBadrequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreatePageNotfoundResponseBody is the type of the "cms" service "CreatePage"
+// endpoint HTTP response body for the "notfound" error.
+type CreatePageNotfoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// NewCreatePageResponseBody builds the HTTP response body from the result of
+// the "CreatePage" endpoint of the "cms" service.
+func NewCreatePageResponseBody(res *cms.Token) *CreatePageResponseBody {
+	body := &CreatePageResponseBody{
+		Token:                  res.Token,
+		AccessToken:            res.AccessToken,
+		RefreshToken:           res.RefreshToken,
+		AccessExpiryTime:       res.AccessExpiryTime,
+		RefreshExpiryTime:      res.RefreshExpiryTime,
+		AccessExpiryTimeStamp:  res.AccessExpiryTimeStamp,
+		RefreshExpiryTimeStamp: res.RefreshExpiryTimeStamp,
+	}
+	return body
+}
+
+// NewCreatePageUnauthorizedResponseBody builds the HTTP response body from the
+// result of the "CreatePage" endpoint of the "cms" service.
+func NewCreatePageUnauthorizedResponseBody(res *goa.ServiceError) *CreatePageUnauthorizedResponseBody {
+	body := &CreatePageUnauthorizedResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreatePageServererrorResponseBody builds the HTTP response body from the
+// result of the "CreatePage" endpoint of the "cms" service.
+func NewCreatePageServererrorResponseBody(res *goa.ServiceError) *CreatePageServererrorResponseBody {
+	body := &CreatePageServererrorResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreatePageBadrequestResponseBody builds the HTTP response body from the
+// result of the "CreatePage" endpoint of the "cms" service.
+func NewCreatePageBadrequestResponseBody(res *goa.ServiceError) *CreatePageBadrequestResponseBody {
+	body := &CreatePageBadrequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreatePageNotfoundResponseBody builds the HTTP response body from the
+// result of the "CreatePage" endpoint of the "cms" service.
+func NewCreatePageNotfoundResponseBody(res *goa.ServiceError) *CreatePageNotfoundResponseBody {
+	body := &CreatePageNotfoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreatePagePayload builds a cms service CreatePage endpoint payload.
+func NewCreatePagePayload(body *CreatePageRequestBody, token *string) *cms.CreatePagePayload {
+	v := &cms.CreatePagePayload{
+		Email:    *body.Email,
+		Password: *body.Password,
+	}
+	v.Token = token
+
+	return v
+}
+
+// ValidateCreatePageRequestBody runs the validations defined on
+// CreatePageRequestBody
+func ValidateCreatePageRequestBody(body *CreatePageRequestBody) (err error) {
+	if body.Email == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("email", "body"))
+	}
+	if body.Password == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("password", "body"))
+	}
+	return
+}

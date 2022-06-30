@@ -3,16 +3,20 @@
 // cms service
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package cms
 
 import (
+	"context"
+
 	goa "goa.design/goa/v3/pkg"
 )
 
 // CMS service for SpaceCMS. An open source content management system.
 type Service interface {
+	// Create an account by email address and password.
+	CreatePage(context.Context, *CreatePagePayload) (res *Token, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -23,7 +27,27 @@ const ServiceName = "cms"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [0]string{}
+var MethodNames = [1]string{"CreatePage"}
+
+// CreatePagePayload is the payload type of the cms service CreatePage method.
+type CreatePagePayload struct {
+	Token *string
+	// User email
+	Email string
+	// User password
+	Password string
+}
+
+// Token is the result type of the cms service CreatePage method.
+type Token struct {
+	Token                  *string
+	AccessToken            string
+	RefreshToken           string
+	AccessExpiryTime       int64
+	RefreshExpiryTime      int64
+	AccessExpiryTimeStamp  string
+	RefreshExpiryTimeStamp string
+}
 
 // MakeUnauthorized builds a goa.ServiceError from an error.
 func MakeUnauthorized(err error) *goa.ServiceError {

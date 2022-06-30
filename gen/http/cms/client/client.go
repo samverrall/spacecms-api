@@ -3,18 +3,24 @@
 // cms client HTTP transport
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package client
 
 import (
+	"context"
 	"net/http"
 
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Client lists the cms service endpoint HTTP clients.
 type Client struct {
+	// CreatePage Doer is the HTTP client used to make requests to the CreatePage
+	// endpoint.
+	CreatePageDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -35,10 +41,35 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
+		CreatePageDoer:      doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
 		decoder:             dec,
 		encoder:             enc,
+	}
+}
+
+// CreatePage returns an endpoint that makes HTTP requests to the cms service
+// CreatePage server.
+func (c *Client) CreatePage() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeCreatePageRequest(c.encoder)
+		decodeResponse = DecodeCreatePageResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreatePageRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreatePageDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("cms", "CreatePage", err)
+		}
+		return decodeResponse(resp)
 	}
 }

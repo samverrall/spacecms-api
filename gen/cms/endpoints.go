@@ -3,23 +3,38 @@
 // cms endpoints
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package cms
 
 import (
+	"context"
+
 	goa "goa.design/goa/v3/pkg"
 )
 
 // Endpoints wraps the "cms" service endpoints.
 type Endpoints struct {
+	CreatePage goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "cms" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
-	return &Endpoints{}
+	return &Endpoints{
+		CreatePage: NewCreatePageEndpoint(s),
+	}
 }
 
 // Use applies the given middleware to all the "cms" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
+	e.CreatePage = m(e.CreatePage)
+}
+
+// NewCreatePageEndpoint returns an endpoint function that calls the method
+// "CreatePage" of service "cms".
+func NewCreatePageEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreatePagePayload)
+		return s.CreatePage(ctx, p)
+	}
 }

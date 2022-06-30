@@ -3,7 +3,7 @@
 // invoice HTTP client CLI support package
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package cli
 
@@ -14,6 +14,7 @@ import (
 	"os"
 
 	authc "github.com/samverrall/spacecms-api/gen/http/auth/client"
+	cmsc "github.com/samverrall/spacecms-api/gen/http/cms/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -24,17 +25,22 @@ import (
 //
 func UsageCommands() string {
 	return `auth (create-account|grant-token)
+cms create-page
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` auth create-account --body '{
-      "email": "Maiores at cupiditate doloribus recusandae non.",
-      "id": "Occaecati aspernatur et doloremque aut recusandae voluptatem.",
-      "name": "Perspiciatis error.",
-      "password": "Autem tenetur et voluptate possimus asperiores ea."
+      "email": "Itaque excepturi repellendus rerum tempore velit.",
+      "id": "Autem tenetur et voluptate possimus asperiores ea.",
+      "name": "Consectetur et saepe voluptas ex sit.",
+      "password": "Dolores eveniet molestias laudantium sequi hic perspiciatis."
    }'` + "\n" +
+		os.Args[0] + ` cms create-page --body '{
+      "email": "Commodi architecto velit dolorem distinctio.",
+      "password": "Laborum quam."
+   }' --token "Quia sapiente est sed accusamus temporibus."` + "\n" +
 		""
 }
 
@@ -56,10 +62,19 @@ func ParseEndpoint(
 		authGrantTokenFlags     = flag.NewFlagSet("grant-token", flag.ExitOnError)
 		authGrantTokenBodyFlag  = authGrantTokenFlags.String("body", "REQUIRED", "")
 		authGrantTokenTokenFlag = authGrantTokenFlags.String("token", "", "")
+
+		cmsFlags = flag.NewFlagSet("cms", flag.ContinueOnError)
+
+		cmsCreatePageFlags     = flag.NewFlagSet("create-page", flag.ExitOnError)
+		cmsCreatePageBodyFlag  = cmsCreatePageFlags.String("body", "REQUIRED", "")
+		cmsCreatePageTokenFlag = cmsCreatePageFlags.String("token", "", "")
 	)
 	authFlags.Usage = authUsage
 	authCreateAccountFlags.Usage = authCreateAccountUsage
 	authGrantTokenFlags.Usage = authGrantTokenUsage
+
+	cmsFlags.Usage = cmsUsage
+	cmsCreatePageFlags.Usage = cmsCreatePageUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -78,6 +93,8 @@ func ParseEndpoint(
 		switch svcn {
 		case "auth":
 			svcf = authFlags
+		case "cms":
+			svcf = cmsFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -100,6 +117,13 @@ func ParseEndpoint(
 
 			case "grant-token":
 				epf = authGrantTokenFlags
+
+			}
+
+		case "cms":
+			switch epn {
+			case "create-page":
+				epf = cmsCreatePageFlags
 
 			}
 
@@ -133,6 +157,13 @@ func ParseEndpoint(
 				endpoint = c.GrantToken()
 				data, err = authc.BuildGrantTokenPayload(*authGrantTokenBodyFlag, *authGrantTokenTokenFlag)
 			}
+		case "cms":
+			c := cmsc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "create-page":
+				endpoint = c.CreatePage()
+				data, err = cmsc.BuildCreatePagePayload(*cmsCreatePageBodyFlag, *cmsCreatePageTokenFlag)
+			}
 		}
 	}
 	if err != nil {
@@ -164,10 +195,10 @@ Create an account by email address and password.
 
 Example:
     %[1]s auth create-account --body '{
-      "email": "Maiores at cupiditate doloribus recusandae non.",
-      "id": "Occaecati aspernatur et doloremque aut recusandae voluptatem.",
-      "name": "Perspiciatis error.",
-      "password": "Autem tenetur et voluptate possimus asperiores ea."
+      "email": "Itaque excepturi repellendus rerum tempore velit.",
+      "id": "Autem tenetur et voluptate possimus asperiores ea.",
+      "name": "Consectetur et saepe voluptas ex sit.",
+      "password": "Dolores eveniet molestias laudantium sequi hic perspiciatis."
    }'
 `, os.Args[0])
 }
@@ -181,8 +212,36 @@ Create an account by email address and password.
 
 Example:
     %[1]s auth grant-token --body '{
-      "email": "Itaque excepturi repellendus rerum tempore velit.",
-      "password": "Consectetur et saepe voluptas ex sit."
-   }' --token "Dolores eveniet molestias laudantium sequi hic perspiciatis."
+      "email": "Perspiciatis quibusdam dolor numquam.",
+      "password": "Odit vel esse voluptas."
+   }' --token "Atque omnis magnam."
+`, os.Args[0])
+}
+
+// cmsUsage displays the usage of the cms command and its subcommands.
+func cmsUsage() {
+	fmt.Fprintf(os.Stderr, `CMS service for SpaceCMS. An open source content management system.
+Usage:
+    %[1]s [globalflags] cms COMMAND [flags]
+
+COMMAND:
+    create-page: Create an account by email address and password.
+
+Additional help:
+    %[1]s cms COMMAND --help
+`, os.Args[0])
+}
+func cmsCreatePageUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] cms create-page -body JSON -token STRING
+
+Create an account by email address and password.
+    -body JSON: 
+    -token STRING: 
+
+Example:
+    %[1]s cms create-page --body '{
+      "email": "Commodi architecto velit dolorem distinctio.",
+      "password": "Laborum quam."
+   }' --token "Quia sapiente est sed accusamus temporibus."
 `, os.Args[0])
 }

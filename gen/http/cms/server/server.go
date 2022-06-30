@@ -3,7 +3,7 @@
 // cms HTTP server
 //
 // Command:
-// $ goa gen github.com/samverrall/spacecms-api/invoice/design
+// $ goa gen github.com/samverrall/spacecms-api/spacecms-api/design
 
 package server
 
@@ -13,11 +13,13 @@ import (
 
 	cms "github.com/samverrall/spacecms-api/gen/cms"
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // Server lists the cms service endpoint HTTP handlers.
 type Server struct {
 	Mounts             []*MountPoint
+	CreatePage         http.Handler
 	GenHTTPOpenapiJSON http.Handler
 }
 
@@ -58,8 +60,10 @@ func New(
 	}
 	return &Server{
 		Mounts: []*MountPoint{
+			{"CreatePage", "POST", "/api/v1/pages"},
 			{"./gen/http/openapi.json", "GET", "/api/v1/openapi.json"},
 		},
+		CreatePage:         NewCreatePageHandler(e.CreatePage, mux, decoder, encoder, errhandler, formatter),
 		GenHTTPOpenapiJSON: http.FileServer(fileSystemGenHTTPOpenapiJSON),
 	}
 }
@@ -69,16 +73,69 @@ func (s *Server) Service() string { return "cms" }
 
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
+	s.CreatePage = m(s.CreatePage)
 }
 
 // Mount configures the mux to serve the cms endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
+	MountCreatePageHandler(mux, h.CreatePage)
 	MountGenHTTPOpenapiJSON(mux, goahttp.Replace("", "/./gen/http/openapi.json", h.GenHTTPOpenapiJSON))
 }
 
 // Mount configures the mux to serve the cms endpoints.
 func (s *Server) Mount(mux goahttp.Muxer) {
 	Mount(mux, s)
+}
+
+// MountCreatePageHandler configures the mux to serve the "cms" service
+// "CreatePage" endpoint.
+func MountCreatePageHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/api/v1/pages", f)
+}
+
+// NewCreatePageHandler creates a HTTP handler which loads the HTTP request and
+// calls the "cms" service "CreatePage" endpoint.
+func NewCreatePageHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreatePageRequest(mux, decoder)
+		encodeResponse = EncodeCreatePageResponse(encoder)
+		encodeError    = EncodeCreatePageError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "CreatePage")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "cms")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
 }
 
 // MountGenHTTPOpenapiJSON configures the mux to serve GET request made to
