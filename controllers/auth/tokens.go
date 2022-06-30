@@ -15,7 +15,7 @@ const (
 	GrantTypeAccess  = "access_token"
 )
 
-func (s *invoicesrvc) GrantToken(ctx context.Context, p *auth.GrantTokenPayload) (*auth.Token, error) {
+func (s *authservice) GrantToken(ctx context.Context, p *auth.GrantTokenPayload) (*auth.Token, error) {
 	s.logger.Info("auth.GrantToken")
 
 	user, err := s.dbi.GetUserByEmail(ctx, p.Email)

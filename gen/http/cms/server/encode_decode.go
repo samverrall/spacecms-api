@@ -12,6 +12,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strings"
 
 	cms "github.com/samverrall/spacecms-api/gen/cms"
 	goahttp "goa.design/goa/v3/http"
@@ -22,7 +23,7 @@ import (
 // cms CreatePage endpoint.
 func EncodeCreatePageResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*cms.Token)
+		res, _ := v.(*cms.Page)
 		enc := encoder(ctx, w)
 		body := NewCreatePageResponseBody(res)
 		w.WriteHeader(http.StatusCreated)
@@ -52,17 +53,19 @@ func DecodeCreatePageRequest(mux goahttp.Muxer, decoder func(*http.Request) goah
 
 		var (
 			token *string
-			c     *http.Cookie
 		)
-		c, _ = r.Cookie("__Host-token")
-		var tokenRaw string
-		if c != nil {
-			tokenRaw = c.Value
-		}
+		tokenRaw := r.Header.Get("X-Authorization")
 		if tokenRaw != "" {
 			token = &tokenRaw
 		}
 		payload := NewCreatePagePayload(&body, token)
+		if payload.Token != nil {
+			if strings.Contains(*payload.Token, " ") {
+				// Remove authorization scheme prefix (e.g. "Bearer")
+				cred := strings.SplitN(*payload.Token, " ", 2)[1]
+				payload.Token = &cred
+			}
+		}
 
 		return payload, nil
 	}
@@ -134,4 +137,26 @@ func EncodeCreatePageError(encoder func(context.Context, http.ResponseWriter) go
 			return encodeError(ctx, w, v)
 		}
 	}
+}
+
+// unmarshalMetaRequestBodyToCmsMeta builds a value of type *cms.Meta from a
+// value of type *MetaRequestBody.
+func unmarshalMetaRequestBodyToCmsMeta(v *MetaRequestBody) *cms.Meta {
+	res := &cms.Meta{
+		Title:       v.Title,
+		Description: v.Description,
+	}
+
+	return res
+}
+
+// marshalCmsMetaToMetaResponseBody builds a value of type *MetaResponseBody
+// from a value of type *cms.Meta.
+func marshalCmsMetaToMetaResponseBody(v *cms.Meta) *MetaResponseBody {
+	res := &MetaResponseBody{
+		Title:       v.Title,
+		Description: v.Description,
+	}
+
+	return res
 }

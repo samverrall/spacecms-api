@@ -22,7 +22,7 @@ func BuildCreateAccountPayload(authCreateAccountBody string) (*auth.User, error)
 	{
 		err = json.Unmarshal([]byte(authCreateAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Itaque excepturi repellendus rerum tempore velit.\",\n      \"id\": \"Autem tenetur et voluptate possimus asperiores ea.\",\n      \"name\": \"Consectetur et saepe voluptas ex sit.\",\n      \"password\": \"Dolores eveniet molestias laudantium sequi hic perspiciatis.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Consequatur aut eos est dolor.\",\n      \"id\": \"Ea alias minus possimus aut.\",\n      \"name\": \"Ea minus cupiditate.\",\n      \"password\": \"Omnis ex.\"\n   }'")
 		}
 	}
 	v := &auth.User{
@@ -43,7 +43,7 @@ func BuildGrantTokenPayload(authGrantTokenBody string, authGrantTokenToken strin
 	{
 		err = json.Unmarshal([]byte(authGrantTokenBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Perspiciatis quibusdam dolor numquam.\",\n      \"password\": \"Odit vel esse voluptas.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Quia illo voluptatem.\",\n      \"password\": \"Quas quas autem.\"\n   }'")
 		}
 	}
 	var token *string

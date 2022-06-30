@@ -32,15 +32,22 @@ cms create-page
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` auth create-account --body '{
-      "email": "Itaque excepturi repellendus rerum tempore velit.",
-      "id": "Autem tenetur et voluptate possimus asperiores ea.",
-      "name": "Consectetur et saepe voluptas ex sit.",
-      "password": "Dolores eveniet molestias laudantium sequi hic perspiciatis."
+      "email": "Consequatur aut eos est dolor.",
+      "id": "Ea alias minus possimus aut.",
+      "name": "Ea minus cupiditate.",
+      "password": "Omnis ex."
    }'` + "\n" +
 		os.Args[0] + ` cms create-page --body '{
-      "email": "Commodi architecto velit dolorem distinctio.",
-      "password": "Laborum quam."
-   }' --token "Quia sapiente est sed accusamus temporibus."` + "\n" +
+      "createdAt": "2014-06-29T21:24:29Z",
+      "id": "FF1D889F-0741-6290-783B-66E606310D86",
+      "isActive": false,
+      "meta": {
+         "description": "Excepturi non occaecati odit voluptates deleniti.",
+         "title": "Dolores optio."
+      },
+      "templateId": "Nisi odio velit ducimus facilis molestiae.",
+      "url": "Ratione reprehenderit quae voluptas."
+   }' --token "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"` + "\n" +
 		""
 }
 
@@ -195,10 +202,10 @@ Create an account by email address and password.
 
 Example:
     %[1]s auth create-account --body '{
-      "email": "Itaque excepturi repellendus rerum tempore velit.",
-      "id": "Autem tenetur et voluptate possimus asperiores ea.",
-      "name": "Consectetur et saepe voluptas ex sit.",
-      "password": "Dolores eveniet molestias laudantium sequi hic perspiciatis."
+      "email": "Consequatur aut eos est dolor.",
+      "id": "Ea alias minus possimus aut.",
+      "name": "Ea minus cupiditate.",
+      "password": "Omnis ex."
    }'
 `, os.Args[0])
 }
@@ -212,9 +219,9 @@ Create an account by email address and password.
 
 Example:
     %[1]s auth grant-token --body '{
-      "email": "Perspiciatis quibusdam dolor numquam.",
-      "password": "Odit vel esse voluptas."
-   }' --token "Atque omnis magnam."
+      "email": "Quia illo voluptatem.",
+      "password": "Quas quas autem."
+   }' --token "Suscipit laboriosam laborum voluptas at."
 `, os.Args[0])
 }
 
@@ -240,8 +247,15 @@ Create an account by email address and password.
 
 Example:
     %[1]s cms create-page --body '{
-      "email": "Commodi architecto velit dolorem distinctio.",
-      "password": "Laborum quam."
-   }' --token "Quia sapiente est sed accusamus temporibus."
+      "createdAt": "2014-06-29T21:24:29Z",
+      "id": "FF1D889F-0741-6290-783B-66E606310D86",
+      "isActive": false,
+      "meta": {
+         "description": "Excepturi non occaecati odit voluptates deleniti.",
+         "title": "Dolores optio."
+      },
+      "templateId": "Nisi odio velit ducimus facilis molestiae.",
+      "url": "Ratione reprehenderit quae voluptas."
+   }' --token "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
 `, os.Args[0])
 }

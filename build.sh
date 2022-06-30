@@ -12,6 +12,6 @@ go test --cover --race --count=1 ./...
 
 echo "Building..."
 
-go build -o spacecms github.com/samverrall/spacecms-api/cmd/spacecms
+go build -o spacecmsapi github.com/samverrall/spacecms-api/cmd/spacecms
 
 echo "Built"

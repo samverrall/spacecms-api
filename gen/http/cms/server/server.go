@@ -18,9 +18,8 @@ import (
 
 // Server lists the cms service endpoint HTTP handlers.
 type Server struct {
-	Mounts             []*MountPoint
-	CreatePage         http.Handler
-	GenHTTPOpenapiJSON http.Handler
+	Mounts     []*MountPoint
+	CreatePage http.Handler
 }
 
 // ErrorNamer is an interface implemented by generated error structs that
@@ -53,18 +52,12 @@ func New(
 	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
 	errhandler func(context.Context, http.ResponseWriter, error),
 	formatter func(err error) goahttp.Statuser,
-	fileSystemGenHTTPOpenapiJSON http.FileSystem,
 ) *Server {
-	if fileSystemGenHTTPOpenapiJSON == nil {
-		fileSystemGenHTTPOpenapiJSON = http.Dir(".")
-	}
 	return &Server{
 		Mounts: []*MountPoint{
 			{"CreatePage", "POST", "/api/v1/pages"},
-			{"./gen/http/openapi.json", "GET", "/api/v1/openapi.json"},
 		},
-		CreatePage:         NewCreatePageHandler(e.CreatePage, mux, decoder, encoder, errhandler, formatter),
-		GenHTTPOpenapiJSON: http.FileServer(fileSystemGenHTTPOpenapiJSON),
+		CreatePage: NewCreatePageHandler(e.CreatePage, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -79,7 +72,6 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 // Mount configures the mux to serve the cms endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreatePageHandler(mux, h.CreatePage)
-	MountGenHTTPOpenapiJSON(mux, goahttp.Replace("", "/./gen/http/openapi.json", h.GenHTTPOpenapiJSON))
 }
 
 // Mount configures the mux to serve the cms endpoints.
@@ -136,10 +128,4 @@ func NewCreatePageHandler(
 			errhandler(ctx, w, err)
 		}
 	})
-}
-
-// MountGenHTTPOpenapiJSON configures the mux to serve GET request made to
-// "/api/v1/openapi.json".
-func MountGenHTTPOpenapiJSON(mux goahttp.Muxer, h http.Handler) {
-	mux.Handle("GET", "/api/v1/openapi.json", h.ServeHTTP)
 }

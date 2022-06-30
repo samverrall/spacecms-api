@@ -9,9 +9,9 @@ paths:
   /api/v1/openapi.json:
     get:
       tags:
-      - cms
+      - auth
       summary: Download ./gen/http/openapi.json
-      operationId: cms#/api/v1/openapi.json
+      operationId: auth#/api/v1/openapi.json
       responses:
         "200":
           description: File downloaded
@@ -23,37 +23,46 @@ paths:
       description: Create an account by email address and password.
       operationId: cms#CreatePage
       parameters:
-      - name: __Host-token
-        in: cookie
+      - name: X-Authorization
+        in: header
+        description: JWT used for authentication
         allowEmptyValue: true
         schema:
           type: string
-          example: Deleniti voluptatibus quam repellat tenetur explicabo velit.
-        example: Aut modi commodi rerum.
+          description: JWT used for authentication
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GrantTokenRequestBody'
+              $ref: '#/components/schemas/CreatePageRequestBody'
             example:
-              email: Commodi architecto velit dolorem distinctio.
-              password: Laborum quam.
+              createdAt: "2014-06-29T21:24:29Z"
+              id: FF1D889F-0741-6290-783B-66E606310D86
+              isActive: false
+              meta:
+                description: Excepturi non occaecati odit voluptates deleniti.
+                title: Dolores optio.
+              templateId: Nisi odio velit ducimus facilis molestiae.
+              url: Ratione reprehenderit quae voluptas.
       responses:
         "201":
           description: Created response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token2'
+                $ref: '#/components/schemas/CreatePageRequestBody'
               example:
-                accessExpiryTime: 1087056026976835113
-                accessExpiryTimeStamp: Illum ut repellendus velit qui.
-                accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-                refreshExpiryTime: 1220539258699969072
-                refreshExpiryTimeStamp: Vero qui voluptatibus illum natus dignissimos.
-                refreshToken: Commodi fugit et voluptas.
-                token: Autem rerum.
+                createdAt: "1977-08-11T19:21:07Z"
+                id: 74C53540-E974-ABFF-2565-6BF99F9017B2
+                isActive: false
+                meta:
+                  description: Placeat et non hic voluptatum.
+                  title: Rerum et deserunt saepe quia.
+                templateId: Maiores modi dolorem quaerat voluptas quia.
+                url: Distinctio eum est corrupti.
         "400":
           description: 'badrequest: Bad Request response.'
           content:
@@ -78,6 +87,10 @@ paths:
             application/vnd.goa.error:
               schema:
                 $ref: '#/components/schemas/Error'
+      security:
+      - jwt_header_X-Authorization:
+        - api:read
+        - api:write
   /api/v1/user/signup:
     post:
       tags:
@@ -92,10 +105,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccountRequestBody'
             example:
-              email: Itaque excepturi repellendus rerum tempore velit.
-              id: Autem tenetur et voluptate possimus asperiores ea.
-              name: Consectetur et saepe voluptas ex sit.
-              password: Dolores eveniet molestias laudantium sequi hic perspiciatis.
+              email: Consequatur aut eos est dolor.
+              id: Ea alias minus possimus aut.
+              name: Ea minus cupiditate.
+              password: Omnis ex.
       responses:
         "201":
           description: Created response.
@@ -136,8 +149,8 @@ paths:
         allowEmptyValue: true
         schema:
           type: string
-          example: Illo nihil repellat voluptatem eos quidem.
-        example: Et dolorem quos iure qui laudantium.
+          example: Repudiandae occaecati et et.
+        example: Consequatur omnis perspiciatis et neque voluptate.
       requestBody:
         required: true
         content:
@@ -145,8 +158,8 @@ paths:
             schema:
               $ref: '#/components/schemas/GrantTokenRequestBody'
             example:
-              email: Perspiciatis quibusdam dolor numquam.
-              password: Odit vel esse voluptas.
+              email: Quia illo voluptatem.
+              password: Quas quas autem.
       responses:
         "200":
           description: OK response.
@@ -155,12 +168,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
               example:
-                accessExpiryTime: 3564172555033265585
-                accessExpiryTimeStamp: Est optio consequatur sit sit doloremque.
+                accessExpiryTime: 539141107233365886
+                accessExpiryTimeStamp: Molestiae aliquid.
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-                refreshExpiryTime: 73466722768413525
-                refreshExpiryTimeStamp: Ad qui est quibusdam eaque et.
-                refreshToken: Inventore ad inventore at omnis non commodi.
+                refreshExpiryTime: 3466291057557277020
+                refreshExpiryTimeStamp: Et modi est.
+                refreshToken: Qui sit reprehenderit a ut et ea.
         "400":
           description: 'badrequest: Bad Request response.'
           content:
@@ -193,35 +206,77 @@ components:
         email:
           type: string
           description: Email address of the user
-          example: Voluptatum vitae provident quia.
+          example: Consequuntur ut.
         id:
           type: string
           description: ID of the user
-          example: Quia dicta placeat et non.
+          example: Magnam dolorem perferendis libero.
         name:
           type: string
           description: Full name of the user
-          example: Voluptatem aut et ipsum.
+          example: Repudiandae at quis quia non.
         password:
           type: string
           description: Password of the user. This is never returned to the client.
-          example: Quia amet.
+          example: Quo necessitatibus ut.
       example:
-        email: Aliquam numquam voluptatem ad veritatis qui.
-        id: Necessitatibus quia accusantium excepturi sit.
-        name: Eum modi qui soluta omnis totam.
-        password: Atque sint ea laborum.
+        email: Saepe optio sint molestias aut aliquid.
+        id: Vitae ea.
+        name: Reprehenderit occaecati id voluptas laudantium.
+        password: Aut nihil.
       required:
       - email
       - name
       - password
+    CreatePageRequestBody:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          example: "1976-02-14T03:08:26Z"
+          format: date-time
+        id:
+          type: string
+          description: Page UUID
+          example: AC77D914-0A36-9917-2BA7-F519556A50B8
+          format: uuid
+        isActive:
+          type: boolean
+          description: Page active
+          example: true
+        meta:
+          $ref: '#/components/schemas/Meta'
+        templateId:
+          type: string
+          description: Page template UUID
+          example: Non quia a voluptas.
+        url:
+          type: string
+          description: Page URL
+          example: Vero a voluptatem modi itaque.
+      example:
+        createdAt: "1979-02-08T21:16:20Z"
+        id: 4CCDE767-7648-444F-D09F-4B4FFE4EB36B
+        isActive: false
+        meta:
+          description: Excepturi non occaecati odit voluptates deleniti.
+          title: Dolores optio.
+        templateId: Eaque ut harum itaque.
+        url: Maxime dolor sed consequatur quisquam qui.
+      required:
+      - id
+      - url
+      - templateId
+      - isActive
+      - meta
+      - createdAt
     Error:
       type: object
       properties:
         fault:
           type: boolean
           description: Is the error a server-side fault?
-          example: false
+          example: true
         id:
           type: string
           description: ID is a unique identifier for this particular occurrence of
@@ -243,7 +298,7 @@ components:
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: false
+          example: true
       example:
         id: 3F1FKVRR
         message: Value of ID must be an integer
@@ -261,47 +316,61 @@ components:
         email:
           type: string
           description: User email
-          example: Fugit vitae totam aut dignissimos.
+          example: Et qui adipisci.
         password:
           type: string
           description: User password
-          example: Eum est corrupti non.
+          example: Saepe vero culpa cumque eligendi.
       example:
-        email: Modi dolorem quaerat voluptas.
-        password: Voluptatibus quia tenetur enim ad.
+        email: Labore in alias.
+        password: Culpa laborum et nesciunt nesciunt.
       required:
       - email
       - password
+    Meta:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Page meta description
+          example: Excepturi dolores.
+        title:
+          type: string
+          description: Page meta title
+          example: Totam modi ab pariatur ducimus ex non.
+      example:
+        description: Sed qui.
+        title: Rem maxime temporibus quod magnam.
     Token:
       type: object
       properties:
         accessExpiryTime:
           type: integer
-          example: 3599252296412658996
+          example: 994844437165658167
           format: int64
         accessExpiryTimeStamp:
           type: string
-          example: Quod natus voluptatem.
+          example: Ipsa exercitationem et delectus.
         accessToken:
           type: string
           example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
         refreshExpiryTime:
           type: integer
-          example: 6128336371357092582
+          example: 4367011410439043561
           format: int64
         refreshExpiryTimeStamp:
           type: string
-          example: Aut quo odio vel quisquam aut explicabo.
+          example: Nihil numquam sit doloribus ipsa fuga.
         refreshToken:
           type: string
-          example: Aliquam aut omnis sint eveniet.
+          example: Aut quia ea et omnis.
       example:
-        accessExpiryTime: 7992353371575155920
-        accessExpiryTimeStamp: Dolores sit sapiente quam minima porro corporis.
+        accessExpiryTime: 6252863462487333598
+        accessExpiryTimeStamp: Quos error.
         accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-        refreshExpiryTime: 85603938504448694
-        refreshExpiryTimeStamp: Reprehenderit et quod minima id accusantium perferendis.
-        refreshToken: Consectetur sed et pariatur modi.
+        refreshExpiryTime: 3925041465761616217
+        refreshExpiryTimeStamp: Reprehenderit soluta.
+        refreshToken: Magni natus.
       required:
       - accessToken
       - refreshToken
@@ -309,47 +378,12 @@ components:
       - refreshExpiryTime
       - accessExpiryTimeStamp
       - refreshExpiryTimeStamp
-    Token2:
-      type: object
-      properties:
-        accessExpiryTime:
-          type: integer
-          example: 3266702264075865762
-          format: int64
-        accessExpiryTimeStamp:
-          type: string
-          example: Ipsum ex dolores unde nemo itaque.
-        accessToken:
-          type: string
-          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-        refreshExpiryTime:
-          type: integer
-          example: 7183912702272291221
-          format: int64
-        refreshExpiryTimeStamp:
-          type: string
-          example: Dolores accusantium eum recusandae maiores qui dolore.
-        refreshToken:
-          type: string
-          example: Odio est velit vel.
-        token:
-          type: string
-          example: Est porro.
-      example:
-        accessExpiryTime: 5196807279474169960
-        accessExpiryTimeStamp: Optio omnis doloribus minima officiis aut aut.
-        accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-        refreshExpiryTime: 8764384405603082437
-        refreshExpiryTimeStamp: A consequatur eos nisi.
-        refreshToken: At vero.
-        token: Odio itaque aut.
-      required:
-      - accessToken
-      - refreshToken
-      - accessExpiryTime
-      - refreshExpiryTime
-      - accessExpiryTimeStamp
-      - refreshExpiryTimeStamp
+  securitySchemes:
+    jwt_header_X-Authorization:
+      type: http
+      description: Secures endpoint by requiring a valid JWT token retrieved via the
+        signin endpoint. Supports scopes "api:read" and "api:write".
+      scheme: bearer
 tags:
 - name: auth
   description: RESTFUL API Backend for Invoicify. An open source invoicing web app.

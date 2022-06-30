@@ -26,11 +26,11 @@ func NewClient(createPage goa.Endpoint) *Client {
 }
 
 // CreatePage calls the "CreatePage" endpoint of the "cms" service.
-func (c *Client) CreatePage(ctx context.Context, p *CreatePagePayload) (res *Token, err error) {
+func (c *Client) CreatePage(ctx context.Context, p *CreatePagePayload) (res *Page, err error) {
 	var ires interface{}
 	ires, err = c.CreatePageEndpoint(ctx, p)
 	if err != nil {
 		return
 	}
-	return ires.(*Token), nil
+	return ires.(*Page), nil
 }

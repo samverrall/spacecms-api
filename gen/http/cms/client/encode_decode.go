@@ -42,11 +42,8 @@ func EncodeCreatePageRequest(encoder func(*http.Request) goahttp.Encoder) func(*
 			return goahttp.ErrInvalidType("cms", "CreatePage", "*cms.CreatePagePayload", v)
 		}
 		if p.Token != nil {
-			v := *p.Token
-			req.AddCookie(&http.Cookie{
-				Name:  "__Host-token",
-				Value: v,
-			})
+			head := *p.Token
+			req.Header.Set("X-Authorization", head)
 		}
 		body := NewCreatePageRequestBody(p)
 		if err := encoder(req).Encode(&body); err != nil {
@@ -93,7 +90,7 @@ func DecodeCreatePageResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			if err != nil {
 				return nil, goahttp.ErrValidationError("cms", "CreatePage", err)
 			}
-			res := NewCreatePageTokenCreated(&body)
+			res := NewCreatePagePageCreated(&body)
 			return res, nil
 		case http.StatusUnauthorized:
 			var (
@@ -156,4 +153,37 @@ func DecodeCreatePageResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			return nil, goahttp.ErrInvalidResponse("cms", "CreatePage", resp.StatusCode, string(body))
 		}
 	}
+}
+
+// marshalCmsMetaToMetaRequestBody builds a value of type *MetaRequestBody from
+// a value of type *cms.Meta.
+func marshalCmsMetaToMetaRequestBody(v *cms.Meta) *MetaRequestBody {
+	res := &MetaRequestBody{
+		Title:       v.Title,
+		Description: v.Description,
+	}
+
+	return res
+}
+
+// marshalMetaRequestBodyToCmsMeta builds a value of type *cms.Meta from a
+// value of type *MetaRequestBody.
+func marshalMetaRequestBodyToCmsMeta(v *MetaRequestBody) *cms.Meta {
+	res := &cms.Meta{
+		Title:       v.Title,
+		Description: v.Description,
+	}
+
+	return res
+}
+
+// unmarshalMetaResponseBodyToCmsMeta builds a value of type *cms.Meta from a
+// value of type *MetaResponseBody.
+func unmarshalMetaResponseBodyToCmsMeta(v *MetaResponseBody) *cms.Meta {
+	res := &cms.Meta{
+		Title:       v.Title,
+		Description: v.Description,
+	}
+
+	return res
 }

@@ -12,7 +12,7 @@ import (
 )
 
 // CreateAccount implements create-account.
-func (s *invoicesrvc) CreateAccount(ctx context.Context, p *auth.User) error {
+func (s *authservice) CreateAccount(ctx context.Context, p *auth.User) error {
 	s.logger.Info("auth.create-account")
 
 	// Lookup the email to make sure it does not already exist in the system.

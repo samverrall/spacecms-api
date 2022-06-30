@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func Test_invoicesrvc_GrantToken(t *testing.T) {
+func Test_authservice_GrantToken(t *testing.T) {
 	const (
 		failedToInsertErr     = "failed@test.com"
 		checkExistingUserFail = "existing@fail.com"
@@ -101,7 +101,7 @@ func Test_invoicesrvc_GrantToken(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &invoicesrvc{
+			s := &authservice{
 				logger:  &logrus.Logger{},
 				dbi:     getDatastoreMock(t, tt.p.Email),
 				hasher:  getHasherMocks(t, tt.p.Email),
@@ -109,11 +109,11 @@ func Test_invoicesrvc_GrantToken(t *testing.T) {
 			}
 			got, err := s.GrantToken(ctx, tt.p)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("invoicesrvc.GrantToken() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("authservice.GrantToken() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("invoicesrvc.GrantToken() = %v, want %v", got, tt.want)
+				t.Errorf("authservice.GrantToken() = %v, want %v", got, tt.want)
 			}
 		})
 	}

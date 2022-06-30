@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	cms "github.com/samverrall/spacecms-api/gen/cms"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildCreatePagePayload builds the payload for the cms CreatePage endpoint
@@ -22,7 +23,17 @@ func BuildCreatePagePayload(cmsCreatePageBody string, cmsCreatePageToken string)
 	{
 		err = json.Unmarshal([]byte(cmsCreatePageBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"email\": \"Commodi architecto velit dolorem distinctio.\",\n      \"password\": \"Laborum quam.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"createdAt\": \"2014-06-29T21:24:29Z\",\n      \"id\": \"FF1D889F-0741-6290-783B-66E606310D86\",\n      \"isActive\": false,\n      \"meta\": {\n         \"description\": \"Excepturi non occaecati odit voluptates deleniti.\",\n         \"title\": \"Dolores optio.\"\n      },\n      \"templateId\": \"Nisi odio velit ducimus facilis molestiae.\",\n      \"url\": \"Ratione reprehenderit quae voluptas.\"\n   }'")
+		}
+		if body.Meta == nil {
+			err = goa.MergeErrors(err, goa.MissingFieldError("meta", "body"))
+		}
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.id", body.ID, goa.FormatUUID))
+
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.createdAt", body.CreatedAt, goa.FormatDateTime))
+
+		if err != nil {
+			return nil, err
 		}
 	}
 	var token *string
@@ -32,8 +43,14 @@ func BuildCreatePagePayload(cmsCreatePageBody string, cmsCreatePageToken string)
 		}
 	}
 	v := &cms.CreatePagePayload{
-		Email:    body.Email,
-		Password: body.Password,
+		ID:         body.ID,
+		URL:        body.URL,
+		TemplateID: body.TemplateID,
+		IsActive:   body.IsActive,
+		CreatedAt:  body.CreatedAt,
+	}
+	if body.Meta != nil {
+		v.Meta = marshalMetaRequestBodyToCmsMeta(body.Meta)
 	}
 	v.Token = token
 

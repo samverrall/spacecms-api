@@ -10,25 +10,29 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// invoice service example implementation.
+const (
+	accessTokenExpiryMinutes = 15
+)
+
+// auth service example implementation.
 // The example methods log the requests and return zero values.
-type invoicesrvc struct {
+type authservice struct {
 	logger  *log.Logger
 	dbi     datastore.DBInterface
 	hasher  hasher.Hasher
 	tokener tokens.Tokener
 }
 
-// NewInvoice returns the invoice service implementation.
-func NewInvoice(logger *log.Logger, dbi *datastore.DataStore) auth.Service {
+// NewAuthService returns the auth service implementation.
+func NewAuthService(logger *log.Logger, dbi *datastore.DataStore) auth.Service {
 	if dbi == nil {
 		dbi = datastore.New()
 	}
 
-	return &invoicesrvc{
+	return &authservice{
 		logger:  logger,
 		dbi:     dbi,
 		hasher:  argon2id.New(),
-		tokener: jwttoken.New(15),
+		tokener: jwttoken.New(accessTokenExpiryMinutes),
 	}
 }

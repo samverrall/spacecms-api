@@ -22,21 +22,21 @@ var _ = Service("cms", func() {
 
 	Method("CreatePage", func() {
 		Description("Create an account by email address and password.")
+		Security(JWTAuth)
 		Payload(func() {
-			Attribute("token", String)
-			Attribute("email", String, "User email")
-			Attribute("password", String, "User password")
-			Required("email", "password")
+			Extend(page)
+			TokenField(1, "token", String, func() {
+				Description("JWT used for authentication")
+				Example("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ")
+			})
 		})
 
-		Result(tokenResponse)
+		Result(page)
 
 		HTTP(func() {
-			Cookie("token:__Host-token", String)
+			Header("token:X-Authorization") // JWT token passed in "X-Authorization" header
 			POST("/pages")
 			Response(StatusCreated)
 		})
 	})
-
-	Files("/openapi.json", "./gen/http/openapi.json")
 })

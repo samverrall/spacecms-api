@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func Test_invoicesrvc_CreateAccount(t *testing.T) {
+func Test_authservice_CreateAccount(t *testing.T) {
 	const (
 		failedToInsertErr     = "failed@test.com"
 		checkExistingUserFail = "existing@fail.com"
@@ -78,13 +78,13 @@ func Test_invoicesrvc_CreateAccount(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &invoicesrvc{
+			s := &authservice{
 				logger: &logrus.Logger{},
 				dbi:    getDatastoreMock(t, tt.payload.Email),
 				hasher: argon2id.New(),
 			}
 			if err := s.CreateAccount(ctx, tt.payload); (err != nil) != tt.wantErr {
-				t.Errorf("invoicesrvc.CreateAccount() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("authservice.CreateAccount() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

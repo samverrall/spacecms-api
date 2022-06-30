@@ -1,5 +1,5 @@
 .data
-spacecms
+spacecmsapi
 auth.exe
 .DS_Store
 run.sh

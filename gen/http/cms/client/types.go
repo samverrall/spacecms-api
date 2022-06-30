@@ -15,22 +15,31 @@ import (
 // CreatePageRequestBody is the type of the "cms" service "CreatePage" endpoint
 // HTTP request body.
 type CreatePageRequestBody struct {
-	// User email
-	Email string `form:"email" json:"email" xml:"email"`
-	// User password
-	Password string `form:"password" json:"password" xml:"password"`
+	// Page UUID
+	ID string `form:"id" json:"id" xml:"id"`
+	// Page URL
+	URL string `form:"url" json:"url" xml:"url"`
+	// Page template UUID
+	TemplateID string `form:"templateId" json:"templateId" xml:"templateId"`
+	// Page active
+	IsActive  bool             `form:"isActive" json:"isActive" xml:"isActive"`
+	Meta      *MetaRequestBody `form:"meta" json:"meta" xml:"meta"`
+	CreatedAt string           `form:"createdAt" json:"createdAt" xml:"createdAt"`
 }
 
 // CreatePageResponseBody is the type of the "cms" service "CreatePage"
 // endpoint HTTP response body.
 type CreatePageResponseBody struct {
-	Token                  *string `form:"token,omitempty" json:"token,omitempty" xml:"token,omitempty"`
-	AccessToken            *string `form:"accessToken,omitempty" json:"accessToken,omitempty" xml:"accessToken,omitempty"`
-	RefreshToken           *string `form:"refreshToken,omitempty" json:"refreshToken,omitempty" xml:"refreshToken,omitempty"`
-	AccessExpiryTime       *int64  `form:"accessExpiryTime,omitempty" json:"accessExpiryTime,omitempty" xml:"accessExpiryTime,omitempty"`
-	RefreshExpiryTime      *int64  `form:"refreshExpiryTime,omitempty" json:"refreshExpiryTime,omitempty" xml:"refreshExpiryTime,omitempty"`
-	AccessExpiryTimeStamp  *string `form:"accessExpiryTimeStamp,omitempty" json:"accessExpiryTimeStamp,omitempty" xml:"accessExpiryTimeStamp,omitempty"`
-	RefreshExpiryTimeStamp *string `form:"refreshExpiryTimeStamp,omitempty" json:"refreshExpiryTimeStamp,omitempty" xml:"refreshExpiryTimeStamp,omitempty"`
+	// Page UUID
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Page URL
+	URL *string `form:"url,omitempty" json:"url,omitempty" xml:"url,omitempty"`
+	// Page template UUID
+	TemplateID *string `form:"templateId,omitempty" json:"templateId,omitempty" xml:"templateId,omitempty"`
+	// Page active
+	IsActive  *bool             `form:"isActive,omitempty" json:"isActive,omitempty" xml:"isActive,omitempty"`
+	Meta      *MetaResponseBody `form:"meta,omitempty" json:"meta,omitempty" xml:"meta,omitempty"`
+	CreatedAt *string           `form:"createdAt,omitempty" json:"createdAt,omitempty" xml:"createdAt,omitempty"`
 }
 
 // CreatePageUnauthorizedResponseBody is the type of the "cms" service
@@ -105,28 +114,49 @@ type CreatePageNotfoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
+// MetaRequestBody is used to define fields on request body types.
+type MetaRequestBody struct {
+	// Page meta title
+	Title *string `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
+	// Page meta description
+	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+}
+
+// MetaResponseBody is used to define fields on response body types.
+type MetaResponseBody struct {
+	// Page meta title
+	Title *string `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
+	// Page meta description
+	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+}
+
 // NewCreatePageRequestBody builds the HTTP request body from the payload of
 // the "CreatePage" endpoint of the "cms" service.
 func NewCreatePageRequestBody(p *cms.CreatePagePayload) *CreatePageRequestBody {
 	body := &CreatePageRequestBody{
-		Email:    p.Email,
-		Password: p.Password,
+		ID:         p.ID,
+		URL:        p.URL,
+		TemplateID: p.TemplateID,
+		IsActive:   p.IsActive,
+		CreatedAt:  p.CreatedAt,
+	}
+	if p.Meta != nil {
+		body.Meta = marshalCmsMetaToMetaRequestBody(p.Meta)
 	}
 	return body
 }
 
-// NewCreatePageTokenCreated builds a "cms" service "CreatePage" endpoint
-// result from a HTTP "Created" response.
-func NewCreatePageTokenCreated(body *CreatePageResponseBody) *cms.Token {
-	v := &cms.Token{
-		Token:                  body.Token,
-		AccessToken:            *body.AccessToken,
-		RefreshToken:           *body.RefreshToken,
-		AccessExpiryTime:       *body.AccessExpiryTime,
-		RefreshExpiryTime:      *body.RefreshExpiryTime,
-		AccessExpiryTimeStamp:  *body.AccessExpiryTimeStamp,
-		RefreshExpiryTimeStamp: *body.RefreshExpiryTimeStamp,
+// NewCreatePagePageCreated builds a "cms" service "CreatePage" endpoint result
+// from a HTTP "Created" response.
+func NewCreatePagePageCreated(body *CreatePageResponseBody) *cms.Page {
+	v := &cms.Page{
+		ID:         *body.ID,
+		URL:        *body.URL,
+		TemplateID: *body.TemplateID,
+		IsActive:   *body.IsActive,
+		CreatedAt:  *body.CreatedAt,
 	}
+	v.Meta = unmarshalMetaResponseBodyToCmsMeta(body.Meta)
 
 	return v
 }
@@ -194,23 +224,29 @@ func NewCreatePageNotfound(body *CreatePageNotfoundResponseBody) *goa.ServiceErr
 // ValidateCreatePageResponseBody runs the validations defined on
 // CreatePageResponseBody
 func ValidateCreatePageResponseBody(body *CreatePageResponseBody) (err error) {
-	if body.AccessToken == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("accessToken", "body"))
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
 	}
-	if body.RefreshToken == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("refreshToken", "body"))
+	if body.URL == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("url", "body"))
 	}
-	if body.AccessExpiryTime == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("accessExpiryTime", "body"))
+	if body.TemplateID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("templateId", "body"))
 	}
-	if body.RefreshExpiryTime == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("refreshExpiryTime", "body"))
+	if body.IsActive == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("isActive", "body"))
 	}
-	if body.AccessExpiryTimeStamp == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("accessExpiryTimeStamp", "body"))
+	if body.Meta == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("meta", "body"))
 	}
-	if body.RefreshExpiryTimeStamp == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("refreshExpiryTimeStamp", "body"))
+	if body.CreatedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("createdAt", "body"))
+	}
+	if body.ID != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.id", *body.ID, goa.FormatUUID))
+	}
+	if body.CreatedAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.createdAt", *body.CreatedAt, goa.FormatDateTime))
 	}
 	return
 }
