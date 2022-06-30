@@ -69,7 +69,7 @@ func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*auth.
 
 func (jt *JWTToken) NewAccessToken(ctx context.Context, claims *Claims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	accessToken, err := token.SignedString([]byte(os.Getenv("INVOICE_SECRET")))
+	accessToken, err := token.SignedString([]byte(os.Getenv("SPACECMS_SECRET")))
 	if err != nil {
 		return "", err
 	}
@@ -78,7 +78,7 @@ func (jt *JWTToken) NewAccessToken(ctx context.Context, claims *Claims) (string,
 
 func (jt *JWTToken) NewRefreshToken(ctx context.Context, claims *Claims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	refreshToken, err := token.SignedString([]byte(os.Getenv("INVOICE_SECRET_REFRESH")))
+	refreshToken, err := token.SignedString([]byte(os.Getenv("SPACECMS_SECRET_REFRESH")))
 	if err != nil {
 		return "", err
 	}

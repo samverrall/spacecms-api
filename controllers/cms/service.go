@@ -39,7 +39,7 @@ func (s *cmsservice) JWTAuth(ctx context.Context, token string, scheme *security
 	s.logger.Info("JWTAuth")
 
 	t, err := jwt.ParseWithClaims(token, &jwttoken.Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("INVOICE_SECRET")), nil
+		return []byte(os.Getenv("SPACECMS_SECRET")), nil
 	})
 	if err != nil {
 		return ctx, err
