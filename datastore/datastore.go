@@ -7,7 +7,7 @@ import (
 
 	"github.com/samverrall/spacecms-api/database"
 	"github.com/samverrall/spacecms-api/datastore/sqlc"
-	"github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 )
 
 type DataStore struct {
@@ -31,5 +31,5 @@ func New() *DataStore {
 
 type DBInterface interface {
 	CreateUser(ctx context.Context, id string, email, password, name string) error
-	GetUserByEmail(ctx context.Context, email string) (*invoice.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*auth.User, error)
 }

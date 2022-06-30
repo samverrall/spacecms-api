@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"os"
 
-	invoicec "github.com/samverrall/spacecms-api/gen/http/invoice/client"
+	authc "github.com/samverrall/spacecms-api/gen/http/auth/client"
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
 )
@@ -23,17 +23,17 @@ import (
 //    command (subcommand1|subcommand2|...)
 //
 func UsageCommands() string {
-	return `invoice (create-account|grant-token)
+	return `auth (create-account|grant-token)
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` invoice create-account --body '{
-      "email": "Et ut.",
-      "id": "Aut quod deserunt voluptas libero et quas.",
-      "name": "Et quaerat quasi maxime nam est fugiat.",
-      "password": "Sequi et dolore."
+	return os.Args[0] + ` auth create-account --body '{
+      "email": "Maiores at cupiditate doloribus recusandae non.",
+      "id": "Occaecati aspernatur et doloremque aut recusandae voluptatem.",
+      "name": "Perspiciatis error.",
+      "password": "Autem tenetur et voluptate possimus asperiores ea."
    }'` + "\n" +
 		""
 }
@@ -48,19 +48,18 @@ func ParseEndpoint(
 	restore bool,
 ) (goa.Endpoint, interface{}, error) {
 	var (
-		invoiceFlags = flag.NewFlagSet("invoice", flag.ContinueOnError)
+		authFlags = flag.NewFlagSet("auth", flag.ContinueOnError)
 
-		invoiceCreateAccountFlags    = flag.NewFlagSet("create-account", flag.ExitOnError)
-		invoiceCreateAccountBodyFlag = invoiceCreateAccountFlags.String("body", "REQUIRED", "")
+		authCreateAccountFlags    = flag.NewFlagSet("create-account", flag.ExitOnError)
+		authCreateAccountBodyFlag = authCreateAccountFlags.String("body", "REQUIRED", "")
 
-		invoiceGrantTokenFlags         = flag.NewFlagSet("grant-token", flag.ExitOnError)
-		invoiceGrantTokenBodyFlag      = invoiceGrantTokenFlags.String("body", "REQUIRED", "")
-		invoiceGrantTokenGrantTypeFlag = invoiceGrantTokenFlags.String("grant-type", "access_token", "")
-		invoiceGrantTokenTokenFlag     = invoiceGrantTokenFlags.String("token", "", "")
+		authGrantTokenFlags     = flag.NewFlagSet("grant-token", flag.ExitOnError)
+		authGrantTokenBodyFlag  = authGrantTokenFlags.String("body", "REQUIRED", "")
+		authGrantTokenTokenFlag = authGrantTokenFlags.String("token", "", "")
 	)
-	invoiceFlags.Usage = invoiceUsage
-	invoiceCreateAccountFlags.Usage = invoiceCreateAccountUsage
-	invoiceGrantTokenFlags.Usage = invoiceGrantTokenUsage
+	authFlags.Usage = authUsage
+	authCreateAccountFlags.Usage = authCreateAccountUsage
+	authGrantTokenFlags.Usage = authGrantTokenUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -77,8 +76,8 @@ func ParseEndpoint(
 	{
 		svcn = flag.Arg(0)
 		switch svcn {
-		case "invoice":
-			svcf = invoiceFlags
+		case "auth":
+			svcf = authFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -94,13 +93,13 @@ func ParseEndpoint(
 	{
 		epn = svcf.Arg(0)
 		switch svcn {
-		case "invoice":
+		case "auth":
 			switch epn {
 			case "create-account":
-				epf = invoiceCreateAccountFlags
+				epf = authCreateAccountFlags
 
 			case "grant-token":
-				epf = invoiceGrantTokenFlags
+				epf = authGrantTokenFlags
 
 			}
 
@@ -124,15 +123,15 @@ func ParseEndpoint(
 	)
 	{
 		switch svcn {
-		case "invoice":
-			c := invoicec.NewClient(scheme, host, doer, enc, dec, restore)
+		case "auth":
+			c := authc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "create-account":
 				endpoint = c.CreateAccount()
-				data, err = invoicec.BuildCreateAccountPayload(*invoiceCreateAccountBodyFlag)
+				data, err = authc.BuildCreateAccountPayload(*authCreateAccountBodyFlag)
 			case "grant-token":
 				endpoint = c.GrantToken()
-				data, err = invoicec.BuildGrantTokenPayload(*invoiceGrantTokenBodyFlag, *invoiceGrantTokenGrantTypeFlag, *invoiceGrantTokenTokenFlag)
+				data, err = authc.BuildGrantTokenPayload(*authGrantTokenBodyFlag, *authGrantTokenTokenFlag)
 			}
 		}
 	}
@@ -143,48 +142,47 @@ func ParseEndpoint(
 	return endpoint, data, nil
 }
 
-// invoiceUsage displays the usage of the invoice command and its subcommands.
-func invoiceUsage() {
+// authUsage displays the usage of the auth command and its subcommands.
+func authUsage() {
 	fmt.Fprintf(os.Stderr, `RESTFUL API Backend for Invoicify. An open source invoicing web app.
 Usage:
-    %[1]s [globalflags] invoice COMMAND [flags]
+    %[1]s [globalflags] auth COMMAND [flags]
 
 COMMAND:
     create-account: Create an account by email address and password.
     grant-token: Create an account by email address and password.
 
 Additional help:
-    %[1]s invoice COMMAND --help
+    %[1]s auth COMMAND --help
 `, os.Args[0])
 }
-func invoiceCreateAccountUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice create-account -body JSON
+func authCreateAccountUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] auth create-account -body JSON
 
 Create an account by email address and password.
-    -body JSON:
+    -body JSON: 
 
 Example:
-    %[1]s invoice create-account --body '{
-      "email": "Et ut.",
-      "id": "Aut quod deserunt voluptas libero et quas.",
-      "name": "Et quaerat quasi maxime nam est fugiat.",
-      "password": "Sequi et dolore."
+    %[1]s auth create-account --body '{
+      "email": "Maiores at cupiditate doloribus recusandae non.",
+      "id": "Occaecati aspernatur et doloremque aut recusandae voluptatem.",
+      "name": "Perspiciatis error.",
+      "password": "Autem tenetur et voluptate possimus asperiores ea."
    }'
 `, os.Args[0])
 }
 
-func invoiceGrantTokenUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] invoice grant-token -body JSON -grant-type STRING -token STRING
+func authGrantTokenUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] auth grant-token -body JSON -token STRING
 
 Create an account by email address and password.
-    -body JSON:
-    -grant-type STRING:
-    -token STRING:
+    -body JSON: 
+    -token STRING: 
 
 Example:
-    %[1]s invoice grant-token --body '{
-      "email": "Laborum facilis libero.",
-      "password": "Eligendi quis."
-   }' --grant-type "access_token" --token "Autem est culpa est fuga voluptas."
+    %[1]s auth grant-token --body '{
+      "email": "Itaque excepturi repellendus rerum tempore velit.",
+      "password": "Consectetur et saepe voluptas ex sit."
+   }' --token "Dolores eveniet molestias laudantium sequi hic perspiciatis."
 `, os.Args[0])
 }

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/samverrall/spacecms-api/datastore/sqlc"
-	"github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 )
 
 func (d *DataStore) CreateUser(ctx context.Context, id string, email, passwordHash, name string) error {
@@ -23,7 +23,7 @@ func (d *DataStore) CreateUser(ctx context.Context, id string, email, passwordHa
 	return nil
 }
 
-func (d *DataStore) GetUserByEmail(ctx context.Context, email string) (*invoice.User, error) {
+func (d *DataStore) GetUserByEmail(ctx context.Context, email string) (*auth.User, error) {
 	user, err := d.querier.GetUserByEmail(ctx, sql.NullString{
 		String: email,
 		Valid:  true,
@@ -32,7 +32,7 @@ func (d *DataStore) GetUserByEmail(ctx context.Context, email string) (*invoice.
 		return nil, err
 	}
 
-	return &invoice.User{
+	return &auth.User{
 		ID:       &user.ID,
 		Email:    email,
 		Name:     user.Name,

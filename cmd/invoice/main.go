@@ -11,8 +11,8 @@ import (
 	"sync"
 	"syscall"
 
-	invoiceapi "github.com/samverrall/spacecms-api/controllers"
-	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	authapi "github.com/samverrall/spacecms-api/controllers/auth"
+	"github.com/samverrall/spacecms-api/gen/auth"
 	"github.com/sirupsen/logrus"
 )
 
@@ -42,19 +42,19 @@ func main() {
 
 	// Initialize the services.
 	var (
-		invoiceSvc invoice.Service
+		invoiceSvc auth.Service
 	)
 	{
-		invoiceSvc = invoiceapi.NewInvoice(logger, nil)
+		invoiceSvc = authapi.NewInvoice(logger, nil)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		invoiceEndpoints *invoice.Endpoints
+		invoiceEndpoints *auth.Endpoints
 	)
 	{
-		invoiceEndpoints = invoice.NewEndpoints(invoiceSvc)
+		invoiceEndpoints = auth.NewEndpoints(invoiceSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines

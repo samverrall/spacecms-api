@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	dm "github.com/samverrall/spacecms-api/datastore/mocks"
-	"github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 	"github.com/samverrall/spacecms-api/hasher"
 	hm "github.com/samverrall/spacecms-api/hasher/mocks"
 	"github.com/samverrall/spacecms-api/tokens/jwttoken"
@@ -25,14 +25,14 @@ func Test_invoicesrvc_GrantToken(t *testing.T) {
 	)
 
 	var getGetUserByEmailMock = func(m *dm.DBInterface, t *testing.T, email string) {
-		// GetUserByEmail(ctx context.Context, email string) (*invoice.User, error)
+		// GetUserByEmail(ctx context.Context, email string) (*auth.User, error)
 		switch email {
 		case checkExistingUserFail:
 			m.On("GetUserByEmail", mock.AnythingOfType("*context.emptyCtx"), email).
 				Return(nil, fmt.Errorf("Failed to check if user exists, unit test error."))
 		default:
 			m.On("GetUserByEmail", mock.AnythingOfType("*context.emptyCtx"), email).
-				Return(&invoice.User{
+				Return(&auth.User{
 					Email:    email,
 					Name:     "Test",
 					Password: "hash",
@@ -73,27 +73,27 @@ func Test_invoicesrvc_GrantToken(t *testing.T) {
 	ctx := context.Background()
 	tests := []struct {
 		name    string
-		want    *invoice.Token
-		p       *invoice.GrantTokenPayload
+		want    *auth.Token
+		p       *auth.GrantTokenPayload
 		wantErr bool
 	}{
 		{
 			name: "Check if user exists fail",
-			p: &invoice.GrantTokenPayload{
+			p: &auth.GrantTokenPayload{
 				Email: checkExistingUserFail,
 			},
 			wantErr: true,
 		},
 		{
 			name: "Fail to compare password hash",
-			p: &invoice.GrantTokenPayload{
+			p: &auth.GrantTokenPayload{
 				Email: compareHashFail,
 			},
 			wantErr: true,
 		},
 		{
 			name: "Password hash compare does not match returns an error",
-			p: &invoice.GrantTokenPayload{
+			p: &auth.GrantTokenPayload{
 				Email: compareHashFalse,
 			},
 			wantErr: true,

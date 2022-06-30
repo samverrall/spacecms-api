@@ -7,13 +7,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/samverrall/spacecms-api/apierror"
-	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 	"github.com/sirupsen/logrus"
 )
 
 // CreateAccount implements create-account.
-func (s *invoicesrvc) CreateAccount(ctx context.Context, p *invoice.User) error {
-	s.logger.Info("invoice.create-account")
+func (s *invoicesrvc) CreateAccount(ctx context.Context, p *auth.User) error {
+	s.logger.Info("auth.create-account")
 
 	// Lookup the email to make sure it does not already exist in the system.
 	// If it does, return an error.

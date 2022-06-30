@@ -4,9 +4,9 @@ import (
 	. "goa.design/goa/v3/dsl"
 )
 
-var _ = API("invoice", func() {
-	Title("Invoice App API Service")
-	Description("RESTFUL API Backend for Invoicify. An open source invoicing web app.")
+var _ = API("auth", func() {
+	Title("Space CMS API Service")
+	Description("Auth service for SpaceCMS. An open source content management system.")
 	Server("invoice", func() {
 		Host("default", func() {
 			URI("http://localhost:8000")
@@ -14,7 +14,7 @@ var _ = API("invoice", func() {
 	})
 })
 
-var _ = Service("invoice", func() {
+var _ = Service("auth", func() {
 	Description("RESTFUL API Backend for Invoicify. An open source invoicing web app.")
 
 	Error("unauthorized")
@@ -56,9 +56,6 @@ var _ = Service("invoice", func() {
 		HTTP(func() {
 			Cookie("token:__Host-token", String)
 			POST("/tokens")
-			Params(func() {
-				Param("grant_type")
-			})
 			Response(StatusOK, func() {
 				Cookie("token:__Host-token", String)
 				CookieMaxAge(90000)

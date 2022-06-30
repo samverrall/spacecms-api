@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Invoice App API Service
-  description: RESTFUL API Backend for Invoicify. An open source invoicing web app.
+  title: Space CMS API Service
+  description: Auth service for SpaceCMS. An open source content management system.
   version: "1.0"
 servers:
 - url: http://localhost:8000
@@ -9,10 +9,10 @@ paths:
   /api/v1/create-account:
     post:
       tags:
-      - invoice
-      summary: CreateAccount invoice
+      - auth
+      summary: CreateAccount auth
       description: Create an account by email address and password.
-      operationId: invoice#CreateAccount
+      operationId: auth#CreateAccount
       requestBody:
         required: true
         content:
@@ -20,10 +20,10 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAccountRequestBody'
             example:
-              email: Et ut.
-              id: Aut quod deserunt voluptas libero et quas.
-              name: Et quaerat quasi maxime nam est fugiat.
-              password: Sequi et dolore.
+              email: Maiores at cupiditate doloribus recusandae non.
+              id: Occaecati aspernatur et doloremque aut recusandae voluptatem.
+              name: Perspiciatis error.
+              password: Autem tenetur et voluptate possimus asperiores ea.
       responses:
         "201":
           description: Created response.
@@ -54,38 +54,27 @@ paths:
   /api/v1/openapi.json:
     get:
       tags:
-      - invoice
+      - auth
       summary: Download ./gen/http/openapi.json
-      operationId: invoice#/api/v1/openapi.json
+      operationId: auth#/api/v1/openapi.json
       responses:
         "200":
           description: File downloaded
   /api/v1/tokens:
     post:
       tags:
-      - invoice
-      summary: GrantToken invoice
+      - auth
+      summary: GrantToken auth
       description: Create an account by email address and password.
-      operationId: invoice#GrantToken
+      operationId: auth#GrantToken
       parameters:
-      - name: grant_type
-        in: query
-        allowEmptyValue: true
-        schema:
-          type: string
-          default: access_token
-          example: refresh_token
-          enum:
-          - access_token
-          - refresh_token
-        example: access_token
       - name: __Host-token
         in: cookie
         allowEmptyValue: true
         schema:
           type: string
-          example: Iure sed iusto sunt.
-        example: Et a ut dolorem sit inventore ex.
+          example: Molestiae aut sit dolorum et error.
+        example: Quos iusto provident.
       requestBody:
         required: true
         content:
@@ -93,8 +82,8 @@ paths:
             schema:
               $ref: '#/components/schemas/GrantTokenRequestBody'
             example:
-              email: Laborum facilis libero.
-              password: Eligendi quis.
+              email: Itaque excepturi repellendus rerum tempore velit.
+              password: Consectetur et saepe voluptas ex sit.
       responses:
         "200":
           description: OK response.
@@ -103,12 +92,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Token'
               example:
-                accessExpiryTime: 3396026838057048242
-                accessExpiryTimeStamp: Nam velit architecto illum voluptas odio fuga.
+                accessExpiryTime: 2485788906379267123
+                accessExpiryTimeStamp: Magnam placeat error sed qui.
                 accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-                refreshExpiryTime: 6932486574096537476
-                refreshExpiryTimeStamp: Perspiciatis voluptas.
-                refreshToken: Earum voluptatem architecto ea et.
+                refreshExpiryTime: 1347379500592278005
+                refreshExpiryTimeStamp: Ad inventore at omnis.
+                refreshToken: Odit vel esse voluptas.
         "400":
           description: 'badrequest: Bad Request response.'
           content:
@@ -141,24 +130,24 @@ components:
         email:
           type: string
           description: Email address of the user
-          example: Quibusdam tenetur occaecati ipsa nihil illum ipsam.
+          example: Quas autem eius suscipit laboriosam laborum voluptas.
         id:
           type: string
           description: ID of the user
-          example: Repellat doloremque distinctio architecto animi.
+          example: Illo voluptatem eligendi.
         name:
           type: string
           description: Full name of the user
-          example: Ipsa non enim culpa nobis quia aliquam.
+          example: Ut iusto cum voluptate.
         password:
           type: string
           description: Password of the user. This is never returned to the client.
-          example: Aut et.
+          example: Qui sit reprehenderit a ut et ea.
       example:
-        email: Vel consequatur.
-        id: Facere doloribus veritatis minima eum beatae.
-        name: Aliquid voluptates magni vero.
-        password: Culpa at voluptatum ipsa dolor ea.
+        email: Modi est adipisci autem rem fuga.
+        id: Repudiandae fugiat molestiae aliquid voluptas.
+        name: Architecto aspernatur vel.
+        password: Officia nihil sed quas sequi nemo occaecati.
       required:
       - email
       - name
@@ -191,7 +180,7 @@ components:
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: true
+          example: false
       example:
         id: 3F1FKVRR
         message: Value of ID must be an integer
@@ -209,14 +198,14 @@ components:
         email:
           type: string
           description: User email
-          example: Et nihil libero ut laboriosam.
+          example: Ab et qui.
         password:
           type: string
           description: User password
-          example: Temporibus eveniet.
+          example: Dolor consequatur et quo similique culpa sint.
       example:
-        email: Ipsum facilis est similique aut id.
-        password: Et delectus.
+        email: Qui sint id labore.
+        password: Adipisci rerum.
       required:
       - email
       - password
@@ -225,31 +214,31 @@ components:
       properties:
         accessExpiryTime:
           type: integer
-          example: 5161384593605469415
+          example: 2228558795693003840
           format: int64
         accessExpiryTimeStamp:
           type: string
-          example: Architecto doloribus quo.
+          example: Ratione reprehenderit quae voluptas.
         accessToken:
           type: string
           example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
         refreshExpiryTime:
           type: integer
-          example: 6403530218774722998
+          example: 5418770516802379696
           format: int64
         refreshExpiryTimeStamp:
           type: string
-          example: Dignissimos repudiandae fuga est at et perferendis.
+          example: Nisi odio velit ducimus facilis molestiae.
         refreshToken:
           type: string
-          example: Sit eaque.
+          example: Veniam atque consectetur.
       example:
-        accessExpiryTime: 8502745685529276309
-        accessExpiryTimeStamp: Sunt facilis labore.
+        accessExpiryTime: 1444052815716541567
+        accessExpiryTimeStamp: Fugit qui qui reiciendis veniam laudantium quisquam.
         accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-        refreshExpiryTime: 4186051162188568620
-        refreshExpiryTimeStamp: Voluptas repellat totam in.
-        refreshToken: Beatae nam odio ipsam est.
+        refreshExpiryTime: 8971481570524836720
+        refreshExpiryTimeStamp: Perspiciatis soluta aut rerum illum tempora.
+        refreshToken: Quibusdam dolores optio consequatur excepturi non occaecati.
       required:
       - accessToken
       - refreshToken
@@ -258,5 +247,7 @@ components:
       - accessExpiryTimeStamp
       - refreshExpiryTimeStamp
 tags:
-- name: invoice
+- name: cms
+  description: CMS service for SpaceCMS. An open source content management system.
+- name: auth
   description: RESTFUL API Backend for Invoicify. An open source invoicing web app.

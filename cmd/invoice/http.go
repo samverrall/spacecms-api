@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	invoicesvr "github.com/samverrall/spacecms-api/gen/http/invoice/server"
-	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
+	authsvr "github.com/samverrall/spacecms-api/gen/http/auth/server"
 	"github.com/sirupsen/logrus"
 	goahttp "goa.design/goa/v3/http"
 	httpmdlwr "goa.design/goa/v3/http/middleware"
@@ -19,7 +19,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *invoice.Endpoints, wg *sync.WaitGroup, errc chan error, logger *logrus.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *auth.Endpoints, wg *sync.WaitGroup, errc chan error, logger *logrus.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -50,11 +50,11 @@ func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *invoice
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		invoiceServer *invoicesvr.Server
+		invoiceServer *authsvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		invoiceServer = invoicesvr.New(invoiceEndpoints, mux, dec, enc, eh, nil, nil)
+		invoiceServer = authsvr.New(invoiceEndpoints, mux, dec, enc, eh, nil, nil)
 		if debug {
 			servers := goahttp.Servers{
 				invoiceServer,
@@ -63,7 +63,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, invoiceEndpoints *invoice
 		}
 	}
 	// Configure the mux.
-	invoicesvr.Mount(mux, invoiceServer)
+	authsvr.Mount(mux, invoiceServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.

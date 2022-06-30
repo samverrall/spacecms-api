@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/samverrall/spacecms-api/datastore"
-	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 	"github.com/samverrall/spacecms-api/hasher"
 	"github.com/samverrall/spacecms-api/hasher/argon2id"
 	"github.com/samverrall/spacecms-api/tokens"
@@ -20,7 +20,7 @@ type invoicesrvc struct {
 }
 
 // NewInvoice returns the invoice service implementation.
-func NewInvoice(logger *log.Logger, dbi *datastore.DataStore) invoice.Service {
+func NewInvoice(logger *log.Logger, dbi *datastore.DataStore) auth.Service {
 	if dbi == nil {
 		dbi = datastore.New()
 	}

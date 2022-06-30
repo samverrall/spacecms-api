@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 )
 
 type JWTToken struct {
@@ -20,7 +20,7 @@ func New(accessTokenExpiryMinutes int) *JWTToken {
 }
 
 // https://developer.vonage.com/blog/20/03/13/using-jwt-for-authentication-in-a-golang-application-dr#:~:text=Refresh%20Token%3A%20A%20refresh%20token,hit%20(from%20our%20application).
-func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*invoice.Token, error) {
+func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*auth.Token, error) {
 	atExpiryTime := time.Now().Add(time.Minute * time.Duration(jt.accessTokenExpiryMinutes))
 	rtExpiryTime := time.Now().Add(time.Hour * 24 * 7)
 
@@ -42,7 +42,7 @@ func (jt *JWTToken) CreateTokenPair(ctx context.Context, userID *string) (*invoi
 		return nil, err
 	}
 
-	return &invoice.Token{
+	return &auth.Token{
 		AccessToken:            at,
 		RefreshToken:           rt,
 		AccessExpiryTime:       atExpiryTime.Unix(),

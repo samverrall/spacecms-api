@@ -6,7 +6,7 @@ import (
 	"errors"
 
 	"github.com/samverrall/spacecms-api/apierror"
-	"github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 	"github.com/sirupsen/logrus"
 )
 
@@ -15,8 +15,8 @@ const (
 	GrantTypeAccess  = "access_token"
 )
 
-func (s *invoicesrvc) GrantToken(ctx context.Context, p *invoice.GrantTokenPayload) (*invoice.Token, error) {
-	s.logger.Info("invoice.GrantToken")
+func (s *invoicesrvc) GrantToken(ctx context.Context, p *auth.GrantTokenPayload) (*auth.Token, error) {
+	s.logger.Info("auth.GrantToken")
 
 	user, err := s.dbi.GetUserByEmail(ctx, p.Email)
 	switch {

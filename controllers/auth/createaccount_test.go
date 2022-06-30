@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	dm "github.com/samverrall/spacecms-api/datastore/mocks"
-	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	"github.com/samverrall/spacecms-api/gen/auth"
 	"github.com/samverrall/spacecms-api/hasher/argon2id"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/mock"
@@ -20,7 +20,7 @@ func Test_invoicesrvc_CreateAccount(t *testing.T) {
 	)
 
 	var getGetUserByEmailMock = func(m *dm.DBInterface, t *testing.T, email string) {
-		// GetUserByEmail(ctx context.Context, email string) (*invoice.User, error)
+		// GetUserByEmail(ctx context.Context, email string) (*auth.User, error)
 		switch email {
 		case checkExistingUserFail:
 			m.On("GetUserByEmail", mock.AnythingOfType("*context.emptyCtx"), email).
@@ -52,26 +52,26 @@ func Test_invoicesrvc_CreateAccount(t *testing.T) {
 	ctx := context.Background()
 	tests := []struct {
 		name    string
-		payload *invoice.User
+		payload *auth.User
 		wantErr bool
 	}{
 		{
 			name: "Check if user exists fail",
-			payload: &invoice.User{
+			payload: &auth.User{
 				Email: checkExistingUserFail,
 			},
 			wantErr: true,
 		},
 		{
 			name: "Insert user fail",
-			payload: &invoice.User{
+			payload: &auth.User{
 				Email: failedToInsertErr,
 			},
 			wantErr: true,
 		},
 		{
 			name: "Successfuly inserted user",
-			payload: &invoice.User{
+			payload: &auth.User{
 				Email: successInsert,
 			},
 		},

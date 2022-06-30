@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	invoice "github.com/samverrall/spacecms-api/gen/invoice"
+	auth "github.com/samverrall/spacecms-api/gen/auth"
 
 	mock "github.com/stretchr/testify/mock"
 )
@@ -30,15 +30,15 @@ func (_m *DBInterface) CreateUser(ctx context.Context, id string, email string, 
 }
 
 // GetUserByEmail provides a mock function with given fields: ctx, email
-func (_m *DBInterface) GetUserByEmail(ctx context.Context, email string) (*invoice.User, error) {
+func (_m *DBInterface) GetUserByEmail(ctx context.Context, email string) (*auth.User, error) {
 	ret := _m.Called(ctx, email)
 
-	var r0 *invoice.User
-	if rf, ok := ret.Get(0).(func(context.Context, string) *invoice.User); ok {
+	var r0 *auth.User
+	if rf, ok := ret.Get(0).(func(context.Context, string) *auth.User); ok {
 		r0 = rf(ctx, email)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*invoice.User)
+			r0 = ret.Get(0).(*auth.User)
 		}
 	}
 

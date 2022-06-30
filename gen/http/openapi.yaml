@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
-  title: Invoice App API Service
-  description: RESTFUL API Backend for Invoicify. An open source invoicing web app.
+  title: Space CMS API Service
+  description: Auth service for SpaceCMS. An open source content management system.
   version: ""
 host: localhost:8000
 consumes:
@@ -16,16 +16,16 @@ paths:
   /api/v1/create-account:
     post:
       tags:
-      - invoice
-      summary: CreateAccount invoice
+      - auth
+      summary: CreateAccount auth
       description: Create an account by email address and password.
-      operationId: invoice#CreateAccount
+      operationId: auth#CreateAccount
       parameters:
       - name: CreateAccountRequestBody
         in: body
         required: true
         schema:
-          $ref: '#/definitions/InvoiceCreateAccountRequestBody'
+          $ref: '#/definitions/AuthCreateAccountRequestBody'
           required:
           - email
           - name
@@ -36,27 +36,27 @@ paths:
         "400":
           description: Bad Request response.
           schema:
-            $ref: '#/definitions/InvoiceCreateAccountBadrequestResponseBody'
+            $ref: '#/definitions/AuthCreateAccountBadrequestResponseBody'
         "401":
           description: Unauthorized response.
           schema:
-            $ref: '#/definitions/InvoiceCreateAccountUnauthorizedResponseBody'
+            $ref: '#/definitions/AuthCreateAccountUnauthorizedResponseBody'
         "404":
           description: Not Found response.
           schema:
-            $ref: '#/definitions/InvoiceCreateAccountNotfoundResponseBody'
+            $ref: '#/definitions/AuthCreateAccountNotfoundResponseBody'
         "500":
           description: Internal Server Error response.
           schema:
-            $ref: '#/definitions/InvoiceCreateAccountServererrorResponseBody'
+            $ref: '#/definitions/AuthCreateAccountServererrorResponseBody'
       schemes:
       - http
   /api/v1/openapi.json:
     get:
       tags:
-      - invoice
+      - auth
       summary: Download ./gen/http/openapi.json
-      operationId: invoice#/api/v1/openapi.json
+      operationId: auth#/api/v1/openapi.json
       responses:
         "200":
           description: File downloaded
@@ -67,24 +67,16 @@ paths:
   /api/v1/tokens:
     post:
       tags:
-      - invoice
-      summary: GrantToken invoice
+      - auth
+      summary: GrantToken auth
       description: Create an account by email address and password.
-      operationId: invoice#GrantToken
+      operationId: auth#GrantToken
       parameters:
-      - name: grant_type
-        in: query
-        required: false
-        type: string
-        default: access_token
-        enum:
-        - access_token
-        - refresh_token
       - name: GrantTokenRequestBody
         in: body
         required: true
         schema:
-          $ref: '#/definitions/InvoiceGrantTokenRequestBody'
+          $ref: '#/definitions/AuthGrantTokenRequestBody'
           required:
           - email
           - password
@@ -92,7 +84,7 @@ paths:
         "200":
           description: OK response.
           schema:
-            $ref: '#/definitions/InvoiceGrantTokenResponseBody'
+            $ref: '#/definitions/AuthGrantTokenResponseBody'
             required:
             - accessToken
             - refreshToken
@@ -103,30 +95,30 @@ paths:
         "400":
           description: Bad Request response.
           schema:
-            $ref: '#/definitions/InvoiceGrantTokenBadrequestResponseBody'
+            $ref: '#/definitions/AuthGrantTokenBadrequestResponseBody'
         "401":
           description: Unauthorized response.
           schema:
-            $ref: '#/definitions/InvoiceGrantTokenUnauthorizedResponseBody'
+            $ref: '#/definitions/AuthGrantTokenUnauthorizedResponseBody'
         "404":
           description: Not Found response.
           schema:
-            $ref: '#/definitions/InvoiceGrantTokenNotfoundResponseBody'
+            $ref: '#/definitions/AuthGrantTokenNotfoundResponseBody'
         "500":
           description: Internal Server Error response.
           schema:
-            $ref: '#/definitions/InvoiceGrantTokenServererrorResponseBody'
+            $ref: '#/definitions/AuthGrantTokenServererrorResponseBody'
       schemes:
       - http
 definitions:
-  InvoiceCreateAccountBadrequestResponseBody:
+  AuthCreateAccountBadrequestResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -155,7 +147,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: true
     required:
     - name
@@ -164,14 +156,14 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceCreateAccountNotfoundResponseBody:
+  AuthCreateAccountNotfoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -189,11 +181,11 @@ definitions:
       temporary:
         type: boolean
         description: Is the error temporary?
-        example: true
+        example: false
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: CreateAccount_notfound_Response_Body result type (default view)
     example:
       fault: false
@@ -209,36 +201,36 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceCreateAccountRequestBody:
-    title: InvoiceCreateAccountRequestBody
+  AuthCreateAccountRequestBody:
+    title: AuthCreateAccountRequestBody
     type: object
     properties:
       email:
         type: string
         description: Email address of the user
-        example: Nemo assumenda aperiam natus ullam ex pariatur.
+        example: Quia sapiente est sed accusamus temporibus.
       id:
         type: string
         description: ID of the user
-        example: Alias cumque.
+        example: Laborum quam.
       name:
         type: string
         description: Full name of the user
-        example: Deserunt et at ipsum eveniet autem.
+        example: Autem rerum.
       password:
         type: string
         description: Password of the user. This is never returned to the client.
-        example: Eaque quam quidem dolorem libero velit.
+        example: Commodi fugit et voluptas.
     example:
-      email: Vel ut quia est deleniti quae aut.
-      id: Vero molestiae eius.
-      name: Tempore eius exercitationem in.
-      password: Accusamus quasi.
+      email: Soluta vero.
+      id: Necessitatibus ipsam illum ut repellendus velit.
+      name: Voluptatibus illum natus.
+      password: Perferendis autem et et qui maiores non.
     required:
     - email
     - name
     - password
-  InvoiceCreateAccountServererrorResponseBody:
+  AuthCreateAccountServererrorResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -267,7 +259,7 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: true
+        example: false
     description: CreateAccount_servererror_Response_Body result type (default view)
     example:
       fault: true
@@ -275,7 +267,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: true
+      timeout: false
     required:
     - name
     - id
@@ -283,7 +275,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceCreateAccountUnauthorizedResponseBody:
+  AuthCreateAccountUnauthorizedResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -319,7 +311,7 @@ definitions:
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
+      temporary: false
       timeout: false
     required:
     - name
@@ -328,7 +320,7 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceGrantTokenBadrequestResponseBody:
+  AuthGrantTokenBadrequestResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
@@ -365,7 +357,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: true
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -373,14 +365,14 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceGrantTokenNotfoundResponseBody:
+  AuthGrantTokenNotfoundResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -402,14 +394,14 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: GrantToken_notfound_Response_Body result type (default view)
     example:
-      fault: false
+      fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: false
+      temporary: true
       timeout: false
     required:
     - name
@@ -418,55 +410,55 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceGrantTokenRequestBody:
-    title: InvoiceGrantTokenRequestBody
+  AuthGrantTokenRequestBody:
+    title: AuthGrantTokenRequestBody
     type: object
     properties:
       email:
         type: string
         description: User email
-        example: Illo officia voluptates ex quod.
+        example: Ab ea.
       password:
         type: string
         description: User password
-        example: Laudantium libero.
+        example: Minus possimus aut doloribus consequatur.
     example:
-      email: Occaecati voluptas molestiae nobis facere.
-      password: Quia assumenda qui sint sapiente ipsum qui.
+      email: Eos est dolor libero.
+      password: Minus cupiditate adipisci omnis ex porro.
     required:
     - email
     - password
-  InvoiceGrantTokenResponseBody:
-    title: InvoiceGrantTokenResponseBody
+  AuthGrantTokenResponseBody:
+    title: AuthGrantTokenResponseBody
     type: object
     properties:
       accessExpiryTime:
         type: integer
-        example: 7843115956462264338
+        example: 974932385201161190
         format: int64
       accessExpiryTimeStamp:
         type: string
-        example: Esse repellendus.
+        example: Repudiandae quod consectetur quia rerum.
       accessToken:
         type: string
         example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
       refreshExpiryTime:
         type: integer
-        example: 1334392219278916415
+        example: 1419221311759041007
         format: int64
       refreshExpiryTimeStamp:
         type: string
-        example: Reiciendis magni et et qui.
+        example: Et minus illum ducimus et.
       refreshToken:
         type: string
-        example: Sunt totam temporibus quibusdam quasi autem possimus.
+        example: Impedit rem eligendi consectetur voluptas rem error.
     example:
-      accessExpiryTime: 2118452547822873798
-      accessExpiryTimeStamp: Atque nisi rem aut.
+      accessExpiryTime: 3756721119481649913
+      accessExpiryTimeStamp: Sit ipsum voluptatem accusamus.
       accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
-      refreshExpiryTime: 6941582188916535944
-      refreshExpiryTimeStamp: Fugit iste nihil ex ea placeat iusto.
-      refreshToken: Ut veniam voluptatum repellendus et aperiam nesciunt.
+      refreshExpiryTime: 2021119473739607656
+      refreshExpiryTimeStamp: Eos recusandae quod porro.
+      refreshToken: Unde iure iure nam nihil distinctio ipsum.
     required:
     - accessToken
     - refreshToken
@@ -474,14 +466,14 @@ definitions:
     - refreshExpiryTime
     - accessExpiryTimeStamp
     - refreshExpiryTimeStamp
-  InvoiceGrantTokenServererrorResponseBody:
+  AuthGrantTokenServererrorResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: true
+        example: false
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -511,7 +503,7 @@ definitions:
       message: parameter 'p' must be an integer
       name: bad_request
       temporary: false
-      timeout: false
+      timeout: true
     required:
     - name
     - id
@@ -519,14 +511,14 @@ definitions:
     - temporary
     - timeout
     - fault
-  InvoiceGrantTokenUnauthorizedResponseBody:
+  AuthGrantTokenUnauthorizedResponseBody:
     title: 'Mediatype identifier: application/vnd.goa.error; view=default'
     type: object
     properties:
       fault:
         type: boolean
         description: Is the error a server-side fault?
-        example: false
+        example: true
       id:
         type: string
         description: ID is a unique identifier for this particular occurrence of the
@@ -548,15 +540,15 @@ definitions:
       timeout:
         type: boolean
         description: Is the error a timeout?
-        example: false
+        example: true
     description: GrantToken_unauthorized_Response_Body result type (default view)
     example:
       fault: true
       id: 123abc
       message: parameter 'p' must be an integer
       name: bad_request
-      temporary: true
-      timeout: true
+      temporary: false
+      timeout: false
     required:
     - name
     - id
