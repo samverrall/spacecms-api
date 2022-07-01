@@ -27,19 +27,16 @@ type CreatePageRequestBody struct {
 	CreatedAt *string          `form:"createdAt,omitempty" json:"createdAt,omitempty" xml:"createdAt,omitempty"`
 }
 
-// CreatePageResponseBody is the type of the "cms" service "CreatePage"
-// endpoint HTTP response body.
-type CreatePageResponseBody struct {
-	// Page UUID
-	ID string `form:"id" json:"id" xml:"id"`
-	// Page URL
-	URL string `form:"url" json:"url" xml:"url"`
-	// Page template UUID
-	TemplateID string `form:"templateId" json:"templateId" xml:"templateId"`
-	// Page active
-	IsActive  bool              `form:"isActive" json:"isActive" xml:"isActive"`
-	Meta      *MetaResponseBody `form:"meta" json:"meta" xml:"meta"`
-	CreatedAt string            `form:"createdAt" json:"createdAt" xml:"createdAt"`
+// CreateTemplateRequestBody is the type of the "cms" service "CreateTemplate"
+// endpoint HTTP request body.
+type CreateTemplateRequestBody struct {
+	// Template UUID
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Name of the template
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Entry block of the template
+	BlockID   *string `form:"blockId,omitempty" json:"blockId,omitempty" xml:"blockId,omitempty"`
+	CreatedAt *string `form:"createdAt,omitempty" json:"createdAt,omitempty" xml:"createdAt,omitempty"`
 }
 
 // CreatePageUnauthorizedResponseBody is the type of the "cms" service
@@ -114,12 +111,76 @@ type CreatePageNotfoundResponseBody struct {
 	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
-// MetaResponseBody is used to define fields on response body types.
-type MetaResponseBody struct {
-	// Page meta title
-	Title *string `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
-	// Page meta description
-	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+// CreateTemplateUnauthorizedResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "unauthorized" error.
+type CreateTemplateUnauthorizedResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateTemplateServererrorResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "servererror" error.
+type CreateTemplateServererrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateTemplateBadrequestResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "badrequest" error.
+type CreateTemplateBadrequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
+}
+
+// CreateTemplateNotfoundResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "notfound" error.
+type CreateTemplateNotfoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name string `form:"name" json:"name" xml:"name"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID string `form:"id" json:"id" xml:"id"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message string `form:"message" json:"message" xml:"message"`
+	// Is the error temporary?
+	Temporary bool `form:"temporary" json:"temporary" xml:"temporary"`
+	// Is the error a timeout?
+	Timeout bool `form:"timeout" json:"timeout" xml:"timeout"`
+	// Is the error a server-side fault?
+	Fault bool `form:"fault" json:"fault" xml:"fault"`
 }
 
 // MetaRequestBody is used to define fields on request body types.
@@ -128,22 +189,6 @@ type MetaRequestBody struct {
 	Title *string `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
 	// Page meta description
 	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
-}
-
-// NewCreatePageResponseBody builds the HTTP response body from the result of
-// the "CreatePage" endpoint of the "cms" service.
-func NewCreatePageResponseBody(res *cms.Page) *CreatePageResponseBody {
-	body := &CreatePageResponseBody{
-		ID:         res.ID,
-		URL:        res.URL,
-		TemplateID: res.TemplateID,
-		IsActive:   res.IsActive,
-		CreatedAt:  res.CreatedAt,
-	}
-	if res.Meta != nil {
-		body.Meta = marshalCmsMetaToMetaResponseBody(res.Meta)
-	}
-	return body
 }
 
 // NewCreatePageUnauthorizedResponseBody builds the HTTP response body from the
@@ -202,6 +247,62 @@ func NewCreatePageNotfoundResponseBody(res *goa.ServiceError) *CreatePageNotfoun
 	return body
 }
 
+// NewCreateTemplateUnauthorizedResponseBody builds the HTTP response body from
+// the result of the "CreateTemplate" endpoint of the "cms" service.
+func NewCreateTemplateUnauthorizedResponseBody(res *goa.ServiceError) *CreateTemplateUnauthorizedResponseBody {
+	body := &CreateTemplateUnauthorizedResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateTemplateServererrorResponseBody builds the HTTP response body from
+// the result of the "CreateTemplate" endpoint of the "cms" service.
+func NewCreateTemplateServererrorResponseBody(res *goa.ServiceError) *CreateTemplateServererrorResponseBody {
+	body := &CreateTemplateServererrorResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateTemplateBadrequestResponseBody builds the HTTP response body from
+// the result of the "CreateTemplate" endpoint of the "cms" service.
+func NewCreateTemplateBadrequestResponseBody(res *goa.ServiceError) *CreateTemplateBadrequestResponseBody {
+	body := &CreateTemplateBadrequestResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
+// NewCreateTemplateNotfoundResponseBody builds the HTTP response body from the
+// result of the "CreateTemplate" endpoint of the "cms" service.
+func NewCreateTemplateNotfoundResponseBody(res *goa.ServiceError) *CreateTemplateNotfoundResponseBody {
+	body := &CreateTemplateNotfoundResponseBody{
+		Name:      res.Name,
+		ID:        res.ID,
+		Message:   res.Message,
+		Temporary: res.Temporary,
+		Timeout:   res.Timeout,
+		Fault:     res.Fault,
+	}
+	return body
+}
+
 // NewCreatePagePayload builds a cms service CreatePage endpoint payload.
 func NewCreatePagePayload(body *CreatePageRequestBody, token *string) *cms.CreatePagePayload {
 	v := &cms.CreatePagePayload{
@@ -212,6 +313,20 @@ func NewCreatePagePayload(body *CreatePageRequestBody, token *string) *cms.Creat
 		CreatedAt:  *body.CreatedAt,
 	}
 	v.Meta = unmarshalMetaRequestBodyToCmsMeta(body.Meta)
+	v.Token = token
+
+	return v
+}
+
+// NewCreateTemplatePayload builds a cms service CreateTemplate endpoint
+// payload.
+func NewCreateTemplatePayload(body *CreateTemplateRequestBody, token *string) *cms.CreateTemplatePayload {
+	v := &cms.CreateTemplatePayload{
+		ID:        *body.ID,
+		Name:      *body.Name,
+		BlockID:   body.BlockID,
+		CreatedAt: *body.CreatedAt,
+	}
 	v.Token = token
 
 	return v
@@ -234,6 +349,27 @@ func ValidateCreatePageRequestBody(body *CreatePageRequestBody) (err error) {
 	}
 	if body.Meta == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("meta", "body"))
+	}
+	if body.CreatedAt == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("createdAt", "body"))
+	}
+	if body.ID != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.id", *body.ID, goa.FormatUUID))
+	}
+	if body.CreatedAt != nil {
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.createdAt", *body.CreatedAt, goa.FormatDateTime))
+	}
+	return
+}
+
+// ValidateCreateTemplateRequestBody runs the validations defined on
+// CreateTemplateRequestBody
+func ValidateCreateTemplateRequestBody(body *CreateTemplateRequestBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}
 	if body.CreatedAt == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("createdAt", "body"))

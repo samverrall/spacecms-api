@@ -25,7 +25,7 @@ import (
 //
 func UsageCommands() string {
 	return `auth (create-account|grant-token)
-cms create-page
+cms (create-page|create-template)
 `
 }
 
@@ -75,6 +75,10 @@ func ParseEndpoint(
 		cmsCreatePageFlags     = flag.NewFlagSet("create-page", flag.ExitOnError)
 		cmsCreatePageBodyFlag  = cmsCreatePageFlags.String("body", "REQUIRED", "")
 		cmsCreatePageTokenFlag = cmsCreatePageFlags.String("token", "", "")
+
+		cmsCreateTemplateFlags     = flag.NewFlagSet("create-template", flag.ExitOnError)
+		cmsCreateTemplateBodyFlag  = cmsCreateTemplateFlags.String("body", "REQUIRED", "")
+		cmsCreateTemplateTokenFlag = cmsCreateTemplateFlags.String("token", "", "")
 	)
 	authFlags.Usage = authUsage
 	authCreateAccountFlags.Usage = authCreateAccountUsage
@@ -82,6 +86,7 @@ func ParseEndpoint(
 
 	cmsFlags.Usage = cmsUsage
 	cmsCreatePageFlags.Usage = cmsCreatePageUsage
+	cmsCreateTemplateFlags.Usage = cmsCreateTemplateUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -132,6 +137,9 @@ func ParseEndpoint(
 			case "create-page":
 				epf = cmsCreatePageFlags
 
+			case "create-template":
+				epf = cmsCreateTemplateFlags
+
 			}
 
 		}
@@ -170,6 +178,9 @@ func ParseEndpoint(
 			case "create-page":
 				endpoint = c.CreatePage()
 				data, err = cmsc.BuildCreatePagePayload(*cmsCreatePageBodyFlag, *cmsCreatePageTokenFlag)
+			case "create-template":
+				endpoint = c.CreateTemplate()
+				data, err = cmsc.BuildCreateTemplatePayload(*cmsCreateTemplateBodyFlag, *cmsCreateTemplateTokenFlag)
 			}
 		}
 	}
@@ -232,7 +243,8 @@ Usage:
     %[1]s [globalflags] cms COMMAND [flags]
 
 COMMAND:
-    create-page: Create an account by email address and password.
+    create-page: Create a page
+    create-template: Create a template.
 
 Additional help:
     %[1]s cms COMMAND --help
@@ -241,7 +253,7 @@ Additional help:
 func cmsCreatePageUsage() {
 	fmt.Fprintf(os.Stderr, `%[1]s [flags] cms create-page -body JSON -token STRING
 
-Create an account by email address and password.
+Create a page
     -body JSON: 
     -token STRING: 
 
@@ -256,6 +268,23 @@ Example:
       },
       "templateId": "Nisi odio velit ducimus facilis molestiae.",
       "url": "Ratione reprehenderit quae voluptas."
+   }' --token "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+`, os.Args[0])
+}
+
+func cmsCreateTemplateUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] cms create-template -body JSON -token STRING
+
+Create a template.
+    -body JSON: 
+    -token STRING: 
+
+Example:
+    %[1]s cms create-template --body '{
+      "blockId": "Animi et iure fugit vitae totam.",
+      "createdAt": "1975-01-21T23:59:55Z",
+      "id": "74C53540-E974-ABFF-2565-6BF99F9017B2",
+      "name": "Atque sint ea laborum."
    }' --token "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
 `, os.Args[0])
 }

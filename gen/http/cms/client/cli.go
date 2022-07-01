@@ -56,3 +56,38 @@ func BuildCreatePagePayload(cmsCreatePageBody string, cmsCreatePageToken string)
 
 	return v, nil
 }
+
+// BuildCreateTemplatePayload builds the payload for the cms CreateTemplate
+// endpoint from CLI flags.
+func BuildCreateTemplatePayload(cmsCreateTemplateBody string, cmsCreateTemplateToken string) (*cms.CreateTemplatePayload, error) {
+	var err error
+	var body CreateTemplateRequestBody
+	{
+		err = json.Unmarshal([]byte(cmsCreateTemplateBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"blockId\": \"Animi et iure fugit vitae totam.\",\n      \"createdAt\": \"1975-01-21T23:59:55Z\",\n      \"id\": \"74C53540-E974-ABFF-2565-6BF99F9017B2\",\n      \"name\": \"Atque sint ea laborum.\"\n   }'")
+		}
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.id", body.ID, goa.FormatUUID))
+
+		err = goa.MergeErrors(err, goa.ValidateFormat("body.createdAt", body.CreatedAt, goa.FormatDateTime))
+
+		if err != nil {
+			return nil, err
+		}
+	}
+	var token *string
+	{
+		if cmsCreateTemplateToken != "" {
+			token = &cmsCreateTemplateToken
+		}
+	}
+	v := &cms.CreateTemplatePayload{
+		ID:        body.ID,
+		Name:      body.Name,
+		BlockID:   body.BlockID,
+		CreatedAt: body.CreatedAt,
+	}
+	v.Token = token
+
+	return v, nil
+}

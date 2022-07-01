@@ -18,8 +18,9 @@ import (
 
 // Server lists the cms service endpoint HTTP handlers.
 type Server struct {
-	Mounts     []*MountPoint
-	CreatePage http.Handler
+	Mounts         []*MountPoint
+	CreatePage     http.Handler
+	CreateTemplate http.Handler
 }
 
 // ErrorNamer is an interface implemented by generated error structs that
@@ -56,8 +57,10 @@ func New(
 	return &Server{
 		Mounts: []*MountPoint{
 			{"CreatePage", "POST", "/api/v1/pages"},
+			{"CreateTemplate", "POST", "/api/v1/templates"},
 		},
-		CreatePage: NewCreatePageHandler(e.CreatePage, mux, decoder, encoder, errhandler, formatter),
+		CreatePage:     NewCreatePageHandler(e.CreatePage, mux, decoder, encoder, errhandler, formatter),
+		CreateTemplate: NewCreateTemplateHandler(e.CreateTemplate, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -67,11 +70,13 @@ func (s *Server) Service() string { return "cms" }
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.CreatePage = m(s.CreatePage)
+	s.CreateTemplate = m(s.CreateTemplate)
 }
 
 // Mount configures the mux to serve the cms endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreatePageHandler(mux, h.CreatePage)
+	MountCreateTemplateHandler(mux, h.CreateTemplate)
 }
 
 // Mount configures the mux to serve the cms endpoints.
@@ -109,6 +114,57 @@ func NewCreatePageHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "CreatePage")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "cms")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountCreateTemplateHandler configures the mux to serve the "cms" service
+// "CreateTemplate" endpoint.
+func MountCreateTemplateHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/api/v1/templates", f)
+}
+
+// NewCreateTemplateHandler creates a HTTP handler which loads the HTTP request
+// and calls the "cms" service "CreateTemplate" endpoint.
+func NewCreateTemplateHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreateTemplateRequest(mux, decoder)
+		encodeResponse = EncodeCreateTemplateResponse(encoder)
+		encodeError    = EncodeCreateTemplateError(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "CreateTemplate")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "cms")
 		payload, err := decodeRequest(r)
 		if err != nil {

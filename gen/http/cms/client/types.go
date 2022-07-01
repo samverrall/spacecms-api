@@ -27,19 +27,16 @@ type CreatePageRequestBody struct {
 	CreatedAt string           `form:"createdAt" json:"createdAt" xml:"createdAt"`
 }
 
-// CreatePageResponseBody is the type of the "cms" service "CreatePage"
-// endpoint HTTP response body.
-type CreatePageResponseBody struct {
-	// Page UUID
-	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	// Page URL
-	URL *string `form:"url,omitempty" json:"url,omitempty" xml:"url,omitempty"`
-	// Page template UUID
-	TemplateID *string `form:"templateId,omitempty" json:"templateId,omitempty" xml:"templateId,omitempty"`
-	// Page active
-	IsActive  *bool             `form:"isActive,omitempty" json:"isActive,omitempty" xml:"isActive,omitempty"`
-	Meta      *MetaResponseBody `form:"meta,omitempty" json:"meta,omitempty" xml:"meta,omitempty"`
-	CreatedAt *string           `form:"createdAt,omitempty" json:"createdAt,omitempty" xml:"createdAt,omitempty"`
+// CreateTemplateRequestBody is the type of the "cms" service "CreateTemplate"
+// endpoint HTTP request body.
+type CreateTemplateRequestBody struct {
+	// Template UUID
+	ID string `form:"id" json:"id" xml:"id"`
+	// Name of the template
+	Name string `form:"name" json:"name" xml:"name"`
+	// Entry block of the template
+	BlockID   *string `form:"blockId,omitempty" json:"blockId,omitempty" xml:"blockId,omitempty"`
+	CreatedAt string  `form:"createdAt" json:"createdAt" xml:"createdAt"`
 }
 
 // CreatePageUnauthorizedResponseBody is the type of the "cms" service
@@ -114,16 +111,80 @@ type CreatePageNotfoundResponseBody struct {
 	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// MetaRequestBody is used to define fields on request body types.
-type MetaRequestBody struct {
-	// Page meta title
-	Title *string `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
-	// Page meta description
-	Description *string `form:"description,omitempty" json:"description,omitempty" xml:"description,omitempty"`
+// CreateTemplateUnauthorizedResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "unauthorized" error.
+type CreateTemplateUnauthorizedResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
 }
 
-// MetaResponseBody is used to define fields on response body types.
-type MetaResponseBody struct {
+// CreateTemplateServererrorResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "servererror" error.
+type CreateTemplateServererrorResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// CreateTemplateBadrequestResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "badrequest" error.
+type CreateTemplateBadrequestResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// CreateTemplateNotfoundResponseBody is the type of the "cms" service
+// "CreateTemplate" endpoint HTTP response body for the "notfound" error.
+type CreateTemplateNotfoundResponseBody struct {
+	// Name is the name of this class of errors.
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// ID is a unique identifier for this particular occurrence of the problem.
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Message is a human-readable explanation specific to this occurrence of the
+	// problem.
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Is the error temporary?
+	Temporary *bool `form:"temporary,omitempty" json:"temporary,omitempty" xml:"temporary,omitempty"`
+	// Is the error a timeout?
+	Timeout *bool `form:"timeout,omitempty" json:"timeout,omitempty" xml:"timeout,omitempty"`
+	// Is the error a server-side fault?
+	Fault *bool `form:"fault,omitempty" json:"fault,omitempty" xml:"fault,omitempty"`
+}
+
+// MetaRequestBody is used to define fields on request body types.
+type MetaRequestBody struct {
 	// Page meta title
 	Title *string `form:"title,omitempty" json:"title,omitempty" xml:"title,omitempty"`
 	// Page meta description
@@ -146,19 +207,16 @@ func NewCreatePageRequestBody(p *cms.CreatePagePayload) *CreatePageRequestBody {
 	return body
 }
 
-// NewCreatePagePageCreated builds a "cms" service "CreatePage" endpoint result
-// from a HTTP "Created" response.
-func NewCreatePagePageCreated(body *CreatePageResponseBody) *cms.Page {
-	v := &cms.Page{
-		ID:         *body.ID,
-		URL:        *body.URL,
-		TemplateID: *body.TemplateID,
-		IsActive:   *body.IsActive,
-		CreatedAt:  *body.CreatedAt,
+// NewCreateTemplateRequestBody builds the HTTP request body from the payload
+// of the "CreateTemplate" endpoint of the "cms" service.
+func NewCreateTemplateRequestBody(p *cms.CreateTemplatePayload) *CreateTemplateRequestBody {
+	body := &CreateTemplateRequestBody{
+		ID:        p.ID,
+		Name:      p.Name,
+		BlockID:   p.BlockID,
+		CreatedAt: p.CreatedAt,
 	}
-	v.Meta = unmarshalMetaResponseBodyToCmsMeta(body.Meta)
-
-	return v
+	return body
 }
 
 // NewCreatePageUnauthorized builds a cms service CreatePage endpoint
@@ -221,34 +279,64 @@ func NewCreatePageNotfound(body *CreatePageNotfoundResponseBody) *goa.ServiceErr
 	return v
 }
 
-// ValidateCreatePageResponseBody runs the validations defined on
-// CreatePageResponseBody
-func ValidateCreatePageResponseBody(body *CreatePageResponseBody) (err error) {
-	if body.ID == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+// NewCreateTemplateUnauthorized builds a cms service CreateTemplate endpoint
+// unauthorized error.
+func NewCreateTemplateUnauthorized(body *CreateTemplateUnauthorizedResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
 	}
-	if body.URL == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("url", "body"))
+
+	return v
+}
+
+// NewCreateTemplateServererror builds a cms service CreateTemplate endpoint
+// servererror error.
+func NewCreateTemplateServererror(body *CreateTemplateServererrorResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
 	}
-	if body.TemplateID == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("templateId", "body"))
+
+	return v
+}
+
+// NewCreateTemplateBadrequest builds a cms service CreateTemplate endpoint
+// badrequest error.
+func NewCreateTemplateBadrequest(body *CreateTemplateBadrequestResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
 	}
-	if body.IsActive == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("isActive", "body"))
+
+	return v
+}
+
+// NewCreateTemplateNotfound builds a cms service CreateTemplate endpoint
+// notfound error.
+func NewCreateTemplateNotfound(body *CreateTemplateNotfoundResponseBody) *goa.ServiceError {
+	v := &goa.ServiceError{
+		Name:      *body.Name,
+		ID:        *body.ID,
+		Message:   *body.Message,
+		Temporary: *body.Temporary,
+		Timeout:   *body.Timeout,
+		Fault:     *body.Fault,
 	}
-	if body.Meta == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("meta", "body"))
-	}
-	if body.CreatedAt == nil {
-		err = goa.MergeErrors(err, goa.MissingFieldError("createdAt", "body"))
-	}
-	if body.ID != nil {
-		err = goa.MergeErrors(err, goa.ValidateFormat("body.id", *body.ID, goa.FormatUUID))
-	}
-	if body.CreatedAt != nil {
-		err = goa.MergeErrors(err, goa.ValidateFormat("body.createdAt", *body.CreatedAt, goa.FormatDateTime))
-	}
-	return
+
+	return v
 }
 
 // ValidateCreatePageUnauthorizedResponseBody runs the validations defined on
@@ -326,6 +414,102 @@ func ValidateCreatePageBadrequestResponseBody(body *CreatePageBadrequestResponse
 // ValidateCreatePageNotfoundResponseBody runs the validations defined on
 // CreatePage_notfound_Response_Body
 func ValidateCreatePageNotfoundResponseBody(body *CreatePageNotfoundResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateCreateTemplateUnauthorizedResponseBody runs the validations defined
+// on CreateTemplate_unauthorized_Response_Body
+func ValidateCreateTemplateUnauthorizedResponseBody(body *CreateTemplateUnauthorizedResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateCreateTemplateServererrorResponseBody runs the validations defined
+// on CreateTemplate_servererror_Response_Body
+func ValidateCreateTemplateServererrorResponseBody(body *CreateTemplateServererrorResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateCreateTemplateBadrequestResponseBody runs the validations defined on
+// CreateTemplate_badrequest_Response_Body
+func ValidateCreateTemplateBadrequestResponseBody(body *CreateTemplateBadrequestResponseBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	if body.Message == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("message", "body"))
+	}
+	if body.Temporary == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("temporary", "body"))
+	}
+	if body.Timeout == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("timeout", "body"))
+	}
+	if body.Fault == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("fault", "body"))
+	}
+	return
+}
+
+// ValidateCreateTemplateNotfoundResponseBody runs the validations defined on
+// CreateTemplate_notfound_Response_Body
+func ValidateCreateTemplateNotfoundResponseBody(body *CreateTemplateNotfoundResponseBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
 	}

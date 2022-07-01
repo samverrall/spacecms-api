@@ -16,8 +16,10 @@ import (
 
 // CMS service for SpaceCMS. An open source content management system.
 type Service interface {
-	// Create an account by email address and password.
-	CreatePage(context.Context, *CreatePagePayload) (res *Page, err error)
+	// Create a page
+	CreatePage(context.Context, *CreatePagePayload) (err error)
+	// Create a template.
+	CreateTemplate(context.Context, *CreateTemplatePayload) (err error)
 }
 
 // Auther defines the authorization functions to be implemented by the service.
@@ -34,7 +36,7 @@ const ServiceName = "cms"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"CreatePage"}
+var MethodNames = [2]string{"CreatePage", "CreateTemplate"}
 
 // CreatePagePayload is the payload type of the cms service CreatePage method.
 type CreatePagePayload struct {
@@ -52,25 +54,25 @@ type CreatePagePayload struct {
 	CreatedAt string
 }
 
+// CreateTemplatePayload is the payload type of the cms service CreateTemplate
+// method.
+type CreateTemplatePayload struct {
+	// JWT used for authentication
+	Token *string
+	// Template UUID
+	ID string
+	// Name of the template
+	Name string
+	// Entry block of the template
+	BlockID   *string
+	CreatedAt string
+}
+
 type Meta struct {
 	// Page meta title
 	Title *string
 	// Page meta description
 	Description *string
-}
-
-// Page is the result type of the cms service CreatePage method.
-type Page struct {
-	// Page UUID
-	ID string
-	// Page URL
-	URL string
-	// Page template UUID
-	TemplateID string
-	// Page active
-	IsActive  bool
-	Meta      *Meta
-	CreatedAt string
 }
 
 // MakeUnauthorized builds a goa.ServiceError from an error.

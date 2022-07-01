@@ -23,3 +23,16 @@ var pageMeta = Type("Meta", func() {
 	Attribute("title", String, "Page meta title")
 	Attribute("description", String, "Page meta description")
 })
+
+var template = Type("Template", func() {
+	Attribute("id", String, "Template UUID", func() {
+		Format(FormatUUID)
+	})
+	Attribute("name", String, "Name of the template")
+	Attribute("blockId", String, "Entry block of the template")
+	Attribute("createdAt", String, func() {
+		Format(FormatDateTime)
+	})
+
+	Required("id", "name", "createdAt")
+})

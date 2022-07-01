@@ -21,6 +21,10 @@ type Client struct {
 	// endpoint.
 	CreatePageDoer goahttp.Doer
 
+	// CreateTemplate Doer is the HTTP client used to make requests to the
+	// CreateTemplate endpoint.
+	CreateTemplateDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -42,6 +46,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		CreatePageDoer:      doer,
+		CreateTemplateDoer:  doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -69,6 +74,30 @@ func (c *Client) CreatePage() goa.Endpoint {
 		resp, err := c.CreatePageDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("cms", "CreatePage", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateTemplate returns an endpoint that makes HTTP requests to the cms
+// service CreateTemplate server.
+func (c *Client) CreateTemplate() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateTemplateRequest(c.encoder)
+		decodeResponse = DecodeCreateTemplateResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateTemplateRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateTemplateDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("cms", "CreateTemplate", err)
 		}
 		return decodeResponse(resp)
 	}

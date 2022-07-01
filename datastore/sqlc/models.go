@@ -9,10 +9,59 @@ import (
 	"time"
 )
 
+type Block struct {
+	ID        string
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt sql.NullTime
+	DeletedAt sql.NullTime
+}
+
 type Config struct {
 	ID        string
 	Entry     string
 	Value     string
+	CreatedAt time.Time
+	UpdatedAt sql.NullTime
+	DeletedAt sql.NullTime
+}
+
+type Node struct {
+	ID          string
+	BlockID     string
+	NextBlockID sql.NullString
+	PluginID    sql.NullString
+	Type        string
+	Fields      sql.NullString
+	SortIndex   int32
+	CreatedAt   time.Time
+	UpdatedAt   sql.NullTime
+	DeletedAt   sql.NullTime
+}
+
+type Page struct {
+	ID           string
+	TemplateID   string
+	Url          string
+	CanonicalUrl string
+	Title        string
+	Description  string
+	Thumbnail    string
+	IsActive     int32
+	IsInSitemap  int32
+	NoFollow     int32
+	NoIndex      int32
+	NoArchive    int32
+	CreatedAt    time.Time
+	UpdatedAt    sql.NullTime
+	DeletedAt    sql.NullTime
+}
+
+type Plugin struct {
+	ID        string
+	Name      sql.NullString
+	Ref       string
+	Fields    sql.NullString
 	CreatedAt time.Time
 	UpdatedAt sql.NullTime
 	DeletedAt sql.NullTime
@@ -25,6 +74,15 @@ type Scope struct {
 	CreatedAt   time.Time
 	UpdatedAt   sql.NullTime
 	DeletedAt   sql.NullTime
+}
+
+type Template struct {
+	ID           string
+	EntryBlockID string
+	Name         string
+	CreatedAt    time.Time
+	UpdatedAt    sql.NullTime
+	DeletedAt    sql.NullTime
 }
 
 type TransientToken struct {

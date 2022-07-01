@@ -12,7 +12,7 @@ import (
 
 type DataStore struct {
 	db      *sql.DB
-	querier sqlc.Querier
+	querier *sqlc.Queries
 }
 
 // https://earthly.dev/blog/golang-sqlite/
@@ -29,7 +29,16 @@ func New() *DataStore {
 	}
 }
 
-type DBInterface interface {
+type AuthDB interface {
 	CreateUser(ctx context.Context, id string, email, password, name string) error
 	GetUserByEmail(ctx context.Context, email string) (*auth.User, error)
+}
+
+type CmsDB interface {
+	CreateTemplate(ctx context.Context, querierTx *sqlc.Queries, id, name, entryBlockID string) error
+	CreateBlock(ctx context.Context, querierTx *sqlc.Queries, id, name string) error
+	CreateTemplateWithBlock(ctx context.Context, id, name, entryBlockID string) error
+	CreatePage(ctx context.Context, in *CreatePageArgs) error
+	GetTemplateByID(ctx context.Context, templateID string) (*sqlc.GetTemplateByIDRow, error)
+	GetPageByURL(ctx context.Context, url string) (*sqlc.LookupPageURLRow, error)
 }

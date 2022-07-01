@@ -20,7 +20,7 @@ paths:
       tags:
       - cms
       summary: CreatePage cms
-      description: Create an account by email address and password.
+      description: Create a page
       operationId: cms#CreatePage
       requestBody:
         required: true
@@ -40,19 +40,55 @@ paths:
       responses:
         "201":
           description: Created response.
+        "400":
+          description: 'badrequest: Bad Request response.'
           content:
-            application/json:
+            application/vnd.goa.error:
               schema:
-                $ref: '#/components/schemas/CreatePageRequestBody'
-              example:
-                createdAt: "1977-08-11T19:21:07Z"
-                id: 74C53540-E974-ABFF-2565-6BF99F9017B2
-                isActive: false
-                meta:
-                  description: Placeat et non hic voluptatum.
-                  title: Rerum et deserunt saepe quia.
-                templateId: Maiores modi dolorem quaerat voluptas quia.
-                url: Distinctio eum est corrupti.
+                $ref: '#/components/schemas/Error'
+        "401":
+          description: 'unauthorized: Unauthorized response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: 'notfound: Not Found response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: 'servererror: Internal Server Error response.'
+          content:
+            application/vnd.goa.error:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - jwt_header_Authorization:
+        - api:read
+        - api:write
+  /api/v1/templates:
+    post:
+      tags:
+      - cms
+      summary: CreateTemplate cms
+      description: Create a template.
+      operationId: cms#CreateTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTemplateRequestBody'
+            example:
+              blockId: Animi et iure fugit vitae totam.
+              createdAt: "1975-01-21T23:59:55Z"
+              id: 74C53540-E974-ABFF-2565-6BF99F9017B2
+              name: Atque sint ea laborum.
+      responses:
+        "201":
+          description: Created response.
         "400":
           description: 'badrequest: Bad Request response.'
           content:
@@ -139,8 +175,8 @@ paths:
         allowEmptyValue: true
         schema:
           type: string
-          example: Repudiandae occaecati et et.
-        example: Consequatur omnis perspiciatis et neque voluptate.
+          example: Eius odit nihil mollitia.
+        example: Commodi non illo.
       requestBody:
         required: true
         content:
@@ -196,24 +232,24 @@ components:
         email:
           type: string
           description: Email address of the user
-          example: Consequuntur ut.
+          example: Quaerat non magnam dolorem.
         id:
           type: string
           description: ID of the user
-          example: Magnam dolorem perferendis libero.
+          example: Odio nesciunt aut perferendis qui nam.
         name:
           type: string
           description: Full name of the user
-          example: Repudiandae at quis quia non.
+          example: Libero omnis consequuntur ut alias.
         password:
           type: string
           description: Password of the user. This is never returned to the client.
-          example: Quo necessitatibus ut.
+          example: At quis quia non reprehenderit quo necessitatibus.
       example:
-        email: Saepe optio sint molestias aut aliquid.
-        id: Vitae ea.
-        name: Reprehenderit occaecati id voluptas laudantium.
-        password: Aut nihil.
+        email: Voluptas saepe optio sint.
+        id: Similique vitae.
+        name: Aut aliquid.
+        password: Reprehenderit occaecati id voluptas laudantium.
       required:
       - email
       - name
@@ -260,6 +296,35 @@ components:
       - isActive
       - meta
       - createdAt
+    CreateTemplateRequestBody:
+      type: object
+      properties:
+        blockId:
+          type: string
+          description: Entry block of the template
+          example: In corrupti temporibus aut iure suscipit et.
+        createdAt:
+          type: string
+          example: "2007-02-17T01:13:35Z"
+          format: date-time
+        id:
+          type: string
+          description: Template UUID
+          example: AB12B85B-1864-53B4-4A92-3519B45D0D5E
+          format: uuid
+        name:
+          type: string
+          description: Name of the template
+          example: Odit assumenda nisi eum.
+      example:
+        blockId: Et ipsam.
+        createdAt: "1995-07-09T08:19:03Z"
+        id: 77DFBD55-EC3C-CF64-7021-5A80D932517B
+        name: Officia iste rerum rem doloribus.
+      required:
+      - id
+      - name
+      - createdAt
     Error:
       type: object
       properties:
@@ -284,11 +349,11 @@ components:
         temporary:
           type: boolean
           description: Is the error temporary?
-          example: false
+          example: true
         timeout:
           type: boolean
           description: Is the error a timeout?
-          example: true
+          example: false
       example:
         id: 3F1FKVRR
         message: Value of ID must be an integer
@@ -306,14 +371,14 @@ components:
         email:
           type: string
           description: User email
-          example: Et qui adipisci.
+          example: Et est.
         password:
           type: string
           description: User password
-          example: Saepe vero culpa cumque eligendi.
+          example: Et qui adipisci.
       example:
-        email: Labore in alias.
-        password: Culpa laborum et nesciunt nesciunt.
+        email: Saepe vero culpa cumque eligendi.
+        password: Labore in alias.
       required:
       - email
       - password
@@ -336,31 +401,31 @@ components:
       properties:
         accessExpiryTime:
           type: integer
-          example: 994844437165658167
+          example: 3196062381164318400
           format: int64
         accessExpiryTimeStamp:
           type: string
-          example: Ipsa exercitationem et delectus.
+          example: Ea et omnis ab doloremque magni.
         accessToken:
           type: string
           example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
         refreshExpiryTime:
           type: integer
-          example: 4367011410439043561
+          example: 8755479929559018545
           format: int64
         refreshExpiryTimeStamp:
           type: string
-          example: Nihil numquam sit doloribus ipsa fuga.
+          example: Exercitationem et delectus nisi nihil numquam.
         refreshToken:
           type: string
-          example: Aut quia ea et omnis.
+          example: Culpa laborum et nesciunt nesciunt.
       example:
         accessExpiryTime: 6252863462487333598
         accessExpiryTimeStamp: Quos error.
         accessToken: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzaWQiOiJkYmViMjlhYTMyYjg0MTMxYTA0NjY4MDAyNzAxNWEwZSIsInJvbGUiOlsiQWRtaW5pc3RyYXRvcnMiLCJSZWdpc3RlcmVkIFVzZXJzIiwiU3Vic2NyaWJlcnMiXSwiaXNzIjoidGVzdHNpdGVjZS5sdmgubWUiLCJleHAiOjE0NTA4MzU2ODMsIm5iZiI6MTQ1MDgzMTc4M30.Yf3mmBJ8nV_IozqvvLc8L34dDklU2J7z0uXn3jsICp0
         refreshExpiryTime: 3925041465761616217
         refreshExpiryTimeStamp: Reprehenderit soluta.
-        refreshToken: Magni natus.
+        refreshToken: Doloribus ipsa fuga praesentium magni natus.
       required:
       - accessToken
       - refreshToken

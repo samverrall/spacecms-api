@@ -23,11 +23,8 @@ import (
 // cms CreatePage endpoint.
 func EncodeCreatePageResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
 	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
-		res, _ := v.(*cms.Page)
-		enc := encoder(ctx, w)
-		body := NewCreatePageResponseBody(res)
 		w.WriteHeader(http.StatusCreated)
-		return enc.Encode(body)
+		return nil
 	}
 }
 
@@ -139,21 +136,127 @@ func EncodeCreatePageError(encoder func(context.Context, http.ResponseWriter) go
 	}
 }
 
+// EncodeCreateTemplateResponse returns an encoder for responses returned by
+// the cms CreateTemplate endpoint.
+func EncodeCreateTemplateResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		w.WriteHeader(http.StatusCreated)
+		return nil
+	}
+}
+
+// DecodeCreateTemplateRequest returns a decoder for requests sent to the cms
+// CreateTemplate endpoint.
+func DecodeCreateTemplateRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body CreateTemplateRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateCreateTemplateRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+
+		var (
+			token *string
+		)
+		tokenRaw := r.Header.Get("Authorization")
+		if tokenRaw != "" {
+			token = &tokenRaw
+		}
+		payload := NewCreateTemplatePayload(&body, token)
+		if payload.Token != nil {
+			if strings.Contains(*payload.Token, " ") {
+				// Remove authorization scheme prefix (e.g. "Bearer")
+				cred := strings.SplitN(*payload.Token, " ", 2)[1]
+				payload.Token = &cred
+			}
+		}
+
+		return payload, nil
+	}
+}
+
+// EncodeCreateTemplateError returns an encoder for errors returned by the
+// CreateTemplate cms endpoint.
+func EncodeCreateTemplateError(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder, formatter func(err error) goahttp.Statuser) func(context.Context, http.ResponseWriter, error) error {
+	encodeError := goahttp.ErrorEncoder(encoder, formatter)
+	return func(ctx context.Context, w http.ResponseWriter, v error) error {
+		var en ErrorNamer
+		if !errors.As(v, &en) {
+			return encodeError(ctx, w, v)
+		}
+		switch en.ErrorName() {
+		case "unauthorized":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreateTemplateUnauthorizedResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusUnauthorized)
+			return enc.Encode(body)
+		case "servererror":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreateTemplateServererrorResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusInternalServerError)
+			return enc.Encode(body)
+		case "badrequest":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreateTemplateBadrequestResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusBadRequest)
+			return enc.Encode(body)
+		case "notfound":
+			var res *goa.ServiceError
+			errors.As(v, &res)
+			enc := encoder(ctx, w)
+			var body interface{}
+			if formatter != nil {
+				body = formatter(res)
+			} else {
+				body = NewCreateTemplateNotfoundResponseBody(res)
+			}
+			w.Header().Set("goa-error", res.ErrorName())
+			w.WriteHeader(http.StatusNotFound)
+			return enc.Encode(body)
+		default:
+			return encodeError(ctx, w, v)
+		}
+	}
+}
+
 // unmarshalMetaRequestBodyToCmsMeta builds a value of type *cms.Meta from a
 // value of type *MetaRequestBody.
 func unmarshalMetaRequestBodyToCmsMeta(v *MetaRequestBody) *cms.Meta {
 	res := &cms.Meta{
-		Title:       v.Title,
-		Description: v.Description,
-	}
-
-	return res
-}
-
-// marshalCmsMetaToMetaResponseBody builds a value of type *MetaResponseBody
-// from a value of type *cms.Meta.
-func marshalCmsMetaToMetaResponseBody(v *cms.Meta) *MetaResponseBody {
-	res := &MetaResponseBody{
 		Title:       v.Title,
 		Description: v.Description,
 	}

@@ -11,3 +11,8 @@ package client
 func CreatePageCmsPath() string {
 	return "/api/v1/pages"
 }
+
+// CreateTemplateCmsPath returns the URL path to the cms service CreateTemplate HTTP endpoint.
+func CreateTemplateCmsPath() string {
+	return "/api/v1/templates"
+}

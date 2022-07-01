@@ -10,8 +10,13 @@ import (
 )
 
 type Querier interface {
+	GetTemplateByID(ctx context.Context, id string) (GetTemplateByIDRow, error)
 	GetUserByEmail(ctx context.Context, email sql.NullString) (GetUserByEmailRow, error)
+	InsertBlock(ctx context.Context, arg InsertBlockParams) error
+	InsertPage(ctx context.Context, arg InsertPageParams) error
+	InsertTemplate(ctx context.Context, arg InsertTemplateParams) error
 	InsertUser(ctx context.Context, arg InsertUserParams) error
+	LookupPageURL(ctx context.Context, url string) (LookupPageURLRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

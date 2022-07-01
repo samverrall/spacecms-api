@@ -16,7 +16,8 @@ import (
 
 // Endpoints wraps the "cms" service endpoints.
 type Endpoints struct {
-	CreatePage goa.Endpoint
+	CreatePage     goa.Endpoint
+	CreateTemplate goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "cms" service with endpoints.
@@ -24,13 +25,15 @@ func NewEndpoints(s Service) *Endpoints {
 	// Casting service to Auther interface
 	a := s.(Auther)
 	return &Endpoints{
-		CreatePage: NewCreatePageEndpoint(s, a.JWTAuth),
+		CreatePage:     NewCreatePageEndpoint(s, a.JWTAuth),
+		CreateTemplate: NewCreateTemplateEndpoint(s, a.JWTAuth),
 	}
 }
 
 // Use applies the given middleware to all the "cms" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.CreatePage = m(e.CreatePage)
+	e.CreateTemplate = m(e.CreateTemplate)
 }
 
 // NewCreatePageEndpoint returns an endpoint function that calls the method
@@ -52,6 +55,29 @@ func NewCreatePageEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoi
 		if err != nil {
 			return nil, err
 		}
-		return s.CreatePage(ctx, p)
+		return nil, s.CreatePage(ctx, p)
+	}
+}
+
+// NewCreateTemplateEndpoint returns an endpoint function that calls the method
+// "CreateTemplate" of service "cms".
+func NewCreateTemplateEndpoint(s Service, authJWTFn security.AuthJWTFunc) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CreateTemplatePayload)
+		var err error
+		sc := security.JWTScheme{
+			Name:           "jwt",
+			Scopes:         []string{"api:read", "api:write"},
+			RequiredScopes: []string{},
+		}
+		var token string
+		if p.Token != nil {
+			token = *p.Token
+		}
+		ctx, err = authJWTFn(ctx, token, &sc)
+		if err != nil {
+			return nil, err
+		}
+		return nil, s.CreateTemplate(ctx, p)
 	}
 }

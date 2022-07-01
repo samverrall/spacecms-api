@@ -15,22 +15,26 @@ import (
 
 // Client is the "cms" service client.
 type Client struct {
-	CreatePageEndpoint goa.Endpoint
+	CreatePageEndpoint     goa.Endpoint
+	CreateTemplateEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "cms" service client given the endpoints.
-func NewClient(createPage goa.Endpoint) *Client {
+func NewClient(createPage, createTemplate goa.Endpoint) *Client {
 	return &Client{
-		CreatePageEndpoint: createPage,
+		CreatePageEndpoint:     createPage,
+		CreateTemplateEndpoint: createTemplate,
 	}
 }
 
 // CreatePage calls the "CreatePage" endpoint of the "cms" service.
-func (c *Client) CreatePage(ctx context.Context, p *CreatePagePayload) (res *Page, err error) {
-	var ires interface{}
-	ires, err = c.CreatePageEndpoint(ctx, p)
-	if err != nil {
-		return
-	}
-	return ires.(*Page), nil
+func (c *Client) CreatePage(ctx context.Context, p *CreatePagePayload) (err error) {
+	_, err = c.CreatePageEndpoint(ctx, p)
+	return
+}
+
+// CreateTemplate calls the "CreateTemplate" endpoint of the "cms" service.
+func (c *Client) CreateTemplate(ctx context.Context, p *CreateTemplatePayload) (err error) {
+	_, err = c.CreateTemplateEndpoint(ctx, p)
+	return
 }

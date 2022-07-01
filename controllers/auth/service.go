@@ -18,7 +18,7 @@ const (
 // The example methods log the requests and return zero values.
 type authservice struct {
 	logger  *log.Logger
-	dbi     datastore.DBInterface
+	dbi     datastore.AuthDB
 	hasher  hasher.Hasher
 	tokener tokens.Tokener
 }

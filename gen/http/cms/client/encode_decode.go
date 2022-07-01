@@ -83,20 +83,7 @@ func DecodeCreatePageResponse(decoder func(*http.Response) goahttp.Decoder, rest
 		}
 		switch resp.StatusCode {
 		case http.StatusCreated:
-			var (
-				body CreatePageResponseBody
-				err  error
-			)
-			err = decoder(resp).Decode(&body)
-			if err != nil {
-				return nil, goahttp.ErrDecodingError("cms", "CreatePage", err)
-			}
-			err = ValidateCreatePageResponseBody(&body)
-			if err != nil {
-				return nil, goahttp.ErrValidationError("cms", "CreatePage", err)
-			}
-			res := NewCreatePagePageCreated(&body)
-			return res, nil
+			return nil, nil
 		case http.StatusUnauthorized:
 			var (
 				body CreatePageUnauthorizedResponseBody
@@ -160,6 +147,134 @@ func DecodeCreatePageResponse(decoder func(*http.Response) goahttp.Decoder, rest
 	}
 }
 
+// BuildCreateTemplateRequest instantiates a HTTP request object with method
+// and path set to call the "cms" service "CreateTemplate" endpoint
+func (c *Client) BuildCreateTemplateRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateTemplateCmsPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("cms", "CreateTemplate", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreateTemplateRequest returns an encoder for requests sent to the cms
+// CreateTemplate server.
+func EncodeCreateTemplateRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*cms.CreateTemplatePayload)
+		if !ok {
+			return goahttp.ErrInvalidType("cms", "CreateTemplate", "*cms.CreateTemplatePayload", v)
+		}
+		if p.Token != nil {
+			head := *p.Token
+			if !strings.Contains(head, " ") {
+				req.Header.Set("Authorization", "Bearer "+head)
+			} else {
+				req.Header.Set("Authorization", head)
+			}
+		}
+		body := NewCreateTemplateRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("cms", "CreateTemplate", err)
+		}
+		return nil
+	}
+}
+
+// DecodeCreateTemplateResponse returns a decoder for responses returned by the
+// cms CreateTemplate endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+// DecodeCreateTemplateResponse may return the following errors:
+//	- "unauthorized" (type *goa.ServiceError): http.StatusUnauthorized
+//	- "servererror" (type *goa.ServiceError): http.StatusInternalServerError
+//	- "badrequest" (type *goa.ServiceError): http.StatusBadRequest
+//	- "notfound" (type *goa.ServiceError): http.StatusNotFound
+//	- error: internal error
+func DecodeCreateTemplateResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			return nil, nil
+		case http.StatusUnauthorized:
+			var (
+				body CreateTemplateUnauthorizedResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("cms", "CreateTemplate", err)
+			}
+			err = ValidateCreateTemplateUnauthorizedResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("cms", "CreateTemplate", err)
+			}
+			return nil, NewCreateTemplateUnauthorized(&body)
+		case http.StatusInternalServerError:
+			var (
+				body CreateTemplateServererrorResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("cms", "CreateTemplate", err)
+			}
+			err = ValidateCreateTemplateServererrorResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("cms", "CreateTemplate", err)
+			}
+			return nil, NewCreateTemplateServererror(&body)
+		case http.StatusBadRequest:
+			var (
+				body CreateTemplateBadrequestResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("cms", "CreateTemplate", err)
+			}
+			err = ValidateCreateTemplateBadrequestResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("cms", "CreateTemplate", err)
+			}
+			return nil, NewCreateTemplateBadrequest(&body)
+		case http.StatusNotFound:
+			var (
+				body CreateTemplateNotfoundResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("cms", "CreateTemplate", err)
+			}
+			err = ValidateCreateTemplateNotfoundResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("cms", "CreateTemplate", err)
+			}
+			return nil, NewCreateTemplateNotfound(&body)
+		default:
+			body, _ := ioutil.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("cms", "CreateTemplate", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // marshalCmsMetaToMetaRequestBody builds a value of type *MetaRequestBody from
 // a value of type *cms.Meta.
 func marshalCmsMetaToMetaRequestBody(v *cms.Meta) *MetaRequestBody {
@@ -174,17 +289,6 @@ func marshalCmsMetaToMetaRequestBody(v *cms.Meta) *MetaRequestBody {
 // marshalMetaRequestBodyToCmsMeta builds a value of type *cms.Meta from a
 // value of type *MetaRequestBody.
 func marshalMetaRequestBodyToCmsMeta(v *MetaRequestBody) *cms.Meta {
-	res := &cms.Meta{
-		Title:       v.Title,
-		Description: v.Description,
-	}
-
-	return res
-}
-
-// unmarshalMetaResponseBodyToCmsMeta builds a value of type *cms.Meta from a
-// value of type *MetaResponseBody.
-func unmarshalMetaResponseBodyToCmsMeta(v *MetaResponseBody) *cms.Meta {
 	res := &cms.Meta{
 		Title:       v.Title,
 		Description: v.Description,

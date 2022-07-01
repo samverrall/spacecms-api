@@ -18,7 +18,7 @@ import (
 // The example methods log the requests and return zero values.
 type cmsservice struct {
 	logger *log.Logger
-	dbi    datastore.DBInterface
+	dbi    datastore.CmsDB
 }
 
 // NewCMSService returns the auth service implementation.
